@@ -148,6 +148,10 @@
       </fileset>
     </copy>
     <copy todir="${build.static.dir}/css" flatten="true">
+      <fileset dir="${lib.dir}">
+        <include name="closure-library/closure/goog/css/hsvapalette.css"/>
+        <include name="closure-library/closure/goog/css/dialog.css"/>
+      </fileset>
       <fileset dir="${lib.dir}/blockly">
         <include name="**/*.css"/>
       </fileset>
