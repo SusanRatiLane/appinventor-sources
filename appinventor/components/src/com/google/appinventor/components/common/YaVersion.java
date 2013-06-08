@@ -1404,6 +1404,6 @@ public class YaVersion {
   public static final String [] ACCEPTABLE_COMPANIONS = { "2.58a", "2.58au" };
 
   // Splash Screen Values
-  public static final int SPLASH_SURVEY = 1;
+  public static final int SPLASH_SURVEY = 0;
 
 }
