@@ -308,6 +308,12 @@ public interface Images extends Resources {
    */
   @Source("com/google/appinventor/images/imageSprite.png")
   ImageResource imageSprite();
+  
+  /**
+   * Designer palette item: Chart
+   */
+  @Source("com/google/appinventor/images/chart.png")
+  ImageResource chart();
 
   /**
    * Designer palette item: Ball

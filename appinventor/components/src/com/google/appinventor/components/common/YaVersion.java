@@ -872,6 +872,9 @@ public class YaVersion {
   // For LOCATIONSENSOR_COMPONENT_VERSION 3:
   // - The speed parameter was added to the LocationChanged event
   public static final int LOCATIONSENSOR_COMPONENT_VERSION = 3;
+  
+  //For CHART_COMPONENT_VERSION = 1
+  public static final int CHART_COMPONENT_VERSION = 1;
 
   // For MAP_COMPONENT_VERSION 1:
   // - Initial Map implementation using OpenStreetMap

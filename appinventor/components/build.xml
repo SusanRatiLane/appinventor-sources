@@ -215,6 +215,29 @@
       <classpath>
         <path refid="AndroidRuntime.path" />
         <pathelement location="${public.deps.dir}/android.jar" />
+        <pathelement location="${local.build.dir}/HtmlEntities.jar" />
+        <pathelement location="${public.build.dir}/CommonConstants.jar" />
+        <pathelement location="${build.dir}/common/CommonVersion.jar" />
+        <pathelement location="${lib.dir}/android/5.1.1/android.jar" />
+        <pathelement location="${lib.dir}/kawa/kawa-1.11-modified.jar" />
+        <pathelement location="${lib.dir}/acra/acra-4.4.0.jar" />
+        <pathelement location="${lib.dir}/guava/guava-14.0.1.jar" />
+        <!-- Conditionally included libraries -->
+        <pathelement location="${lib.dir}/twitter/twitter4j-core-3.0.5.jar" />
+        <pathelement location="${lib.dir}/twitter/twitter4j-media-support-3.0.5.jar" />
+        <pathelement location="${lib.dir}/apache-http/httpcore-4.3.2.jar" />
+        <pathelement location="${lib.dir}/apache-http/httpmime-4.3.4.jar" />
+        <pathelement location="${lib.dir}/fusiontables/fusiontables.jar" />
+        <pathelement location="${lib.dir}/firebase/firebase-client-android-2.5.0.jar" />
+        <pathelement location="${lib.dir}/MPAndroidChart/mpandroidchartlibrary-2-2-4.jar" />
+        <pathelement location="${lib.dir}/oauth/google-api-client-1.10.3-beta.jar" />
+        <pathelement location="${lib.dir}/oauth/google-api-client-android2-1.10.3-beta.jar" />
+        <pathelement location="${lib.dir}/oauth/google-http-client-1.10.3-beta.jar" />
+        <pathelement location="${lib.dir}/oauth/google-http-client-android2-1.10.3-beta.jar" />
+        <pathelement location="${lib.dir}/oauth/google-http-client-android3-1.10.3-beta.jar" />
+        <pathelement location="${lib.dir}/oauth/google-oauth-client-1.10.1-beta.jar" />
+        <pathelement location="${lib.dir}/gson/gson-2.1.jar" />
+        <pathelement location="${lib.dir}/json/json.jar" />
       </classpath>
     </ai.javac>
 
@@ -310,6 +333,28 @@
           <path refid="AndroidRuntime.path" />
           <pathelement location="${public.build.dir}/AndroidRuntime.jar" />
           <pathelement location="${public.deps.dir}/android.jar" />
+          <pathelement location="${local.build.dir}/HtmlEntities.jar" />
+          <pathelement location="${public.build.dir}/CommonConstants.jar" />
+          <pathelement location="${lib.dir}/android/5.1.1/android.jar" />
+          <pathelement location="${lib.dir}/guava/guava-14.0.1.jar" />
+          <pathelement location="${lib.dir}/gson/gson-2.1.jar" />
+          <pathelement location="${lib.dir}/json/json.jar" />
+          <pathelement location="${lib.dir}/kawa/kawa-1.11-modified.jar" />
+          <pathelement location="${lib.dir}/acra/acra-4.4.0.jar" />
+          <pathelement location="${lib.dir}/twitter/twitter4j-core-3.0.5.jar" />
+          <pathelement location="${lib.dir}/twitter/twitter4j-media-support-3.0.5.jar" />
+          <pathelement location="${lib.dir}/apache-http/httpcore-4.3.2.jar" />
+          <pathelement location="${lib.dir}/apache-http/httpmime-4.3.4.jar" />
+          <pathelement location="${lib.dir}/fusiontables/fusiontables.jar" />
+          <pathelement location="${lib.dir}/firebase/firebase-client-android-2.5.0.jar" />
+          <pathelement location="${lib.dir}/MPAndroidChart/mpandroidchartlibrary-2-2-4.jar" />
+          <pathelement location="${lib.dir}/oauth/google-api-client-1.10.3-beta.jar" />
+          <pathelement location="${lib.dir}/oauth/google-api-client-android2-1.10.3-beta.jar" />
+          <pathelement location="${lib.dir}/oauth/google-http-client-1.10.3-beta.jar" />
+          <pathelement location="${lib.dir}/oauth/google-http-client-android2-1.10.3-beta.jar" />
+          <pathelement location="${lib.dir}/oauth/google-http-client-android3-1.10.3-beta.jar" />
+          <pathelement location="${lib.dir}/oauth/google-oauth-client-1.10.1-beta.jar" />
+          <pathelement location="${lib.dir}/guava/guava-14.0.1.jar" />
         </classpath>
         <compilerarg line="-processorpath ${local.build.dir}/AnnotationProcessors.jar"/>
         <compilerarg line="-processor @{apt-processor}" />

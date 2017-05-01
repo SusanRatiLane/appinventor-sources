@@ -13,6 +13,7 @@ import com.google.appinventor.client.editor.simple.SimpleEditor;
 import com.google.appinventor.client.editor.simple.components.MockBall;
 import com.google.appinventor.client.editor.simple.components.MockButton;
 import com.google.appinventor.client.editor.simple.components.MockCanvas;
+import com.google.appinventor.client.editor.simple.components.MockChart;
 import com.google.appinventor.client.editor.simple.components.MockCheckBox;
 import com.google.appinventor.client.editor.simple.components.MockCircle;
 import com.google.appinventor.client.editor.simple.components.MockCloudDB;
@@ -389,6 +390,8 @@ public final class SimpleComponentDescriptor {
       return new MockButton(editor);
     } else if (name.equals(MockCanvas.TYPE)) {
       return new MockCanvas(editor);
+    } else if (name.equals(MockChart.TYPE)) {
+        return new MockChart(editor);
     } else if (name.equals(MockCheckBox.TYPE)) {
       return new MockCheckBox(editor);
     } else if (name.equals(MockImage.TYPE)) {
