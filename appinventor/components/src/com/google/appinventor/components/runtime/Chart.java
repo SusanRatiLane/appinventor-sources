@@ -124,12 +124,15 @@ public final class Chart extends AndroidViewComponent {
     this.container = container;
     items = YailList.makeEmptyList();
     chartLayout = new RelativeLayout(container.$context());
+    chartLayout.setLayoutParams(new RelativeLayout.LayoutParams(
+    		ViewGroup.LayoutParams.MATCH_PARENT,
+    		ViewGroup.LayoutParams.MATCH_PARENT));
     
     lineChart = new LineChart(container.$context());
     lineChart.setLayoutParams(new ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT));
-    
+        
     ArrayList<Entry> entries = new ArrayList<Entry>();
 	ArrayList<String> labels = new ArrayList<String>();
     int count = 0;
@@ -142,6 +145,7 @@ public final class Chart extends AndroidViewComponent {
     LineDataSet dataset = new LineDataSet(entries,legend);
     dataset.setDrawValues(pointLabels);
     LineData data = new LineData(labels, dataset);
+    
     dataset.setColors(colors); //
     dataset.setDrawCubic(drawSmooth);
     dataset.setDrawFilled(drawFilled);
@@ -189,10 +193,7 @@ public final class Chart extends AndroidViewComponent {
     // note that the TextColor and ElementsFromString setters
     // need to have the textColor set first, since they reset the
     // adapter
-
-    //Width(LENGTH_FILL_PARENT);
-    super.Width(LENGTH_FILL_PARENT);
-    super.Height(LENGTH_FILL_PARENT);
+    
     BackgroundColor(DEFAULT_BACKGROUND_COLOR);
 
     textColor = DEFAULT_TEXT_COLOR;
@@ -202,11 +203,7 @@ public final class Chart extends AndroidViewComponent {
     ElementsFromString("");
 
     chartLayout.addView(lineChart);
-    //lineChart.setWidth(Component.LENGTH_FILL_PARENT)
-    
-    
-    //not a AndroidViewComponent
-    //container.$add(chartLayout);
+    container.$add(this);
     
   }
 
@@ -304,14 +301,18 @@ public final class Chart extends AndroidViewComponent {
 	  "Each number before the comma will be a datapoint " + 
       "on the chart.",  category = PropertyCategory.BEHAVIOR)
   public void ElementsFromString(String itemstring) {
-    items = ElementsUtil.elementsFromString(itemstring);
-    setAdapterData();
   }
 
   /**
    * Sets the items of the ListView through an adapter
    */
   public void setAdapterData(){
+//    int size = items.size();
+//    int displayTextSize = textSize;
+//    Spannable [] objects = new Spannable[size];
+//    for (int i = 1; i <= size; i++) {
+//	      String itemString = YailList.YailListElementToString(items.get(i));
+//    }
   }
 
   /**
