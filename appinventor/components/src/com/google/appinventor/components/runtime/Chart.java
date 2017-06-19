@@ -6,26 +6,12 @@
 
 package com.google.appinventor.components.runtime;
 
-/*
- * 
- */
-import android.graphics.drawable.GradientDrawable;
-import android.text.Editable;
 import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.TextWatcher;
-import android.text.style.AbsoluteSizeSpan;
-import android.text.style.ForegroundColorSpan;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-
 import com.google.appinventor.components.annotations.DesignerComponent;
 import com.google.appinventor.components.annotations.DesignerProperty;
 import com.google.appinventor.components.annotations.PropertyCategory;
-import com.google.appinventor.components.annotations.SimpleEvent;
 import com.google.appinventor.components.annotations.SimpleObject;
 import com.google.appinventor.components.annotations.SimpleProperty;
 import com.google.appinventor.components.annotations.UsesLibraries;
@@ -36,7 +22,6 @@ import com.google.appinventor.components.runtime.util.ElementsUtil;
 import com.google.appinventor.components.runtime.util.YailList;
 
 import android.graphics.Color;
-import android.os.Bundle;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -49,12 +34,8 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
-
-import java.io.File;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.github.mikephil.charting.components.YAxis.AxisDependency;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 /**
  * Chart Component. More info to come 
@@ -72,7 +53,10 @@ public final class Chart extends AndroidViewComponent {
 
   protected final ComponentContainer container;
   private final RelativeLayout chartLayout;
-  private final LineChart lineChart;
+  private LineChart lineChart;
+  private final TextView testview;
+  private LineData data;
+  private ILineDataSet set;
 
   // The adapter contains spannables rather than strings, since we will be changing the item
   // colors using ForegroundColorSpan
@@ -100,7 +84,6 @@ public final class Chart extends AndroidViewComponent {
   String legend = "legend";
   boolean drawFilled = true;
   boolean drawSmooth = true;
-  List<Integer> listdata = Arrays.asList(1,2,8,4,3,10,5);
   int[] colors = ColorTemplate.COLORFUL_COLORS;
   int animateSpeed = 1000;
   boolean touchEnabled = true;
@@ -132,23 +115,8 @@ public final class Chart extends AndroidViewComponent {
     lineChart.setLayoutParams(new ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT));
-        
-    ArrayList<Entry> entries = new ArrayList<Entry>();
-	ArrayList<String> labels = new ArrayList<String>();
-    int count = 0;
-    for (int i:listdata) {
-        entries.add(new Entry(i,count));
-        labels.add(String.valueOf(count));
-        count+=1;
-    }
     
-    LineDataSet dataset = new LineDataSet(entries,legend);
-    dataset.setDrawValues(pointLabels);
-    LineData data = new LineData(labels, dataset);
-    
-    dataset.setColors(colors); //
-    dataset.setDrawCubic(drawSmooth);
-    dataset.setDrawFilled(drawFilled);
+    testview = new TextView(container.$context());
 
     // enable / disable grid background
     lineChart.setDrawGridBackground(false);
@@ -170,7 +138,8 @@ public final class Chart extends AndroidViewComponent {
     lineChart.setBackgroundColor(Color.TRANSPARENT);
 
 
-    lineChart.setData(data);
+//    lineChart.setData(data);
+    lineChart.setData(new LineData());
     lineChart.animateY(animateSpeed);
 
 
@@ -203,6 +172,8 @@ public final class Chart extends AndroidViewComponent {
     ElementsFromString("");
 
     chartLayout.addView(lineChart);
+    testview.setText("Testing");
+    chartLayout.addView(testview);
     container.$add(this);
     
   }
@@ -302,7 +273,60 @@ public final class Chart extends AndroidViewComponent {
       "on the chart.",  category = PropertyCategory.BEHAVIOR)
   public void ElementsFromString(String itemstring) {
   }
+  
+  private LineDataSet createSet() {
 
+      LineDataSet set = new LineDataSet(null, "DataSet 1");
+      set.setLineWidth(2.5f);
+      set.setCircleRadius(4.5f);
+      set.setColor(Color.rgb(240, 99, 99));
+      set.setCircleColor(Color.rgb(240, 99, 99));
+      set.setHighLightColor(Color.rgb(190, 190, 190));
+      set.setAxisDependency(AxisDependency.LEFT);
+      set.setValueTextSize(10f);
+      return set;
+  }
+  
+  /**
+   * --
+   * @param --
+   */
+  @SimpleProperty(description="The data elements specified as a string with the " +
+      "items separated by commas such as: 1,2,8,4,3,10,5. " + 
+	  "Each number before the comma will be a datapoint " + 
+      "on the chart.",  category = PropertyCategory.BEHAVIOR)
+  public void AddSingleData(float datapoint) {
+	  testview.setText(String.valueOf(datapoint));	
+      LineData data = lineChart.getData();
+      ILineDataSet set = data.getDataSetByIndex(0);
+
+      if (set == null) {
+          set = createSet();
+          data.addDataSet(set);
+      }
+
+      // choose a random dataSet
+      int randomDataSetIndex = (int) (Math.random() * data.getDataSetCount());
+      
+      //testview.setText(String.valueOf(data.getDataSetByIndex(randomDataSetIndex).getEntryCount()));
+	  testview.setText("*"+String.valueOf(datapoint));
+
+      data.addEntry(new Entry(datapoint, data.getDataSetByIndex(randomDataSetIndex).getEntryCount()), randomDataSetIndex);
+      data.addXValue(String.valueOf(data.getDataSetByIndex(randomDataSetIndex).getEntryCount()));
+      data.notifyDataChanged();
+      lineChart.setData(data);
+
+      // let the chart know it's data has changed
+      lineChart.notifyDataSetChanged();
+
+      lineChart.setVisibleXRangeMaximum(6);
+      //mChart.setVisibleYRangeMaximum(15, AxisDependency.LEFT);
+//          
+//          // this automatically refreshes the chart (calls invalidate())
+      lineChart.moveViewTo(data.getXValCount() - 7, 50f, AxisDependency.LEFT);
+	  
+  }
+ 
   /**
    * Sets the items of the ListView through an adapter
    */
