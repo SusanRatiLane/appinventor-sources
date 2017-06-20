@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import com.google.appinventor.components.annotations.DesignerComponent;
 import com.google.appinventor.components.annotations.DesignerProperty;
 import com.google.appinventor.components.annotations.PropertyCategory;
+import com.google.appinventor.components.annotations.SimpleFunction;
 import com.google.appinventor.components.annotations.SimpleObject;
 import com.google.appinventor.components.annotations.SimpleProperty;
 import com.google.appinventor.components.annotations.UsesLibraries;
@@ -25,6 +26,9 @@ import android.graphics.Color;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -57,6 +61,7 @@ public final class Chart extends AndroidViewComponent {
   private final TextView testview;
   private LineData data;
   private ILineDataSet set;
+  private Map<String,Integer> lineSet;
 
   // The adapter contains spannables rather than strings, since we will be changing the item
   // colors using ForegroundColorSpan
@@ -140,6 +145,7 @@ public final class Chart extends AndroidViewComponent {
 
 //    lineChart.setData(data);
     lineChart.setData(new LineData());
+    lineSet = new HashMap<String,Integer>();
     lineChart.animateY(animateSpeed);
 
 
@@ -274,7 +280,7 @@ public final class Chart extends AndroidViewComponent {
   public void ElementsFromString(String itemstring) {
   }
   
-  private LineDataSet createSet() {
+  private LineDataSet createSet(String line) {
 
       LineDataSet set = new LineDataSet(null, "DataSet 1");
       set.setLineWidth(2.5f);
@@ -291,28 +297,28 @@ public final class Chart extends AndroidViewComponent {
    * --
    * @param --
    */
-  @SimpleProperty(description="The data elements specified as a string with the " +
+  @SimpleFunction(description="The data elements specified as a string with the " +
       "items separated by commas such as: 1,2,8,4,3,10,5. " + 
 	  "Each number before the comma will be a datapoint " + 
-      "on the chart.",  category = PropertyCategory.BEHAVIOR)
-  public void AddSingleData(float datapoint) {
+      "on the chart.")
+  public void AddSingleData(String line, float datapoint) {
 	  testview.setText(String.valueOf(datapoint));	
+	  
       LineData data = lineChart.getData();
       ILineDataSet set = data.getDataSetByIndex(0);
 
-      if (set == null) {
-          set = createSet();
+      if ((set == null)||(!lineSet.keySet().contains(line))) {
+          lineSet.put(line, lineSet.keySet().size());
+          set = createSet(line);
           data.addDataSet(set);
       }
-
-      // choose a random dataSet
-      int randomDataSetIndex = (int) (Math.random() * data.getDataSetCount());
       
       //testview.setText(String.valueOf(data.getDataSetByIndex(randomDataSetIndex).getEntryCount()));
 	  testview.setText("*"+String.valueOf(datapoint));
+	  testview.setText("line:"+lineSet.toString()+" index:"+lineSet.get(line));
 
-      data.addEntry(new Entry(datapoint, data.getDataSetByIndex(randomDataSetIndex).getEntryCount()), randomDataSetIndex);
-      data.addXValue(String.valueOf(data.getDataSetByIndex(randomDataSetIndex).getEntryCount()));
+      data.addEntry(new Entry(datapoint, data.getDataSetByIndex(lineSet.get(line)).getEntryCount()), lineSet.get(line));
+      data.addXValue(String.valueOf(data.getDataSetByIndex(lineSet.get(line)).getEntryCount()));
       data.notifyDataChanged();
       lineChart.setData(data);
 
