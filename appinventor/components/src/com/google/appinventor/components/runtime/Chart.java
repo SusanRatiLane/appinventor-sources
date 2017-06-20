@@ -278,6 +278,12 @@ public final class Chart extends AndroidViewComponent {
 	  "Each number before the comma will be a datapoint " + 
       "on the chart.",  category = PropertyCategory.BEHAVIOR)
   public void ElementsFromString(String itemstring) {
+	  if (itemstring != "") {
+		  String[] itemArray = itemstring.split(",");
+		  for (int i=1; i<itemArray.length; i++) {
+			  AddSingleData(itemArray[0],Float.valueOf(itemArray[i]));
+		  }  
+	  }  
   }
   
   private LineDataSet createSet(String line) {
@@ -301,24 +307,28 @@ public final class Chart extends AndroidViewComponent {
       "items separated by commas such as: 1,2,8,4,3,10,5. " + 
 	  "Each number before the comma will be a datapoint " + 
       "on the chart.")
-  public void AddSingleData(String line, float datapoint) {
-	  testview.setText(String.valueOf(datapoint));	
+  public void AddSingleData(String series, float datapoint) {
+	  //testview.setText(String.valueOf(datapoint));	
 	  
       LineData data = lineChart.getData();
       ILineDataSet set = data.getDataSetByIndex(0);
 
-      if ((set == null)||(!lineSet.keySet().contains(line))) {
-          lineSet.put(line, lineSet.keySet().size());
-          set = createSet(line);
+      if ((set == null)||(!lineSet.keySet().contains(series))) {
+          lineSet.put(series, lineSet.keySet().size());
+          set = createSet(series);
           data.addDataSet(set);
+          testview.setText("data was null");
+      }
+      
+      if (!data.getXVals().contains(String.valueOf(data.getDataSetByIndex(lineSet.get(series)).getEntryCount()))) {
+          data.addXValue(String.valueOf(data.getDataSetByIndex(lineSet.get(series)).getEntryCount()));
       }
       
       //testview.setText(String.valueOf(data.getDataSetByIndex(randomDataSetIndex).getEntryCount()));
-	  testview.setText("*"+String.valueOf(datapoint));
-	  testview.setText("line:"+lineSet.toString()+" index:"+lineSet.get(line));
+	  //testview.setText("*"+String.valueOf(datapoint));
+	  //testview.setText("line:"+lineSet.toString()+" index:"+lineSet.get(line));
 
-      data.addEntry(new Entry(datapoint, data.getDataSetByIndex(lineSet.get(line)).getEntryCount()), lineSet.get(line));
-      data.addXValue(String.valueOf(data.getDataSetByIndex(lineSet.get(line)).getEntryCount()));
+      data.addEntry(new Entry(datapoint, data.getDataSetByIndex(lineSet.get(series)).getEntryCount()), lineSet.get(series));
       data.notifyDataChanged();
       lineChart.setData(data);
 
@@ -331,6 +341,40 @@ public final class Chart extends AndroidViewComponent {
 //          // this automatically refreshes the chart (calls invalidate())
       lineChart.moveViewTo(data.getXValCount() - 7, 50f, AxisDependency.LEFT);
 	  
+  }
+  
+  /**
+   * --
+   * @param --
+   */
+  @SimpleFunction(description="The data elements specified as a string with the " +
+      "items separated by commas such as: 1,2,8,4,3,10,5. " + 
+	  "Each number before the comma will be a datapoint " + 
+      "on the chart.")
+  public void AddStringData(String series, String itemstring) {
+	  if (itemstring != "") {
+		  String[] itemArray = itemstring.split(",");
+		  for (int i=0; i<itemArray.length; i++) {
+			  AddSingleData(series,Float.valueOf(itemArray[i]));
+		  }  
+	  }  
+  }
+  
+  /**
+   * --
+   * @param --
+   */
+  @SimpleFunction(description="The data elements specified as a string with the " +
+      "items separated by commas such as: 1,2,8,4,3,10,5. " + 
+	  "Each number before the comma will be a datapoint " + 
+      "on the chart.")
+  public void AddListData(String series, YailList itemlist) {
+	  Object[] listData = itemlist.toArray();
+	  if (listData.length > 0) {
+		  for (int i=0; i<listData.length; i++) {
+			  AddSingleData(series,Float.valueOf(listData[i].toString()));
+		  }  
+	  }  
   }
  
   /**
