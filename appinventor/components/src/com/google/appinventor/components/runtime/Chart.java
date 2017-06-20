@@ -286,9 +286,9 @@ public final class Chart extends AndroidViewComponent {
 	  }  
   }
   
-  private LineDataSet createSet(String line) {
+  private LineDataSet createSet(String series) {
 
-      LineDataSet set = new LineDataSet(null, "DataSet 1");
+      LineDataSet set = new LineDataSet(null, series);
       set.setLineWidth(2.5f);
       set.setCircleRadius(4.5f);
       set.setColor(Color.rgb(240, 99, 99));
@@ -312,16 +312,31 @@ public final class Chart extends AndroidViewComponent {
 	  
       LineData data = lineChart.getData();
       ILineDataSet set = data.getDataSetByIndex(0);
+      
+      if (data == null) {
+          testview.setText("data was null" + System.currentTimeMillis());
+      }
+      if (set == null) {
+    	  lineSet.put(series, lineSet.keySet().size());
+          set = createSet(series);
+          data.addDataSet(set);
+          testview.setText("set was null" + System.currentTimeMillis());
+          testview.setText(set.getLabel());
+          testview.setText("dictionary:"+lineSet.toString()+" Series dict:"+String.valueOf(lineSet.get(series))+ " Data at index:"+data.getDataSetByIndex(lineSet.get(series)));
 
-      if ((set == null)||(!lineSet.keySet().contains(series))) {
+      }
+      if (!lineSet.keySet().contains(series)) {
           lineSet.put(series, lineSet.keySet().size());
           set = createSet(series);
           data.addDataSet(set);
-          testview.setText("data was null");
+          testview.setText("series was new" + System.currentTimeMillis());
       }
       
+//String.valueOf(data.getDataSetByIndex(lineSet.get(series)).getEntryCount()));
       if (!data.getXVals().contains(String.valueOf(data.getDataSetByIndex(lineSet.get(series)).getEntryCount()))) {
           data.addXValue(String.valueOf(data.getDataSetByIndex(lineSet.get(series)).getEntryCount()));
+          testview.setText("safe" + System.currentTimeMillis());
+
       }
       
       //testview.setText(String.valueOf(data.getDataSetByIndex(randomDataSetIndex).getEntryCount()));
@@ -335,7 +350,7 @@ public final class Chart extends AndroidViewComponent {
       // let the chart know it's data has changed
       lineChart.notifyDataSetChanged();
 
-      lineChart.setVisibleXRangeMaximum(6);
+      //lineChart.setVisibleXRangeMaximum(6);
       //mChart.setVisibleYRangeMaximum(15, AxisDependency.LEFT);
 //          
 //          // this automatically refreshes the chart (calls invalidate())
@@ -375,8 +390,29 @@ public final class Chart extends AndroidViewComponent {
 			  AddSingleData(series,Float.valueOf(listData[i].toString()));
 		  }  
 	  }  
+	  
   }
- 
+  
+  /**
+   * --
+   * @param --
+   */
+  @SimpleFunction(description="The data elements specified as a string with the " +
+      "items separated by commas such as: 1,2,8,4,3,10,5. " + 
+	  "Each number before the comma will be a datapoint " + 
+      "on the chart.")
+  public void ClearAllData() {
+	  LineData data = lineChart.getData();
+      data.clearValues();
+      lineSet.clear();
+	  lineChart.invalidate();
+      lineChart.setData(new LineData());
+
+	  // let the chart know it's data has changed
+	  lineChart.invalidate();
+	 
+  }
+  
   /**
    * Sets the items of the ListView through an adapter
    */
