@@ -34,6 +34,7 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -61,7 +62,7 @@ public final class Chart extends AndroidViewComponent {
   private final TextView testview;
   private LineData data;
   private ILineDataSet set;
-  private Map<String,Integer> lineSet;
+  private Map<String,ILineDataSet> lineSet;
 
   // The adapter contains spannables rather than strings, since we will be changing the item
   // colors using ForegroundColorSpan
@@ -145,7 +146,7 @@ public final class Chart extends AndroidViewComponent {
 
 //    lineChart.setData(data);
     lineChart.setData(new LineData());
-    lineSet = new HashMap<String,Integer>();
+    lineSet = new HashMap<String,ILineDataSet>();
     lineChart.animateY(animateSpeed);
 
 
@@ -312,14 +313,16 @@ public final class Chart extends AndroidViewComponent {
       testview.setText("inside");
       
       if (!lineSet.keySet().contains(series)) {
-          lineSet.put(series, lineSet.keySet().size());
-          set = createSet(series);
+    	  set = createSet(series);
           data.addDataSet(set);
+    	  lineSet.put(series, data.getDataSetByLabel(series, true));
+    	  
       }
-      if (!data.getXVals().contains(String.valueOf(data.getDataSetByIndex(lineSet.get(series)).getEntryCount()))) {
-          data.addXValue(String.valueOf(data.getDataSetByIndex(lineSet.get(series)).getEntryCount()));
+      if (!data.getXVals().contains(String.valueOf(lineSet.get(series).getEntryCount()))) {
+          data.addXValue(String.valueOf(lineSet.get(series).getEntryCount()));
       }
-      data.addEntry(new Entry(datapoint, data.getDataSetByIndex(lineSet.get(series)).getEntryCount()), lineSet.get(series));
+      set = lineSet.get(series);
+      set.addEntry(new Entry(datapoint, lineSet.get(series).getEntryCount()));
       data.notifyDataChanged();
       lineChart.setData(data);
 
@@ -398,7 +401,7 @@ public final class Chart extends AndroidViewComponent {
       "on the chart.")
   public void ClearLineData(String series) {
 	  LineData data = lineChart.getData();
-	  data.getDataSetByIndex(lineSet.get(series)).clear();
+	  data.getDataSetByLabel(series, true).clear();
       lineSet.remove(series);
 	  lineChart.invalidate();
   }
