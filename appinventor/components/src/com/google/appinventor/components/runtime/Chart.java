@@ -407,6 +407,45 @@ public final class Chart extends AndroidViewComponent {
   }
   
   /**
+   * --
+   * @param --
+   */
+  @SimpleFunction(description="The data elements specified as a string with the " +
+      "items separated by commas such as: 1,2,8,4,3,10,5. " + 
+	  "Each number before the comma will be a datapoint " + 
+      "on the chart.")
+  public void SetListData(String series, YailList itemlist) {
+	  ClearLineData(series);
+	  AddListData(series,itemlist);
+  }
+  
+  /**
+   * --
+   * @param --
+   */
+  @SimpleFunction(description="The data elements specified as a string with the " +
+      "items separated by commas such as: 1,2,8,4,3,10,5. " + 
+	  "Each number before the comma will be a datapoint " + 
+      "on the chart.")
+  public void SetStringData(String series, String itemstring) {
+	  ClearLineData(series);
+	  AddStringData(series,itemstring);
+  }
+  
+  /**
+   * --
+   * @param --
+   */
+  @SimpleFunction(description="The data elements specified as a string with the " +
+      "items separated by commas such as: 1,2,8,4,3,10,5. " + 
+	  "Each number before the comma will be a datapoint " + 
+      "on the chart.")
+  public void SetSingleData(String series, float datapoint) {
+	  ClearLineData(series);
+	  AddSingleData(series,datapoint);
+  }
+  
+  /**
    * Sets the items of the ListView through an adapter
    */
   public void setAdapterData(){
