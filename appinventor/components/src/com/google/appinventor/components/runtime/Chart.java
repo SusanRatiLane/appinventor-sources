@@ -307,42 +307,18 @@ public final class Chart extends AndroidViewComponent {
       "items separated by commas such as: 1,2,8,4,3,10,5. " + 
 	  "Each number before the comma will be a datapoint " + 
       "on the chart.")
-  public void AddSingleData(String series, float datapoint) {
-	  //testview.setText(String.valueOf(datapoint));	
-	  
+  public void AddSingleData(String series, float datapoint) {	  
       LineData data = lineChart.getData();
-      ILineDataSet set = data.getDataSetByIndex(0);
+      testview.setText("inside");
       
-      if (data == null) {
-          testview.setText("data was null" + System.currentTimeMillis());
-      }
-      if (set == null) {
-    	  lineSet.put(series, lineSet.keySet().size());
-          set = createSet(series);
-          data.addDataSet(set);
-          testview.setText("set was null" + System.currentTimeMillis());
-          testview.setText(set.getLabel());
-          testview.setText("dictionary:"+lineSet.toString()+" Series dict:"+String.valueOf(lineSet.get(series))+ " Data at index:"+data.getDataSetByIndex(lineSet.get(series)));
-
-      }
       if (!lineSet.keySet().contains(series)) {
           lineSet.put(series, lineSet.keySet().size());
           set = createSet(series);
           data.addDataSet(set);
-          testview.setText("series was new" + System.currentTimeMillis());
       }
-      
-//String.valueOf(data.getDataSetByIndex(lineSet.get(series)).getEntryCount()));
       if (!data.getXVals().contains(String.valueOf(data.getDataSetByIndex(lineSet.get(series)).getEntryCount()))) {
           data.addXValue(String.valueOf(data.getDataSetByIndex(lineSet.get(series)).getEntryCount()));
-          testview.setText("safe" + System.currentTimeMillis());
-
       }
-      
-      //testview.setText(String.valueOf(data.getDataSetByIndex(randomDataSetIndex).getEntryCount()));
-	  //testview.setText("*"+String.valueOf(datapoint));
-	  //testview.setText("line:"+lineSet.toString()+" index:"+lineSet.get(line));
-
       data.addEntry(new Entry(datapoint, data.getDataSetByIndex(lineSet.get(series)).getEntryCount()), lineSet.get(series));
       data.notifyDataChanged();
       lineChart.setData(data);
@@ -410,7 +386,21 @@ public final class Chart extends AndroidViewComponent {
 
 	  // let the chart know it's data has changed
 	  lineChart.invalidate();
-	 
+  }
+  
+  /**
+   * --
+   * @param --
+   */
+  @SimpleFunction(description="The data elements specified as a string with the " +
+      "items separated by commas such as: 1,2,8,4,3,10,5. " + 
+	  "Each number before the comma will be a datapoint " + 
+      "on the chart.")
+  public void ClearLineData(String series) {
+	  LineData data = lineChart.getData();
+	  data.getDataSetByIndex(lineSet.get(series)).clear();
+      lineSet.remove(series);
+	  lineChart.invalidate();
   }
   
   /**
