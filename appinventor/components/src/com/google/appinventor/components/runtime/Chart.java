@@ -27,7 +27,9 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -393,6 +395,24 @@ public final class Chart extends AndroidViewComponent {
   public void SetSingleData(String series, float datapoint) {
 	  ClearLineData(series);
 	  AddSingleData(series,datapoint);
+  }
+  
+  /**
+   * --
+   * @param --
+   */
+  @SimpleFunction(description="")
+  public YailList GetSeries() {
+	  data = lineChart.getData();
+	  List<ILineDataSet> setList = data.getDataSets();
+	  List<String> temp = new ArrayList<String>();
+	  
+	  for (int i = 0; i < setList.size(); i++) {
+		  temp.add(setList.get(i).getLabel());
+	  }
+	  testview.setText(temp.toString());
+	  YailList series = YailList.makeList(temp);
+	  return series;
   }
   
   /**
