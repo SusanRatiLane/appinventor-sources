@@ -34,6 +34,7 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BaseDataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -237,7 +238,7 @@ public final class Chart extends AndroidViewComponent {
    */
   @SimpleProperty(category = PropertyCategory.BEHAVIOR,
       description = "Returns current state of ShowChart for visibility.")
-  public boolean ShowChart() {
+  public boolean ShowLegend() {
     return showLegend;
   }
 
@@ -394,6 +395,21 @@ public final class Chart extends AndroidViewComponent {
 	  ClearLineData(series);
 	  AddSingleData(series,datapoint);
   }
+  
+  /**
+   * --
+   * @param --
+   */
+  @SimpleFunction(description="The data elements specified as a string with the " +
+      "items separated by commas such as: 1,2,8,4,3,10,5. " + 
+	  "Each number before the comma will be a datapoint " + 
+      "on the chart.")
+  public void SetSeriesColor(String series, int color) {
+	  LineDataSet colorSet = (LineDataSet)lineSet.get(series);
+	  colorSet.setColor(color);
+	  colorSet.setCircleColor(color);
+	  lineChart.invalidate();
+  }
 
   /**
    * Assigns a value to the backgroundColor
@@ -494,5 +510,6 @@ public void TextSize(int fontSize) {
     else
       textSize = fontSize;
 }
+
 
 }
