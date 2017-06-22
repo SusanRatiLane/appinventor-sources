@@ -431,6 +431,16 @@ public final class Chart extends AndroidViewComponent {
 	  fillSet.setFillColor(color);
 	  lineChart.invalidate();
   }
+  
+  /**
+   * --
+   * @param --
+   */
+  @SimpleFunction(description="")
+  public int GetSeriesFill(String series) {
+	  LineDataSet colorSet = (LineDataSet)lineSet.get(series);
+	  return colorSet.getFillColor();
+  }
 
   /**
    * Assigns a value to the backgroundColor
