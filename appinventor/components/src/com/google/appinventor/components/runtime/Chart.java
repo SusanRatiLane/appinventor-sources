@@ -70,7 +70,6 @@ public final class Chart extends AndroidViewComponent {
   private YailList items;
   private int selectionIndex;
   private String selection;
-  private boolean showChart= true;
   private static final boolean DEFAULT_ENABLED = false;
 
   private int backgroundColor;
@@ -100,7 +99,7 @@ public final class Chart extends AndroidViewComponent {
   boolean rightYGrid = false;
   boolean rightYLabels = false;
   boolean pointLabels = false;
-  boolean showLegend = false;
+  boolean showLegend = true;
   String chartDescription = "";
 
   /**
@@ -226,14 +225,10 @@ public final class Chart extends AndroidViewComponent {
       defaultValue = DEFAULT_ENABLED ? "True" : "False")
   @SimpleProperty(description = "Sets visibility of Chart. True will show the chart, " +
       "False will hide it.")
-  public void ShowChart(boolean showChart) {
-    this.showChart = showChart;
-    if (showChart) {
-      lineChart.setVisibility(View.VISIBLE);
-    }
-    else {
-      lineChart.setVisibility(View.GONE);
-    }
+  public void ShowLegend(boolean showLegend) {
+    this.showLegend = showLegend;
+    Legend chartLegend = lineChart.getLegend();
+    chartLegend.setEnabled(showLegend);
   }
 
   /**
@@ -243,7 +238,7 @@ public final class Chart extends AndroidViewComponent {
   @SimpleProperty(category = PropertyCategory.BEHAVIOR,
       description = "Returns current state of ShowChart for visibility.")
   public boolean ShowChart() {
-    return showChart;
+    return showLegend;
   }
 
   private LineDataSet createSet(String series) {
