@@ -161,7 +161,7 @@ public final class Chart extends AndroidViewComponent {
 
     Legend chartLegend = lineChart.getLegend();
     chartLegend.setEnabled(showLegend);
-
+    
     lineChart.setDescription(chartDescription);
     	
     // set the colors and initialize the elements
@@ -320,7 +320,6 @@ public final class Chart extends AndroidViewComponent {
 			  AddSingleData(series,Float.valueOf(listData[i].toString()));
 		  }  
 	  }  
-	  
   }
   
   /**
@@ -400,14 +399,36 @@ public final class Chart extends AndroidViewComponent {
    * --
    * @param --
    */
-  @SimpleFunction(description="The data elements specified as a string with the " +
-      "items separated by commas such as: 1,2,8,4,3,10,5. " + 
-	  "Each number before the comma will be a datapoint " + 
-      "on the chart.")
+  @SimpleFunction(description="")
   public void SetSeriesColor(String series, int color) {
 	  LineDataSet colorSet = (LineDataSet)lineSet.get(series);
 	  colorSet.setColor(color);
 	  colorSet.setCircleColor(color);
+	  lineChart.invalidate();
+  }
+  
+  /**
+   * --
+   * @param --
+   */
+  @SimpleFunction(description="")
+  public int GetSeriesColor(String series) {
+	  LineDataSet colorSet = (LineDataSet)lineSet.get(series);
+	  return colorSet.getColor();
+  }
+  
+  /**
+   * --
+   * @param --
+   */
+  @SimpleFunction(description="The data elements specified as a string with the " +
+      "items separated by commas such as: 1,2,8,4,3,10,5. " + 
+	  "Each number before the comma will be a datapoint " + 
+      "on the chart.")
+  public void SetSeriesFill(String series, boolean fill, int color) {
+	  LineDataSet fillSet = (LineDataSet)lineSet.get(series);
+	  fillSet.setDrawFilled(fill);
+	  fillSet.setFillColor(color);
 	  lineChart.invalidate();
   }
 
