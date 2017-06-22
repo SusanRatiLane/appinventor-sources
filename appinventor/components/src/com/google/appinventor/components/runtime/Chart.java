@@ -34,7 +34,6 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -176,7 +175,6 @@ public final class Chart extends AndroidViewComponent {
     TextColor(textColor);
     textSize = DEFAULT_TEXT_SIZE;
     TextSize(textSize);
-    ElementsFromString("");
 
     chartLayout.addView(lineChart);
     testview.setText("Testing");
@@ -248,45 +246,6 @@ public final class Chart extends AndroidViewComponent {
     return showChart;
   }
 
-  /**
-   * Set a list of text elements to build a lineChart
-   * @param itemsList a YailList containing the data to be added to the lineChart
-   */
-  @SimpleProperty(description="List of text elements to show in the lineChart",
-      category = PropertyCategory.BEHAVIOR)
-  public void Elements(YailList itemsList) {
-    items = ElementsUtil.elements(itemsList, "Chart");
-    setAdapterData();
-  }
-
-  /**
-   * Elements property getter method
-   *
-   * @return a YailList representing the list of strings to be picked from
-   */
-  @SimpleProperty(category = PropertyCategory.BEHAVIOR)
-  public YailList Elements() {
-    return items;
-  }
-
-  /**
-   * Specifies the text elements of the lineChart.
-   * @param itemstring a string containing a comma-separated list of the strings to be picked from
-   */
-  @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_STRING, defaultValue = "")
-  @SimpleProperty(description="The data elements specified as a string with the " +
-      "items separated by commas such as: 1,2,8,4,3,10,5. " + 
-	  "Each number before the comma will be a datapoint " + 
-      "on the chart.",  category = PropertyCategory.BEHAVIOR)
-  public void ElementsFromString(String itemstring) {
-	  if (itemstring != "") {
-		  String[] itemArray = itemstring.split(",");
-		  for (int i=1; i<itemArray.length; i++) {
-			  AddSingleData(itemArray[0],Float.valueOf(itemArray[i]));
-		  }  
-	  }  
-  }
-  
   private LineDataSet createSet(String series) {
 
       LineDataSet set = new LineDataSet(null, series);
@@ -309,7 +268,7 @@ public final class Chart extends AndroidViewComponent {
 	  "Each number before the comma will be a datapoint " + 
       "on the chart.")
   public void AddSingleData(String series, float datapoint) {	  
-      LineData data = lineChart.getData();
+      data = lineChart.getData();
       testview.setText("inside");
       
       if (!lineSet.keySet().contains(series)) {
@@ -329,10 +288,6 @@ public final class Chart extends AndroidViewComponent {
       // let the chart know it's data has changed
       lineChart.notifyDataSetChanged();
 
-      //lineChart.setVisibleXRangeMaximum(6);
-      //mChart.setVisibleYRangeMaximum(15, AxisDependency.LEFT);
-//          
-//          // this automatically refreshes the chart (calls invalidate())
       lineChart.moveViewTo(data.getXValCount() - 7, 50f, AxisDependency.LEFT);
 	  
   }
@@ -381,7 +336,7 @@ public final class Chart extends AndroidViewComponent {
 	  "Each number before the comma will be a datapoint " + 
       "on the chart.")
   public void ClearAllData() {
-	  LineData data = lineChart.getData();
+	  data = lineChart.getData();
       data.clearValues();
       lineSet.clear();
 	  lineChart.invalidate();
@@ -400,7 +355,7 @@ public final class Chart extends AndroidViewComponent {
 	  "Each number before the comma will be a datapoint " + 
       "on the chart.")
   public void ClearLineData(String series) {
-	  LineData data = lineChart.getData();
+	  data = lineChart.getData();
 	  data.getDataSetByLabel(series, true).clear();
       lineSet.remove(series);
 	  lineChart.invalidate();
@@ -443,18 +398,6 @@ public final class Chart extends AndroidViewComponent {
   public void SetSingleData(String series, float datapoint) {
 	  ClearLineData(series);
 	  AddSingleData(series,datapoint);
-  }
-  
-  /**
-   * Sets the items of the ListView through an adapter
-   */
-  public void setAdapterData(){
-//    int size = items.size();
-//    int displayTextSize = textSize;
-//    Spannable [] objects = new Spannable[size];
-//    for (int i = 1; i <= size; i++) {
-//	      String itemString = YailList.YailListElementToString(items.get(i));
-//    }
   }
 
   /**
@@ -526,7 +469,9 @@ public int TextColor() {
 @SimpleProperty
 public void TextColor(int argb) {
     textColor = argb;
-    setAdapterData();
+    lineChart.getAxisLeft().setTextColor(textColor);
+    lineChart.getXAxis().setTextColor(textColor);
+    lineChart.getLegend().setTextColor(textColor);
 }
 /**
  * Returns the listview's text font Size
@@ -553,6 +498,6 @@ public void TextSize(int fontSize) {
       textSize = 999;
     else
       textSize = fontSize;
-    setAdapterData();
 }
+
 }
