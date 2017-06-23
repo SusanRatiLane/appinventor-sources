@@ -353,8 +353,13 @@ public final class Chart extends AndroidViewComponent {
       "on the chart.")
   public void ClearLineData(String series) {
 	  data = lineChart.getData();
-	  data.getDataSetByLabel(series, true).clear();
+	  
+	  //*********************************************************************************
+	  //clear() methods does not seem to actually delete the dataset....
+	  //data.getDataSetByLabel(series, true).clear();
+	  data.removeDataSet(data.getDataSetByLabel(series, true));
       lineSet.remove(series);
+      testview.setText(lineSet.toString());
 	  lineChart.invalidate();
   }
   
@@ -367,7 +372,9 @@ public final class Chart extends AndroidViewComponent {
 	  "Each number before the comma will be a datapoint " + 
       "on the chart.")
   public void SetListData(String series, YailList itemlist) {
-	  ClearLineData(series);
+	  if (lineSet.containsKey(series)) {
+		  ClearLineData(series);
+	  }
 	  AddListData(series,itemlist);
   }
   
@@ -380,7 +387,9 @@ public final class Chart extends AndroidViewComponent {
 	  "Each number before the comma will be a datapoint " + 
       "on the chart.")
   public void SetStringData(String series, String itemstring) {
-	  ClearLineData(series);
+	  if (lineSet.containsKey(series)) {
+		  ClearLineData(series);
+	  }
 	  AddStringData(series,itemstring);
   }
   
@@ -393,7 +402,9 @@ public final class Chart extends AndroidViewComponent {
 	  "Each number before the comma will be a datapoint " + 
       "on the chart.")
   public void SetSingleData(String series, float datapoint) {
-	  ClearLineData(series);
+	  if (lineSet.containsKey(series)) {
+		  ClearLineData(series);
+	  }
 	  AddSingleData(series,datapoint);
   }
   
@@ -410,7 +421,7 @@ public final class Chart extends AndroidViewComponent {
 	  for (int i = 0; i < setList.size(); i++) {
 		  temp.add(setList.get(i).getLabel());
 	  }
-	  testview.setText(temp.toString());
+	  testview.setText(testview.getText()+temp.toString());
 	  YailList series = YailList.makeList(temp);
 	  return series;
   }
