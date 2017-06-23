@@ -7,6 +7,7 @@
 package com.google.appinventor.components.runtime;
 
 import android.text.Spannable;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import com.google.appinventor.components.annotations.DesignerComponent;
@@ -62,6 +63,10 @@ public final class Chart extends AndroidViewComponent {
   private final RelativeLayout chartLayout;
   private LineChart lineChart;
   private final TextView testview;
+  private final TextView title;
+  private final TextView yaxis;
+  private final TextView xaxis;
+  
   private LineData data;
   private ILineDataSet set;
   private Map<String,ILineDataSet> lineSet;
@@ -124,7 +129,10 @@ public final class Chart extends AndroidViewComponent {
             ViewGroup.LayoutParams.MATCH_PARENT));
     
     testview = new TextView(container.$context());
-
+    title = new TextView(container.$context());
+    yaxis = new TextView(container.$context());
+    xaxis = new TextView(container.$context());
+    
     // enable / disable grid background
     lineChart.setDrawGridBackground(false);
 
@@ -180,6 +188,32 @@ public final class Chart extends AndroidViewComponent {
     chartLayout.addView(lineChart);
     testview.setText("Testing");
     chartLayout.addView(testview);
+    
+    title.setText("Title");
+    title.setLayoutParams(new ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT));
+    title.setGravity(Gravity.CENTER);
+    title.setTextColor(Color.BLACK);
+    
+    yaxis.setText("YAxis");
+    yaxis.setRotation(-95);
+    yaxis.setLayoutParams(new ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.MATCH_PARENT));
+    yaxis.setGravity(Gravity.RIGHT | Gravity.CENTER_VERTICAL);
+    yaxis.setTextColor(Color.BLACK);
+    
+    xaxis.setText("XAxis");
+    xaxis.setLayoutParams(new ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT));
+    xaxis.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+    xaxis.setTextColor(Color.BLACK);
+    
+    chartLayout.addView(title);
+    chartLayout.addView(yaxis);
+    chartLayout.addView(xaxis);
     container.$add(this);
     
   }
@@ -279,9 +313,9 @@ public final class Chart extends AndroidViewComponent {
       LineDataSet set = new LineDataSet(null, series);
       set.setLineWidth(2.5f);
       set.setCircleRadius(4.5f);
-      set.setColor(Color.rgb(240, 99, 99));
-      set.setCircleColor(Color.rgb(240, 99, 99));
-      set.setHighLightColor(Color.rgb(190, 190, 190));
+      set.setColor(Color.rgb(0, 0, 0));
+      set.setCircleColor(Color.rgb(0, 0, 0));
+      set.setHighLightColor(Color.rgb(128, 128, 128));
       set.setAxisDependency(AxisDependency.LEFT);
       set.setValueTextSize(10f);
       set.setDrawValues(pointLabels);
