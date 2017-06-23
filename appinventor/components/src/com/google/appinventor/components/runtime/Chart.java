@@ -101,7 +101,7 @@ public final class Chart extends AndroidViewComponent {
   boolean leftYGrid = true;
   boolean rightYGrid = false;
   boolean rightYLabels = false;
-  boolean pointLabels = false;
+  boolean pointLabels;
   boolean showLegend;
   String chartDescription = "";
 
@@ -244,6 +244,35 @@ public final class Chart extends AndroidViewComponent {
     return showLegend;
   }
   
+  /**
+   *
+   * @param 
+   */
+  @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_BOOLEAN,
+      defaultValue = DEFAULT_ENABLED ? "True" : "False")
+  @SimpleProperty(description = "")
+  public void ShowPointLabels(boolean pointLabels) {
+    this.pointLabels = pointLabels;
+    
+    data = lineChart.getData();
+	List<ILineDataSet> setList = data.getDataSets();
+	  
+	for (int i = 0; i < setList.size(); i++) {
+		setList.get(i).setDrawValues(pointLabels);
+	}
+    
+    lineChart.invalidate();
+  }
+
+  /**
+   * 
+   * @return
+   */
+  @SimpleProperty(category = PropertyCategory.BEHAVIOR,
+      description = "")
+  public boolean ShowPointLabels() {
+    return pointLabels;
+  }
 
   private LineDataSet createSet(String series) {
 
