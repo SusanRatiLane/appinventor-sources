@@ -102,7 +102,7 @@ public final class Chart extends AndroidViewComponent {
   boolean rightYGrid = false;
   boolean rightYLabels = false;
   boolean pointLabels = false;
-  boolean showLegend = true;
+  boolean showLegend;
   String chartDescription = "";
 
   /**
@@ -143,7 +143,6 @@ public final class Chart extends AndroidViewComponent {
 
     // set an alternative background color
     lineChart.setBackgroundColor(Color.TRANSPARENT);
-
 
 //    lineChart.setData(data);
     lineChart.setData(new LineData());
@@ -232,6 +231,7 @@ public final class Chart extends AndroidViewComponent {
     this.showLegend = showLegend;
     Legend chartLegend = lineChart.getLegend();
     chartLegend.setEnabled(showLegend);
+    lineChart.invalidate();
   }
 
   /**
@@ -243,6 +243,7 @@ public final class Chart extends AndroidViewComponent {
   public boolean ShowLegend() {
     return showLegend;
   }
+  
 
   private LineDataSet createSet(String series) {
 
@@ -254,6 +255,7 @@ public final class Chart extends AndroidViewComponent {
       set.setHighLightColor(Color.rgb(190, 190, 190));
       set.setAxisDependency(AxisDependency.LEFT);
       set.setValueTextSize(10f);
+      set.setDrawValues(pointLabels);
       return set;
   }
   
