@@ -81,7 +81,7 @@ public final class Chart extends AndroidViewComponent {
   private static final boolean DEFAULT_ENABLED = false;
 
   private int backgroundColor;
-  private static final int DEFAULT_BACKGROUND_COLOR = Component.COLOR_NONE;
+  private static final int DEFAULT_BACKGROUND_COLOR = Component.COLOR_WHITE;
 
   // The text color of the ListView's items.  All items have the same text color
   private int textColor;
@@ -150,7 +150,7 @@ public final class Chart extends AndroidViewComponent {
     lineChart.setPinchZoom(pinchZoom);
 
     // set an alternative background color
-    lineChart.setBackgroundColor(Color.TRANSPARENT);
+    lineChart.setBackgroundColor(DEFAULT_BACKGROUND_COLOR);
 
 //    lineChart.setData(data);
     lineChart.setData(new LineData());
@@ -412,20 +412,22 @@ public final class Chart extends AndroidViewComponent {
    * --
    * @param --
    */
-  @SimpleFunction(description="The data elements specified as a string with the " +
-      "items separated by commas such as: 1,2,8,4,3,10,5. " + 
-	  "Each number before the comma will be a datapoint " + 
-      "on the chart.")
+  @SimpleFunction(description="")
   public void ClearLineData(String series) {
 	  data = lineChart.getData();
-	  
-	  //*********************************************************************************
-	  //clear() methods does not seem to actually delete the dataset....
-	  //data.getDataSetByLabel(series, true).clear();
 	  data.removeDataSet(data.getDataSetByLabel(series, true));
       lineSet.remove(series);
       testview.setText(lineSet.toString());
 	  lineChart.invalidate();
+  }
+  
+  /**
+   * --
+   * @param --
+   */
+  @SimpleFunction(description="")
+  public void ExportChart() {
+	  lineChart.saveToGallery("mychart-"+System.currentTimeMillis()+".jpg",100);
   }
   
   /**
@@ -572,7 +574,7 @@ public final class Chart extends AndroidViewComponent {
    * includes alpha, red, green, and blue components
    */
   @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_COLOR,
-      defaultValue = Component.DEFAULT_VALUE_COLOR_NONE)
+      defaultValue = Component.DEFAULT_VALUE_COLOR_WHITE)
   @SimpleProperty
   public void BackgroundColor(int argb) {
       backgroundColor = argb;
