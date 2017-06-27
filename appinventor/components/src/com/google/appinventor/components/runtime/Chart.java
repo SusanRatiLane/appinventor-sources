@@ -21,13 +21,28 @@ import com.google.appinventor.components.common.ComponentCategory;
 import com.google.appinventor.components.common.PropertyTypeConstants;
 import com.google.appinventor.components.common.YaVersion;
 import com.google.appinventor.components.runtime.util.ElementsUtil;
+import com.google.appinventor.components.runtime.util.ErrorMessages;
+import com.google.appinventor.components.runtime.util.FileUtil;
 import com.google.appinventor.components.runtime.util.YailList;
 
+import android.content.ContentValues;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Bitmap.CompressFormat;
+import android.graphics.drawable.Drawable;
+import android.os.Environment;
+import android.provider.MediaStore.Images;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -60,9 +75,8 @@ public final class Chart extends AndroidViewComponent {
   private static final String LOG_TAG = "Chart";
 
   protected final ComponentContainer container;
-  private final RelativeLayout chartLayout;
+  private final LinearLayout chartLayout;
   private LineChart lineChart;
-  private final TextView testview;
   private final TextView title;
   private final TextView yaxis;
   private final TextView xaxis;
@@ -118,20 +132,28 @@ public final class Chart extends AndroidViewComponent {
     super(container);
     this.container = container;
     items = YailList.makeEmptyList();
-    chartLayout = new RelativeLayout(container.$context());
-    chartLayout.setLayoutParams(new RelativeLayout.LayoutParams(
-    		ViewGroup.LayoutParams.MATCH_PARENT,
-    		ViewGroup.LayoutParams.MATCH_PARENT));
+    
+    title = new TextView(container.$context());
+    title.setId(1);
+    yaxis = new TextView(container.$context());
+    yaxis.setId(2);
+    xaxis = new TextView(container.$context());
+    xaxis.setId(3);
+    
+    chartLayout = new LinearLayout(container.$context());
+    chartLayout.setLayoutParams(new LinearLayout.LayoutParams(
+    		LinearLayout.LayoutParams.MATCH_PARENT,
+    		LinearLayout.LayoutParams.MATCH_PARENT));
+    chartLayout.setOrientation(LinearLayout.VERTICAL);
     
     lineChart = new LineChart(container.$context());
-    lineChart.setLayoutParams(new ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT));
-    
-    testview = new TextView(container.$context());
-    title = new TextView(container.$context());
-    yaxis = new TextView(container.$context());
-    xaxis = new TextView(container.$context());
+    lineChart.setId(4);
+    LinearLayout.LayoutParams lineChartParams = new LinearLayout.LayoutParams(
+            LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+    lineChartParams.weight = 1;
+    //lineChartParams.addRule(LinearLayout.ABOVE, xaxis.getId());
+    //lineChartParams.addRule(LinearLayout.RIGHT_OF, yaxis.getId());
+    //lineChartParams.addRule(LinearLayout.BELOW, title.getId());
     
     // enable / disable grid background
     lineChart.setDrawGridBackground(false);
@@ -184,36 +206,46 @@ public final class Chart extends AndroidViewComponent {
     TextColor(textColor);
     textSize = DEFAULT_TEXT_SIZE;
     TextSize(textSize);
-
-    chartLayout.addView(lineChart);
-    testview.setText("Testing");
-    chartLayout.addView(testview);
     
     title.setText("Title");
-    title.setLayoutParams(new ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT));
+    LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(
+            LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
     title.setGravity(Gravity.CENTER);
     title.setTextColor(Color.BLACK);
     
     yaxis.setText("YAxis");
     yaxis.setRotation(-95);
-    yaxis.setLayoutParams(new ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.MATCH_PARENT));
+    LinearLayout.LayoutParams yAxisParams = new LinearLayout.LayoutParams(
+            LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
+    yAxisParams.setMargins(0, 0, 0, 0);
+    //yaxis.setLayoutParams(yAxisParams);
     yaxis.setGravity(Gravity.RIGHT | Gravity.CENTER_VERTICAL);
     yaxis.setTextColor(Color.BLACK);
     
     xaxis.setText("XAxis");
-    xaxis.setLayoutParams(new ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT));
+    LinearLayout.LayoutParams xAxisParams = new LinearLayout.LayoutParams(
+            LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+    //xaxis.setLayoutParams(xAxisParams);
     xaxis.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
     xaxis.setTextColor(Color.BLACK);
+
+    LinearLayout horizLayout = new LinearLayout(container.$context());
+    LinearLayout.LayoutParams horizLayoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
+    horizLayout.setOrientation(LinearLayout.HORIZONTAL);
     
-    chartLayout.addView(title);
-    chartLayout.addView(yaxis);
-    chartLayout.addView(xaxis);
+    chartLayout.addView(title,titleParams);
+    chartLayout.addView(horizLayout,horizLayoutParams);
+    
+    LinearLayout vertLayout = new LinearLayout(container.$context());
+    LinearLayout.LayoutParams vertLayoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
+    vertLayout.setOrientation(LinearLayout.VERTICAL);
+    vertLayout.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+    
+    horizLayout.addView(yaxis,yAxisParams);
+    horizLayout.addView(vertLayout, vertLayoutParams);
+    
+    vertLayout.addView(lineChart,lineChartParams);
+    vertLayout.addView(xaxis,xAxisParams);
     container.$add(this);
     
   }
@@ -332,7 +364,6 @@ public final class Chart extends AndroidViewComponent {
       "on the chart.")
   public void AddSingleData(String series, float datapoint) {	  
       data = lineChart.getData();
-      testview.setText("inside");
       
       if (!lineSet.keySet().contains(series)) {
     	  set = createSet(series);
@@ -417,17 +448,7 @@ public final class Chart extends AndroidViewComponent {
 	  data = lineChart.getData();
 	  data.removeDataSet(data.getDataSetByLabel(series, true));
       lineSet.remove(series);
-      testview.setText(lineSet.toString());
 	  lineChart.invalidate();
-  }
-  
-  /**
-   * --
-   * @param --
-   */
-  @SimpleFunction(description="")
-  public void ExportChart() {
-	  lineChart.saveToGallery("mychart-"+System.currentTimeMillis()+".jpg",100);
   }
   
   /**
@@ -488,7 +509,6 @@ public final class Chart extends AndroidViewComponent {
 	  for (int i = 0; i < setList.size(); i++) {
 		  temp.add(setList.get(i).getLabel());
 	  }
-	  testview.setText(testview.getText()+temp.toString());
 	  YailList series = YailList.makeList(temp);
 	  return series;
   }
@@ -640,5 +660,168 @@ public void TextSize(int fontSize) {
       textSize = fontSize;
 }
 
+//Saving functionality borrowed from MPAndroidCharts
+/**
+ * Returns the bitmap that represents the chart.
+ *
+ * @return
+ */
+public Bitmap getChartBitmap() {
+    // Define a bitmap with the same size as the view
+    Bitmap returnedBitmap = Bitmap.createBitmap(chartLayout.getWidth(), chartLayout.getHeight(), Bitmap.Config.RGB_565);
+    // Bind a canvas to it
+    Canvas canvas = new Canvas(returnedBitmap);
+    // Get the view's background
+    Drawable bgDrawable = chartLayout.getBackground();
+    if (bgDrawable != null)
+        // has background drawable, then draw it on the canvas
+        bgDrawable.draw(canvas);
+    else
+        // does not have background drawable, then draw white background on
+        // the canvas
+        canvas.drawColor(Color.WHITE);
+    // draw the view on the canvas
+    chartLayout.draw(canvas);
+    // return the bitmap
+    return returnedBitmap;
+}
 
+/**
+ * Saves the current chart state with the given name to the given path on
+ * the sdcard leaving the path empty "" will put the saved file directly on
+ * the SD card chart is saved as a PNG image, example:
+ * saveToPath("myfilename", "foldername1/foldername2");
+ *
+ * @param title
+ * @param pathOnSD e.g. "folder1/folder2/folder3"
+ * @return returns true on success, false on error
+ */
+public boolean saveToPath(String title, String pathOnSD) {
+
+    Bitmap b = getChartBitmap();
+
+    OutputStream stream = null;
+    try {
+        stream = new FileOutputStream(Environment.getExternalStorageDirectory().getPath()
+                + pathOnSD + "/" + title
+                + ".png");
+
+        /*
+         * Write bitmap to file using JPEG or PNG and 40% quality hint for
+         * JPEG.
+         */
+        b.compress(CompressFormat.PNG, 40, stream);
+
+        stream.close();
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+    }
+
+    return true;
+}
+
+/**
+ * Saves the current state of the chart to the gallery as an image type. The
+ * compression must be set for JPEG only. 0 == maximum compression, 100 = low
+ * compression (high quality). NOTE: Needs permission WRITE_EXTERNAL_STORAGE
+ *
+ * @param fileName        e.g. "my_image"
+ * @param subFolderPath   e.g. "ChartPics"
+ * @param fileDescription e.g. "Chart details"
+ * @param format          e.g. Bitmap.CompressFormat.PNG
+ * @param quality         e.g. 50, min = 0, max = 100
+ * @return returns true if saving was successful, false if not
+ */
+public boolean saveToGallery(String fileName, String subFolderPath, String fileDescription, Bitmap.CompressFormat format, int quality) {
+    // restrain quality
+    if (quality < 0 || quality > 100)
+        quality = 50;
+
+    long currentTime = System.currentTimeMillis();
+
+    File extBaseDir = Environment.getExternalStorageDirectory();
+    File file = new File(extBaseDir.getAbsolutePath() + "/DCIM/" + subFolderPath);
+    if (!file.exists()) {
+        if (!file.mkdirs()) {
+            return false;
+        }
+    }
+
+    String mimeType = "";
+    switch (format) {
+        case PNG:
+            mimeType = "image/png";
+            if (!fileName.endsWith(".png"))
+                fileName += ".png";
+            break;
+        case WEBP:
+            mimeType = "image/webp";
+            if (!fileName.endsWith(".webp"))
+                fileName += ".webp";
+            break;
+        case JPEG:
+        default:
+            mimeType = "image/jpeg";
+            if (!(fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")))
+                fileName += ".jpg";
+            break;
+    }
+
+    String filePath = file.getAbsolutePath() + "/" + fileName;
+    FileOutputStream out = null;
+    try {
+        out = new FileOutputStream(filePath);
+
+        Bitmap b = getChartBitmap();
+        b.compress(format, quality, out);
+
+        out.flush();
+        out.close();
+
+    } catch (IOException e) {
+        e.printStackTrace();
+
+        return false;
+    }
+
+    long size = new File(filePath).length();
+
+    ContentValues values = new ContentValues(8);
+
+    // store the details
+    values.put(Images.Media.TITLE, fileName);
+    values.put(Images.Media.DISPLAY_NAME, fileName);
+    values.put(Images.Media.DATE_ADDED, currentTime);
+    values.put(Images.Media.MIME_TYPE, mimeType);
+    values.put(Images.Media.DESCRIPTION, fileDescription);
+    values.put(Images.Media.ORIENTATION, 0);
+    values.put(Images.Media.DATA, filePath);
+    values.put(Images.Media.SIZE, size);
+
+    return container.$context().getContentResolver().insert(Images.Media.EXTERNAL_CONTENT_URI, values) != null;
+}
+
+/**
+ * Saves the current state of the chart to the gallery as a JPEG image. The
+ * filename and compression can be set. 0 == maximum compression, 100 = low
+ * compression (high quality). NOTE: Needs permission WRITE_EXTERNAL_STORAGE
+ *
+ * @param fileName e.g. "my_image"
+ * @param quality  e.g. 50, min = 0, max = 100
+ * @return returns true if saving was successful, false if not
+ */
+public boolean saveToGallery(String fileName, int quality) {
+    return saveToGallery(fileName, "", "MPAndroidChart-Library Save", Bitmap.CompressFormat.JPEG, quality);
+}
+
+/**
+ * --
+ * @param --
+ */
+@SimpleFunction(description="")
+public void ExportChart() {
+	  //lineChart.saveToGallery("mychart-"+System.currentTimeMillis()+".jpg",100);
+	  saveToGallery("mychart-"+System.currentTimeMillis()+".jpg",100);
+}
 }
