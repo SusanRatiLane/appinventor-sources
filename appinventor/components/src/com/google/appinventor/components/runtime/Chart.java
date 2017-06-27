@@ -49,6 +49,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -122,8 +123,7 @@ public final class Chart extends AndroidViewComponent {
   boolean rightYLabels = false;
   boolean pointLabels;
   boolean showLegend;
-  String chartDescription = "";
-
+  Description chartDescription;
   /**
    * Creates a new Chart component.
    * @param container  container that the component will be placed in
@@ -193,8 +193,10 @@ public final class Chart extends AndroidViewComponent {
     Legend chartLegend = lineChart.getLegend();
     chartLegend.setEnabled(showLegend);
     
+    chartDescription = new Description();
+    chartDescription.setText("");
     lineChart.setDescription(chartDescription);
-    	
+    
     // set the colors and initialize the elements
     // note that the TextColor and ElementsFromString setters
     // need to have the textColor set first, since they reset the
@@ -354,6 +356,38 @@ public final class Chart extends AndroidViewComponent {
       return set;
   }
   
+//  /**
+//   * --
+//   * @param --
+//   */
+//  @SimpleFunction(description="The data elements specified as a string with the " +
+//      "items separated by commas such as: 1,2,8,4,3,10,5. " + 
+//	  "Each number before the comma will be a datapoint " + 
+//      "on the chart.")
+//  public void AddSingleData(String series, float datapoint) {	  
+//      data = lineChart.getData();
+//      
+//      if (!lineSet.keySet().contains(series)) {
+//    	  set = createSet(series);
+//          data.addDataSet(set);
+//    	  lineSet.put(series, data.getDataSetByLabel(series, true));
+//    	  
+//      }
+//      if (!data.getXVals().contains(String.valueOf(lineSet.get(series).getEntryCount()))) {
+//          data.addXValue(String.valueOf(lineSet.get(series).getEntryCount()));
+//      }
+//      set = lineSet.get(series);
+//      set.addEntry(new Entry(datapoint, lineSet.get(series).getEntryCount()));
+//      data.notifyDataChanged();
+//      lineChart.setData(data);
+//
+//      // let the chart know it's data has changed
+//      lineChart.notifyDataSetChanged();
+//
+//      lineChart.moveViewTo(data.getXValCount() - 7, 50f, AxisDependency.LEFT);
+//	  
+//  }
+  
   /**
    * --
    * @param --
@@ -362,28 +396,63 @@ public final class Chart extends AndroidViewComponent {
       "items separated by commas such as: 1,2,8,4,3,10,5. " + 
 	  "Each number before the comma will be a datapoint " + 
       "on the chart.")
-  public void AddSingleData(String series, float datapoint) {	  
-      data = lineChart.getData();
-      
+  public void AddXYData(String series, float x, float y) {	  
+	  data = lineChart.getData();
       if (!lineSet.keySet().contains(series)) {
     	  set = createSet(series);
           data.addDataSet(set);
     	  lineSet.put(series, data.getDataSetByLabel(series, true));
     	  
       }
-      if (!data.getXVals().contains(String.valueOf(lineSet.get(series).getEntryCount()))) {
-          data.addXValue(String.valueOf(lineSet.get(series).getEntryCount()));
-      }
+
       set = lineSet.get(series);
-      set.addEntry(new Entry(datapoint, lineSet.get(series).getEntryCount()));
+      Entry newEntry = new Entry(x, y);
+      
+      //Should not be allowed to have two entries with same x value. 
+      List<Entry> existingX = set.getEntriesForXValue(x);
+      if (existingX.size() > 0) {
+    	  for (int i=0; i<existingX.size(); i++) {
+    		  set.removeEntry(existingX.get(i));
+    	  }
+      }
+      set.addEntryOrdered(newEntry);
       data.notifyDataChanged();
       lineChart.setData(data);
-
-      // let the chart know it's data has changed
-      lineChart.notifyDataSetChanged();
-
-      lineChart.moveViewTo(data.getXValCount() - 7, 50f, AxisDependency.LEFT);
-	  
+      lineChart.invalidate(); 
+  }
+  
+  /**
+   * --
+   * @param --
+   */
+  @SimpleFunction(description="The data elements specified as a string with the " +
+      "items separated by commas such as: 1,2,8,4,3,10,5. " + 
+	  "Each number before the comma will be a datapoint " + 
+      "on the chart.")
+  public void AddSingleData(String series, float y) {	  
+	  data = lineChart.getData();
+      if (!lineSet.keySet().contains(series)) {
+    	  set = createSet(series);
+          data.addDataSet(set);
+    	  lineSet.put(series, data.getDataSetByLabel(series, true));
+    	  
+      }
+      set = lineSet.get(series);
+	  Entry newEntry = new Entry(set.getEntryCount(), y);
+      
+      //Should not be allowed to have two entries with same x value. 
+      //Look at getEntriesForXValue(float xValue) to find existing entries and 
+      //removeEntry(T e) them before addEntryOrdered(T e)
+      List<Entry> existingX = set.getEntriesForXValue(data.getEntryCount());
+      if (existingX.size() > 0) {
+    	  for (int i=0; i<existingX.size(); i++) {
+    		  set.removeEntry(existingX.get(i));
+    	  }
+      }
+      set.addEntryOrdered(newEntry);
+      data.notifyDataChanged();
+      lineChart.setData(data);
+      lineChart.invalidate(); 
   }
   
   /**
