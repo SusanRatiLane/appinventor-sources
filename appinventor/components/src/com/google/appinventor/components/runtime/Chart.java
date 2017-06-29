@@ -23,6 +23,7 @@ import com.google.appinventor.components.common.YaVersion;
 import com.google.appinventor.components.runtime.util.ElementsUtil;
 import com.google.appinventor.components.runtime.util.ErrorMessages;
 import com.google.appinventor.components.runtime.util.FileUtil;
+import com.google.appinventor.components.runtime.util.TextViewUtil;
 import com.google.appinventor.components.runtime.util.YailList;
 
 import android.content.ContentValues;
@@ -285,6 +286,69 @@ public final class Chart extends AndroidViewComponent {
     }
     super.Width(width);
   }
+  
+  /**
+   *
+   * @return  
+   */
+  @SimpleProperty(
+      category = PropertyCategory.APPEARANCE)
+  public String ChartTitle() {
+    return title.getText().toString();
+  }
+
+  /**
+   *
+   * @param
+   */
+  @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_STRING,
+      defaultValue = "")
+  @SimpleProperty
+  public void ChartTitle(String text) {
+	  title.setText(text);
+  }
+  
+  /**
+  *
+  * @return  
+  */
+ @SimpleProperty(
+     category = PropertyCategory.APPEARANCE)
+ public String ChartYLabel() {
+   return yaxis.getText().toString();
+ }
+
+ /**
+  *
+  * @param
+  */
+ @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_STRING,
+     defaultValue = "")
+ @SimpleProperty
+ public void ChartYLabel(String text) {
+	  yaxis.setText(text);
+ }
+ 
+ /**
+ *
+ * @return  
+ */
+@SimpleProperty(
+    category = PropertyCategory.APPEARANCE)
+public String ChartXLabel() {
+  return xaxis.getText().toString();
+}
+
+/**
+ *
+ * @param
+ */
+@DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_STRING,
+    defaultValue = "")
+@SimpleProperty
+public void ChartXLabel(String text) {
+	  xaxis.setText(text);
+}
 
   /**
    * Sets true or false to determine whether the chart is displayed
