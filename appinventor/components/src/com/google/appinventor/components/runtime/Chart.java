@@ -356,38 +356,6 @@ public final class Chart extends AndroidViewComponent {
       return set;
   }
   
-//  /**
-//   * --
-//   * @param --
-//   */
-//  @SimpleFunction(description="The data elements specified as a string with the " +
-//      "items separated by commas such as: 1,2,8,4,3,10,5. " + 
-//	  "Each number before the comma will be a datapoint " + 
-//      "on the chart.")
-//  public void AddSingleData(String series, float datapoint) {	  
-//      data = lineChart.getData();
-//      
-//      if (!lineSet.keySet().contains(series)) {
-//    	  set = createSet(series);
-//          data.addDataSet(set);
-//    	  lineSet.put(series, data.getDataSetByLabel(series, true));
-//    	  
-//      }
-//      if (!data.getXVals().contains(String.valueOf(lineSet.get(series).getEntryCount()))) {
-//          data.addXValue(String.valueOf(lineSet.get(series).getEntryCount()));
-//      }
-//      set = lineSet.get(series);
-//      set.addEntry(new Entry(datapoint, lineSet.get(series).getEntryCount()));
-//      data.notifyDataChanged();
-//      lineChart.setData(data);
-//
-//      // let the chart know it's data has changed
-//      lineChart.notifyDataSetChanged();
-//
-//      lineChart.moveViewTo(data.getXValCount() - 7, 50f, AxisDependency.LEFT);
-//	  
-//  }
-  
   /**
    * --
    * @param --
