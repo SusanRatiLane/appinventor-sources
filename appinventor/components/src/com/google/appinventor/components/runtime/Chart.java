@@ -87,13 +87,6 @@ public final class Chart extends AndroidViewComponent {
   private ILineDataSet set;
   private Map<String,ILineDataSet> lineSet;
 
-  // The adapter contains spannables rather than strings, since we will be changing the item
-  // colors using ForegroundColorSpan
-  private ArrayAdapter<Spannable> adapter;
-  private ArrayAdapter<Spannable> adapterCopy;
-  private YailList items;
-  private int selectionIndex;
-  private String selection;
   private static final boolean DEFAULT_ENABLED = false;
 
   private int backgroundColor;
@@ -101,10 +94,7 @@ public final class Chart extends AndroidViewComponent {
 
   // The text color of the ListView's items.  All items have the same text color
   private int textColor;
-  private static final int DEFAULT_TEXT_COLOR = Component.COLOR_WHITE;
-
-  private int selectionColor;
-  private static final int DEFAULT_SELECTION_COLOR = Component.COLOR_LTGRAY;
+  private static final int DEFAULT_TEXT_COLOR = Component.COLOR_BLACK;
 
   private int textSize;
   private static final int DEFAULT_TEXT_SIZE = 22;
@@ -125,6 +115,7 @@ public final class Chart extends AndroidViewComponent {
   boolean pointLabels;
   boolean showLegend;
   Description chartDescription;
+  Legend chartLegend;
   /**
    * Creates a new Chart component.
    * @param container  container that the component will be placed in
@@ -132,7 +123,6 @@ public final class Chart extends AndroidViewComponent {
   public Chart(ComponentContainer container) {
     super(container);
     this.container = container;
-    items = YailList.makeEmptyList();
     
     title = new TextView(container.$context());
     title.setId(1);
@@ -152,9 +142,6 @@ public final class Chart extends AndroidViewComponent {
     LinearLayout.LayoutParams lineChartParams = new LinearLayout.LayoutParams(
             LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
     lineChartParams.weight = 1;
-    //lineChartParams.addRule(LinearLayout.ABOVE, xaxis.getId());
-    //lineChartParams.addRule(LinearLayout.RIGHT_OF, yaxis.getId());
-    //lineChartParams.addRule(LinearLayout.BELOW, title.getId());
     
     // enable / disable grid background
     lineChart.setDrawGridBackground(false);
@@ -191,7 +178,7 @@ public final class Chart extends AndroidViewComponent {
     rightYAxis.setDrawGridLines(rightYGrid);
     rightYAxis.setEnabled(rightYLabels);
 
-    Legend chartLegend = lineChart.getLegend();
+    chartLegend = lineChart.getLegend();
     chartLegend.setEnabled(showLegend);
     
     chartDescription = new Description();
@@ -205,32 +192,28 @@ public final class Chart extends AndroidViewComponent {
     
     BackgroundColor(DEFAULT_BACKGROUND_COLOR);
 
-    textColor = DEFAULT_TEXT_COLOR;
-    TextColor(textColor);
+    //textColor = DEFAULT_TEXT_COLOR;
+    TextColor(DEFAULT_TEXT_COLOR);
     textSize = DEFAULT_TEXT_SIZE;
-    TextSize(textSize);
+    //TextSize(textSize);
     
     title.setText("Title");
     LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(
             LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
     title.setGravity(Gravity.CENTER);
-    title.setTextColor(Color.BLACK);
+    //title.setTextColor(textColor);
     
-    yaxis.setText("YAxis");
+    yaxis.setText("Y Axis");
     yaxis.setRotation(-95);
     LinearLayout.LayoutParams yAxisParams = new LinearLayout.LayoutParams(
             LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
     yAxisParams.setMargins(0, 0, 0, 0);
-    //yaxis.setLayoutParams(yAxisParams);
     yaxis.setGravity(Gravity.RIGHT | Gravity.CENTER_VERTICAL);
-    yaxis.setTextColor(Color.BLACK);
     
-    xaxis.setText("XAxis");
+    xaxis.setText("X Axis");
     LinearLayout.LayoutParams xAxisParams = new LinearLayout.LayoutParams(
             LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-    //xaxis.setLayoutParams(xAxisParams);
     xaxis.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
-    xaxis.setTextColor(Color.BLACK);
 
     LinearLayout horizLayout = new LinearLayout(container.$context());
     LinearLayout.LayoutParams horizLayoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
@@ -302,7 +285,7 @@ public final class Chart extends AndroidViewComponent {
    * @param
    */
   @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_STRING,
-      defaultValue = "")
+      defaultValue = "Title")
   @SimpleProperty
   public void ChartTitle(String text) {
 	  title.setText(text);
@@ -323,7 +306,7 @@ public final class Chart extends AndroidViewComponent {
   * @param
   */
  @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_STRING,
-     defaultValue = "")
+     defaultValue = "Y Axis")
  @SimpleProperty
  public void ChartYLabel(String text) {
 	  yaxis.setText(text);
@@ -344,7 +327,7 @@ public String ChartXLabel() {
  * @param
  */
 @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_STRING,
-    defaultValue = "")
+    defaultValue = "X Axis")
 @SimpleProperty
 public void ChartXLabel(String text) {
 	  xaxis.setText(text);
@@ -361,7 +344,7 @@ public void ChartXLabel(String text) {
       "False will hide it.")
   public void ShowLegend(boolean showLegend) {
     this.showLegend = showLegend;
-    Legend chartLegend = lineChart.getLegend();
+    chartLegend = lineChart.getLegend();
     chartLegend.setEnabled(showLegend);
     lineChart.invalidate();
   }
@@ -467,7 +450,6 @@ public void ChartXLabel(String text) {
     	  set = createSet(series);
           data.addDataSet(set);
     	  lineSet.put(series, data.getDataSetByLabel(series, true));
-    	  
       }
       set = lineSet.get(series);
 	  Entry newEntry = new Entry(set.getEntryCount(), y);
@@ -623,6 +605,7 @@ public void ChartXLabel(String text) {
 	  LineDataSet colorSet = (LineDataSet)lineSet.get(series);
 	  colorSet.setColor(color);
 	  colorSet.setCircleColor(color);
+	  lineChart.notifyDataSetChanged();
 	  lineChart.invalidate();
   }
   
@@ -726,13 +709,13 @@ public int TextColor() {
  * includes alpha, red, green, and blue components
  */
 @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_COLOR,
-    defaultValue = Component.DEFAULT_VALUE_COLOR_WHITE)
+    defaultValue = Component.DEFAULT_VALUE_COLOR_BLACK)
 @SimpleProperty
 public void TextColor(int argb) {
     textColor = argb;
-    lineChart.getAxisLeft().setTextColor(textColor);
-    lineChart.getXAxis().setTextColor(textColor);
-    lineChart.getLegend().setTextColor(textColor);
+    xaxis.setTextColor(textColor);
+    yaxis.setTextColor(textColor);
+    title.setTextColor(textColor);
 }
 /**
  * Returns the listview's text font Size
