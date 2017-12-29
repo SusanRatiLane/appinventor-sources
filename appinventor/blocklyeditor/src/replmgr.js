@@ -83,7 +83,8 @@ Blockly.ReplStateObj.prototype = {
     'rendezvous2' : 'https://rendezvous.appinventor.mit.edu/rendezvous2/',
     'iceservers' : { 'iceServers' : [ { 'urls' : ['turn:turn.appinventor.mit.edu:3478'],
                                         'username' : 'oh',
-                                        'credential' : 'boy' }]}
+                                        'credential' : 'boy' }]},
+    'emulator': false
 };
 
 var PROTECT_ENUM_ANDROID = "(define-syntax protect-enum " +
@@ -757,6 +758,7 @@ Blockly.ReplMgr.putYail = (function() {
                 if (this.readyState == 4 && this.status == 200) {
                     rs.didversioncheck = true;
                     if (this.response[0] != "{") {
+                        top.ReplState.needsUpgradeHelper = true;
                         engine.checkversionupgrade(true, "", true); // Old Companion
                         engine.resetcompanion();
                         return;
@@ -859,6 +861,8 @@ Blockly.ReplMgr.putYail = (function() {
 //          context.hardreset(context.formName); // kill adb and emulator
             rs.didversioncheck = false;
             rs.android = true;
+            rs.emulator = false;
+            rs.needsUpgradeHelper = false;
             top.BlocklyPanel_indicateDisconnect();
             top.ConnectProgressBar_hide();
             engine.reset();
@@ -948,6 +952,8 @@ Blockly.ReplMgr.triggerUpdate = function() {
         rs.connection = null;
         rs.didversioncheck = false;
         rs.isUSB = false;
+        rs.emulator = false;
+        rs.needsUpgradeHelper = false;
         context.resetYail(false);
         top.BlocklyPanel_indicateDisconnect();
         // End reset companion state
