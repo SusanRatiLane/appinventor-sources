@@ -149,6 +149,8 @@
   <extend-property name="locale" values="lt"/>
 
   <set-property-fallback name="locale" value="en"/>
-  <collapse-all-properties/>
+  <!--
+    <collapse-all-properties/>
+    -->
 
 </module>
