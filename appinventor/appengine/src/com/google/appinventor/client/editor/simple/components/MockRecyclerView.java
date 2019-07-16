@@ -8,6 +8,7 @@ import static com.google.appinventor.client.Ode.MESSAGES;
 import com.google.appinventor.client.editor.simple.SimpleEditor;
 import com.google.appinventor.client.output.OdeLog;
 import com.google.appinventor.components.common.ComponentConstants;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -129,27 +130,14 @@ public final class MockRecyclerView extends MockVisibleComponent {
     listViewWidget.add(textBoxWidget);
   }
 
-   private void setElementsFromStringFirstProperty(String text){
-    currentElementsFirst = text;
-    currentListFirst = text.split(",");
+   private void setElementsFromStringFirstProperty(String text) {
+     currentElementsFirst = text;
+     currentListFirst = text.split(",");
 
-    listViewWidget.clear();
-    createFilterBox();
+     setItems();
+   }
 
-    if (filterShowing) {
-      textBoxWidget.setVisible(true);
-    }
-    else {
-      textBoxWidget.setVisible(false);
-    }
-
-  if(currentImage!="" && currentElementsSecond!=""){
-  //if(currentList.length==2*currentImageList.length)  
-  setItems(currentListFirst,currentListSecond,currentImageList);  
-}
-  }
-
-  private void setElementsFromStringSecondProperty(String text){
+  private void setElementsFromStringSecondProperty(String text) {
     currentElementsSecond = text;
     currentListSecond = text.split(",");
 
@@ -158,16 +146,11 @@ public final class MockRecyclerView extends MockVisibleComponent {
 
     if (filterShowing) {
       textBoxWidget.setVisible(true);
-    }
-    else {
+    } else {
       textBoxWidget.setVisible(false);
     }
 
-  if(currentImage!="" && currentElementsFirst!=""){
- 
-  //if(currentList.length==2*currentImageList.length)  
-  setItems(currentListFirst,currentListSecond,currentImageList);  
-}
+    setItems();
   }
 
   private void addNewPicture(String stringImage){
@@ -180,28 +163,31 @@ public final class MockRecyclerView extends MockVisibleComponent {
        setElementImagesProperty(currentImage);
   }
 
-  private void setElementImagesProperty(String stringImage){
-   currentImage=stringImage;
-   currentImageList = currentImage.split(",");
-   listViewWidget.clear();
-  
-  if(currentElementsFirst!="" && currentElementsSecond != ""){
- 
-  //if(currentList.length==2*currentImageList.length)  
-  setItems(currentListFirst,currentListSecond,currentImageList);  
-}
-}
+  private void setElementImagesProperty(String stringImage) {
+    currentImage = stringImage;
+    currentImageList = currentImage.split(",");
 
-  private void setItems(String[] currentListFirst,String[] currentListSecond, String[] currentImageList){
-   
-
-    if(currentListFirst.length == currentImageList.length && currentListFirst.length == currentListSecond.length){
-    for(int i=0;i<currentListFirst.length;i++){
-      createLabelItem(i);
-      createImageItem(i);
-      createLabelPanel();
-    }
+    setItems();
   }
+
+  private void setItems(){
+
+    // TODO: Handle multiple images in Picture property
+    if(currentImageList !=null && currentImageList.length > 0 && currentListFirst.length == currentListSecond.length) {
+      listViewWidget.clear();
+      createFilterBox();
+
+      if (filterShowing) {
+        textBoxWidget.setVisible(true);
+      } else {
+        textBoxWidget.setVisible(false);
+      }
+      for (int i = 0; i < currentListFirst.length; i++) {
+        createLabelItem(i);
+        createImageItem(0);
+        createLabelPanel();
+      }
+    }
   }
 
   private void createLabelItem(int i) {

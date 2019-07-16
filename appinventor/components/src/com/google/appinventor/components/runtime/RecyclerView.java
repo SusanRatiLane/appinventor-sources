@@ -249,11 +249,7 @@ public final class RecyclerView extends AndroidViewComponent{
       category = PropertyCategory.BEHAVIOR)
   public void Elements(YailList input) {
     input = ElementsUtil.elements(input, "RecyclerView");
-    //inputImage = ElementsUtil.elements(inputImage, "RecyclerView");
-    
-    if(imagePathList != null && strSecond!=null && strFirst.length == imagePathList.size() && strFirst.length == strSecond.length ){
-    setAdapterr(strFirst,strSecond,imagePathList);
-  }
+    setAdapterr();
   }
 
   /**
@@ -276,13 +272,10 @@ public final class RecyclerView extends AndroidViewComponent{
       "such as: Cheese,Fruit,Bacon,Radish. Each word before the comma will be an element in the " +
       "list.",  category = PropertyCategory.BEHAVIOR)
   public void ElementsFromStringFirst(String itemstring) {
-    inputFirst = ElementsUtil.elementsFromString(itemstring);
-    strFirst = inputFirst.toStringArray();
+    strFirst = itemstring.split(",");
 
-   if(imagePathList != null && strSecond!=null && strFirst.length == imagePathList.size() && strFirst.length == strSecond.length )
-    setAdapterr(strFirst,strSecond,imagePathList);
- 
-    }
+    setAdapterr();
+  }
 
 
   /**
@@ -295,13 +288,11 @@ public final class RecyclerView extends AndroidViewComponent{
       "such as: Cheese,Fruit,Bacon,Radish. Each word before the comma will be an element in the " +
       "list.",  category = PropertyCategory.BEHAVIOR)
   public void ElementsFromStringSecond(String itemstring) {
-    inputSecond = ElementsUtil.elementsFromString(itemstring);
-    strSecond = inputSecond.toStringArray();
+    strSecond = itemstring.split(",");
 
-    if(imagePathList != null && strFirst!=null && strFirst.length == imagePathList.size() && strFirst.length == strSecond.length )
-    setAdapterr(strFirst,strSecond,imagePathList);
- 
-    }
+    setAdapterr();
+
+  }
 
 
   /**
@@ -346,9 +337,7 @@ public final class RecyclerView extends AndroidViewComponent{
     picturePath+=path;
     imagePathList.add(path);
 
-
-if(strFirst != null && strSecond!=null && strFirst.length == imagePathList.size() && strFirst.length == strSecond.length )
-    setAdapterr(strFirst,strSecond,imagePathList);
+    setAdapterr();
  
   }
 
@@ -374,7 +363,7 @@ if(strFirst != null && strSecond!=null && strFirst.length == imagePathList.size(
   /**
    * Sets the items of the ListView through an adapter
    */
- public void setAdapterr(String[] strFirst,String[] strSecond,ArrayList<String> imagePathList){
+ public void setAdapterr() {
 
   /*  int size =(str.length)/2;
     String[] first=new String[size];
@@ -389,27 +378,29 @@ if(strFirst != null && strSecond!=null && strFirst.length == imagePathList.size(
     }
 */
 
-  ArrayList<Drawable> third = new ArrayList<Drawable>();
-  for(int i=0;i<strFirst.length;i++){    
-      //third[x] = MediaUtil.getBitmapDrawable(container.$form(), picturePath);
-  try {
-      third.add(MediaUtil.getBitmapDrawable(container.$form(), imagePathList.get(i)));
-    } catch (IOException ioe) {
-      Log.e("Image", "Unable to load " + imagePathList.get(i));
-      third.add(null);
-    }    
-  //  ViewUtil.setImage(view, drawable);
-    }
-  
+   if (strFirst != null && strSecond != null && strFirst.length == strSecond.length && imagePathList != null && imagePathList.size() > 0) {
+     ArrayList<Drawable> third = new ArrayList<Drawable>();
+     for (int i = 0; i < strFirst.length; i++) {
+       //third[x] = MediaUtil.getBitmapDrawable(container.$form(), picturePath);
+       try {
+         // TODO: Handle imagePathList larger than length 1
+         third.add(MediaUtil.getBitmapDrawable(container.$form(), imagePathList.get(0)));
+       } catch (IOException ioe) {
+         Log.e("Image", "Unable to load " + imagePathList.get(i));
+         third.add(null);
+       }
+       //  ViewUtil.setImage(view, drawable);
+     }
 
-    //if(third.length == first.length){
-    listAdapterWithRecyclerView =new ListAdapterWithRecyclerView(container.$context(),strFirst,strSecond,third,textColor,textSize);
-  
-    LinearLayoutManager layoutManager=new LinearLayoutManager(ctx);
-    recyclerView.setLayoutManager(layoutManager);
-    recyclerView.setAdapter(listAdapterWithRecyclerView);
-    }
-   //}
+
+     //if(third.length == first.length){
+     listAdapterWithRecyclerView = new ListAdapterWithRecyclerView(container.$context(), strFirst, strSecond, third, textColor, textSize);
+
+     LinearLayoutManager layoutManager = new LinearLayoutManager(ctx);
+     recyclerView.setLayoutManager(layoutManager);
+     recyclerView.setAdapter(listAdapterWithRecyclerView);
+   }
+ }
 
    /*
 public String[] itemsToColoredText(String[] str) {
@@ -606,7 +597,7 @@ public String[] itemsToColoredText(String[] str) {
   @SimpleProperty
   public void TextColor(int argb) {
       textColor = argb;
-      setAdapterr(strFirst,strSecond,imagePathList);
+      setAdapterr();
   }
 
   /**
@@ -634,7 +625,7 @@ public String[] itemsToColoredText(String[] str) {
         textSize = 999;
       else
         textSize = fontSize;
-      setAdapterr(strFirst,strSecond,imagePathList);
+      setAdapterr();
   }
 
 }
