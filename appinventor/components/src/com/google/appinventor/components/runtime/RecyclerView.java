@@ -58,7 +58,7 @@ import java.util.*;
     nonVisible = false,
     iconName = "images/recyclerView.png")
 @SimpleObject
-@UsesLibraries(libraries ="RecyclerView.jar")
+@UsesLibraries(libraries ="RecyclerView.jar, CardView.jar, CardView.aar")
 @UsesPermissions(permissionNames = "android.permission.INTERNET," +
     "android.permission.READ_EXTERNAL_STORAGE")
 public final class RecyclerView extends AndroidViewComponent{

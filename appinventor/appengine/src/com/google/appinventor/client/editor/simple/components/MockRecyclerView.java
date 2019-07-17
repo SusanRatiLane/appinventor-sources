@@ -8,11 +8,9 @@ import static com.google.appinventor.client.Ode.MESSAGES;
 import com.google.appinventor.client.editor.simple.SimpleEditor;
 import com.google.appinventor.client.output.OdeLog;
 import com.google.appinventor.components.common.ComponentConstants;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 //
 import com.google.gwt.user.client.ui.Image;

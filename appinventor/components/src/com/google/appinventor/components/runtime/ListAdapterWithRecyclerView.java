@@ -18,6 +18,7 @@ import android.text.SpannableString;
 //
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.graphics.drawable.Drawable;
 import java.util.*;
 
@@ -63,8 +64,8 @@ public class ListAdapterWithRecyclerView extends RecyclerView.Adapter<ListAdapte
         relativeLayout.setBackgroundColor(Color.parseColor("#E9E9E9"));
 
         ViewCompat.setElevation(relativeLayout, 20);
-       
-       // CardView cardView = new CardView(context);
+
+        CardView cardView = new CardView(context);
         TextView textViewFirst=new TextView(context);
         TextView textViewSecond=new TextView(context);
         ImageView imageView = new ImageView(context);
