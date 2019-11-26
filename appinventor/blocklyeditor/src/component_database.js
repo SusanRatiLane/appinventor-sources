@@ -521,8 +521,8 @@ Blockly.ComponentDatabase.prototype.getInternationalizedEventName = function(nam
  * @param {?string=name} opt_default Optional default value (default: name parameter)
  * @returns {string} The localized string if available, otherwise the unlocalized name.
  */
-Blockly.ComponentDatabase.prototype.getInternationalizedEventDescription = function(name, opt_default) {
-  return this.i18nEventDescriptions_[name] || opt_default || name;
+Blockly.ComponentDatabase.prototype.getInternationalizedEventDescription = function(component, name, opt_default) {
+  return this.i18nEventDescriptions_[component + '.' + name] || this.i18nEventDescriptions_[name] || opt_default || name;
 };
 
 /**
@@ -541,8 +541,8 @@ Blockly.ComponentDatabase.prototype.getInternationalizedMethodName = function(na
  * @param {?string=name} opt_default Optional default value (default: name parameter)
  * @returns {string} The localized string if available, otherwise the unlocalized name.
  */
-Blockly.ComponentDatabase.prototype.getInternationalizedMethodDescription = function(name, opt_default) {
-  return this.i18nMethodDescriptions_[name] || opt_default || name;
+Blockly.ComponentDatabase.prototype.getInternationalizedMethodDescription = function(component, name, opt_default) {
+  return this.i18nMethodDescriptions_[component + '.' + name] || this.i18nMethodDescriptions_[name] || opt_default || name;
 };
 
 /**
@@ -571,6 +571,6 @@ Blockly.ComponentDatabase.prototype.getInternationalizedPropertyName = function(
  * @param {?string=name} opt_default Optional default value (default: name parameter)
  * @returns {string} The localized string if available, otherwise the unlocalized name.
  */
-Blockly.ComponentDatabase.prototype.getInternationalizedPropertyDescription = function(name, opt_default) {
-  return this.i18nPropertyDescriptions_[name] || opt_default || name;
+Blockly.ComponentDatabase.prototype.getInternationalizedPropertyDescription = function(component, name, opt_default) {
+  return this.i18nPropertyDescriptions_[component + '.' + name] || this.i18nPropertyDescriptions_[name] || opt_default || name;
 };

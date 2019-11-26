@@ -280,10 +280,10 @@ Blockly.Blocks.component_event = {
     this.setParameterOrientation(horizParams);
     var tooltipDescription;
     if (eventType) {
-      tooltipDescription = componentDb.getInternationalizedEventDescription(eventType.name, eventType.description);
+      tooltipDescription = componentDb.getInternationalizedEventDescription(this.typeName, eventType.name, eventType.description);
     }
     else {
-      tooltipDescription = componentDb.getInternationalizedEventDescription(this.eventName);
+      tooltipDescription = componentDb.getInternationalizedEventDescription(this.typeName, this.eventName);
     }
     this.setTooltip(tooltipDescription);
     this.setPreviousStatement(false, null);
@@ -711,9 +711,9 @@ Blockly.Blocks.component_method = {
 
     var tooltipDescription;
     if (methodTypeObject) {
-      tooltipDescription = componentDb.getInternationalizedMethodDescription(methodTypeObject.name, methodTypeObject.description);
+      tooltipDescription = componentDb.getInternationalizedMethodDescription(this.typeName, methodTypeObject.name, methodTypeObject.description);
     } else {
-      tooltipDescription = componentDb.getInternationalizedMethodDescription(this.typeName);
+      tooltipDescription = componentDb.getInternationalizedMethodDescription(this.typeName, this.methodName);
     }
     this.setTooltip(tooltipDescription);
 
@@ -1000,7 +1000,7 @@ Blockly.Blocks.component_set_get = {
     }
     var tooltipDescription;
     if (this.propertyName) {
-      tooltipDescription = componentDb.getInternationalizedPropertyDescription(this.propertyName, this.propertyObject.description);
+      tooltipDescription = componentDb.getInternationalizedPropertyDescription(this.typeName, this.propertyName, this.propertyObject.description);
     } else {
       tooltipDescription = Blockly.Msg.UNDEFINED_BLOCK_TOOLTIP;
     }
@@ -1016,7 +1016,7 @@ Blockly.Blocks.component_set_get = {
         thisBlock.propertyObject = thisBlock.getPropertyObject(selection);
         thisBlock.setTypeCheck();
         if (thisBlock.propertyName) {
-          thisBlock.setTooltip(componentDb.getInternationalizedPropertyDescription(thisBlock.propertyName, thisBlock.propertyObject.description));
+          thisBlock.setTooltip(componentDb.getInternationalizedPropertyDescription(thisBlock.typeName, thisBlock.propertyName, thisBlock.propertyObject.description));
         } else {
           thisBlock.setTooltip(Blockly.Msg.UNDEFINED_BLOCK_TOOLTIP);
         }
