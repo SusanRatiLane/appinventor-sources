@@ -166,7 +166,7 @@
     <property name="forums.url" value="https://community.appinventor.mit.edu" />
     <property name="feedback.url" value="http://appinv.us/aifeedback" />
     <property name="release.notes.url" value="http://appinventor.mit.edu/ai2/ReleaseNotes.html" />
-    <property name="tos.url" value="/about/termsofservice.html" />
+    <property name="tos.url" value="https://appinventor.mit.edu/about/termsofservice" />
     <property name="logo.url" value="http://appinventor.mit.edu" />
     <property name="guide.url" value="http://appinventor.mit.edu/explore/library" />
     <property name="reference.components.url" value="/reference/components/" />
