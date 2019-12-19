@@ -110,6 +110,9 @@
           description="Create and populate build/war directory structure"
           depends="init,blocklyeditor_BlocklyCompile,BuildDocs">
     <mkdir dir="${build.war.dir}" />
+    <copy todir="${build.war.dir}/about/">
+      <fileset dir="${about.dir}"/>
+    </copy>
     <copy todir="${build.war.dir}/">
       <fileset dir="war" />
       <fileset dir="${docs.dir}">
