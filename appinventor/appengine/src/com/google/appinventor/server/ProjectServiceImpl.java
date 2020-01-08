@@ -42,10 +42,20 @@ import java.util.logging.Logger;
 /**
  * The implementation of the RPC service which runs on the server.
  *
- * <p>Note that this service must be state-less so that it can be run on
+ * Note that this service must be state-less so that it can be run on
  * multiple servers.
  *
+ * 02/01/2020: OK, time to explain some obsolete abstraction
+ * here. Originally this code was written to support multiple "types"
+ * of projects. However the only type implemented is
+ * YoungAndroidProjectNode.YOUNG_ANDROID_PROJECT_TYPE
+ * getProjectRpcImpl() accepts a userId and either a projectId or a
+ * projectType. If a projectId is provided we ask the storage layer
+ * (StorageIo) what the type of the project is so we can call the
+ * appropriate lower level code. But of course there is only one
+ * type...
  */
+
 public class ProjectServiceImpl extends OdeRemoteServiceServlet implements ProjectService {
 
   private static final Logger LOG = Logger.getLogger(ProjectServiceImpl.class.getName());
@@ -221,6 +231,51 @@ public class ProjectServiceImpl extends OdeRemoteServiceServlet implements Proje
       String userId = userInfoProvider.getUserId();
       storageIo.setMoveToTrashFlag(userId,projectId,false);
       return storageIo.getUserProject(userId,projectId);
+  }
+
+  /**
+   * Login to the new Gallery
+   *
+   * Generate a token used to login to the new gallery
+   * @return RPC Result which contains URL to open a window on the Gallery
+   */
+
+  @Override
+  public RpcResult loginToNewGallery() {
+    final String userId = userInfoProvider.getUserId();
+    return youngAndroidProject.loginToNewGallery(userId);
+  }
+
+  /**
+   * Send project to new Gallery
+   * @param projectId project ID
+   * @return RPC Result which contains URL to open a window on the Gallery
+   */
+
+  @Override
+  public RpcResult sendToNewGallery(long projectId) {
+    final String userId = userInfoProvider.getUserId();
+    return getProjectRpcImpl(userId, projectId).sendToNewGallery(userId, projectId);
+  }
+
+  /**
+   * Load a project from the new Gallery
+   * We take the galleryId, fetch the project from the (remote) Gallery
+   * store it with the user's projects and return a UserProject object
+   * to the client, which will then load the project into the UI
+   * @param galleryId The unique id for the project in the gallery
+   * @return UserProject Info for the UI to load the project
+   *
+   * Note: The server loads the project directly from the gallery
+   *       it is *not* routed via the user's browser
+   *
+   */
+
+  @Override
+  public UserProject loadFromNewGallery(String galleryId) throws IOException {
+    final String userId = userInfoProvider.getUserId();
+    return getProjectRpcImpl(userId,
+      YoungAndroidProjectNode.YOUNG_ANDROID_PROJECT_TYPE).loadFromNewGallery(userId, galleryId);
   }
 
   /**

@@ -92,6 +92,31 @@ public interface ProjectService extends RemoteService {
   UserProject restoreProject(long projectId);
 
   /**
+   * Facilitate logging into the new gallery by
+   * generating a token which is passed to the gallery
+   * which contains the appropriate login authentication
+   * information
+   */
+
+  public RpcResult loginToNewGallery();
+
+  /**
+   * Send a project to the new project Gallery
+   * @param projectId  project ID
+   * @return RpcResult will include URL to redirect to
+   */
+
+  public RpcResult sendToNewGallery(long projectId);
+
+  /**
+   * Load a project from the new Gallery
+   * @param galleryId  The gallery's unique ID for this project
+   * @return UserProject information object for newly loaded project
+   */
+
+  public UserProject loadFromNewGallery(String galleryId) throws IOException;
+
+  /**
    * Returns an array with project IDs.
    *
    * @return  IDs of projects found by the back-end

@@ -13,6 +13,7 @@ import com.google.appinventor.client.boxes.ProjectListBox;
 import com.google.appinventor.client.explorer.project.Project;
 import com.google.appinventor.client.widgets.Toolbar;
 import com.google.appinventor.client.wizards.youngandroid.NewYoungAndroidProjectWizard;
+import com.google.appinventor.shared.rpc.RpcResult;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 
@@ -31,6 +32,8 @@ public class ProjectToolbar extends Toolbar {
   private static final String WIDGET_NAME_PROJECT= "Projects";
   private static final String WIDGET_NAME_RESTORE= "Restore";
   private static final String WIDGET_NAME_DELETE_FROM_TRASH= "Delete From Trash";
+  private static final String WIDGET_NAME_SENDTONG = "Send to New Gallery";
+  private static final String WIDGET_NAME_LOGINTONEWGALLERY = "Login to New Gallery";
 
   private boolean isReadOnly;
 
@@ -54,6 +57,10 @@ public class ProjectToolbar extends Toolbar {
         new RestoreProjectAction()));
     addButton(new ToolbarItem(WIDGET_NAME_DELETE_FROM_TRASH,MESSAGES.deleteFromTrashButton(),
         new DeleteForeverProjectAction()));
+    addButton(new ToolbarItem(WIDGET_NAME_LOGINTONEWGALLERY, MESSAGES.loginToNewGallery(),
+        new LoginToNewGalleryAction()));
+    addButton(new ToolbarItem(WIDGET_NAME_SENDTONG, MESSAGES.sendToNewGallery(),
+        new SendToNewGalleryAction()));
 
     setTrashTabButtonsVisible(false);
     updateButtons();
@@ -179,6 +186,51 @@ public class ProjectToolbar extends Toolbar {
         // The user can select a project to resolve the
         // error.
         ErrorReporter.reportInfo(MESSAGES.noProjectSelectedForRestore());
+      }
+    }
+  }
+
+  // Login to the New Gallery
+  private static class LoginToNewGalleryAction implements Command {
+    @Override
+      public void execute() {
+      Ode.getInstance().getProjectService().loginToNewGallery(
+        new OdeAsyncCallback<RpcResult>(
+          "Barf") {
+          @Override
+          public void onSuccess(RpcResult result) {
+            if (result.getResult() == RpcResult.SUCCESS) {
+              Window.open(result.getOutput(), "_blank", "");
+            } else {
+              ErrorReporter.reportInfo(result.getError());
+            }
+          }
+        });
+    }
+  }
+
+  // Send to the New Gallery
+  private static class SendToNewGalleryAction implements Command {
+    @Override
+      public void execute() {
+      List<Project> selectedProjects =
+          ProjectListBox.getProjectListBox().getProjectList().getSelectedProjects();
+      if (selectedProjects.size() != 1) {
+        ErrorReporter.reportInfo(MESSAGES.selectOnlyOneProject());
+      } else {
+        Project project = selectedProjects.get(0);
+        Ode.getInstance().getProjectService().sendToNewGallery(project.getProjectId(),
+          new OdeAsyncCallback<RpcResult>(
+            "Barf") {
+            @Override
+            public void onSuccess(RpcResult result) {
+              if (result.getResult() == RpcResult.SUCCESS) {
+                Window.open(result.getOutput(), "_blank", "");
+              } else {
+                ErrorReporter.reportInfo(result.getError());
+              }
+            }
+          });
       }
     }
   }
