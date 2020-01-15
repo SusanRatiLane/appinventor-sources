@@ -433,17 +433,29 @@ The Original Web component provided functions for HTTP GET and POST requests.
 {:id="Web.HtmlTextDecode" class="method returns text"} <i/> HtmlTextDecode(*htmlText*{:.text})
 : Decodes the given HTML text value.
 
- <pre>
- HTML Character Entities such as &amp;, &lt;, &gt;, &apos;, and &quot; are
- changed to &, <, >, ', and ".
- Entities such as &#xhhhh, and &#nnnn are changed to the appropriate characters.
- </pre>
+     HTML Character Entities such as `&amp;`, `&lt;`, `&gt;`, `&apos;`, and `&quot;` are
+     changed to `&`, `<`, `>`, `'`, and `"`.
+     Entities such as &#xhhhh, and &#nnnn are changed to the appropriate characters.
+
+{:id="Web.JsonObjectEncode" class="method returns text"} <i/> JsonObjectEncode(*jsonObject*{:.any})
+: Returns the value of a built-in type (i.e., boolean, number, text, list, dictionary)
+ in its JavaScript Object Notation representation. If the value cannot be
+ represented as JSON, the Screen's ErrorOccurred event will be run, if any,
+ and the Web component will return the empty string.
 
 {:id="Web.JsonTextDecode" class="method returns any"} <i/> JsonTextDecode(*jsonText*{:.text})
 : Decodes the given JSON encoded value to produce a corresponding AppInventor value.
  A JSON list [x, y, z] decodes to a list (x y z),  A JSON object with name A and value B,
  (denoted as A:B enclosed in curly braces) decodes to a list
  ((A B)), that is, a list containing the two-element list (A B).
+
+   Use the method [JsonTextDecodeWithDictionaries](#Web.JsonTextDecodeWithDictionaries) if you
+ would prefer to get back dictionary objects rather than lists-of-lists in the result.
+
+{:id="Web.JsonTextDecodeWithDictionaries" class="method returns any"} <i/> JsonTextDecodeWithDictionaries(*jsonText*{:.text})
+: Decodes the given JSON encoded value to produce a corresponding App Inventor value.
+ A JSON list [x, y, z] decodes to a list (x y z). A JSON Object with name A and value B,
+ denoted as \{a: b\} decodes to a dictionary with the key a and value b.
 
 {:id="Web.PostFile" class="method"} <i/> PostFile(*path*{:.text})
 : Performs an HTTP POST request using the Url property and data from the
@@ -472,18 +484,33 @@ The Original Web component provided functions for HTTP GET and POST requests.
 : Encodes the given text value so that it can be used in a URL.
 
 {:id="Web.XMLTextDecode" class="method returns any"} <i/> XMLTextDecode(*XmlText*{:.text})
-: Decodes the given XML string to produce a list structure. <tag>string</tag> decodes to
+: Decodes the given XML string to produce a list structure. `<tag>string</tag>` decodes to
  a list that contains a pair of tag and string.  More generally, if obj1, obj2, ...
- are tag-delimited XML strings, then <tag>obj1 obj2 ...</tag> decodes to a list
+ are tag-delimited XML strings, then `<tag>obj1 obj2 ...</tag>` decodes to a list
  that contains a pair whose first element is tag and whose second element is the
- list of the decoded obj's, ordered alphabetically by tags.  Examples:
- <foo>123</foo> decodes to a one-item list containing the pair (foo, 123)
- <foo>1 2 3</foo> decodes to a one-item list containing the pair (foo,"1 2 3")
- <a><foo>1 2 3</foo><bar>456</bar></a> decodes to a list containing the pair
- (a,X) where X is a 2-item list that contains the pair (bar,123) and the pair (foo,"1 2 3").
- If the sequence of obj's mixes tag-delimited and non-tag-delimited
- items, then the non-tag-delimited items are pulled out of the sequence and wrapped
- with a "content" tag.  For example, decoding <a><bar>456</bar>many<foo>1 2 3</foo>apples</a>
+ list of the decoded obj's, ordered alphabetically by tags.
+
+   Examples:
+   * `<foo><123/foo>` decodes to a one-item list containing the pair `(foo 123)`
+   * `<foo>1 2 3</foo>` decodes to a one-item list containing the pair `(foo "1 2 3")`
+   * `<a><foo>1 2 3</foo><bar>456</bar></a>` decodes to a list containing the pair `(a X)`
+     where X is a 2-item list that contains the pair `(bar 123)` and the pair `(foo "1 2 3")`.
+
+   If the sequence of obj's mixes tag-delimited and non-tag-delimited items, then the
+ non-tag-delimited items are pulled out of the sequence and wrapped with a "content" tag.
+ For example, decoding `<a><bar>456</bar>many<foo>1 2 3</foo>apples<a></code>`
  is similar to above, except that the list X is a 3-item list that contains the additional pair
  whose first item is the string "content", and whose second item is the list (many, apples).
  This method signals an error and returns the empty list if the result is not well-formed XML.
+
+{:id="Web.XMLTextDecodeAsDictionary" class="method returns any"} <i/> XMLTextDecodeAsDictionary(*XmlText*{:.text})
+: Decodes the given XML string to produce a JSON structure. The dictionary includes the
+ special keys `$tag`, `$localName`, `$namespace`, `$namespaceUri`, `attributes`, and `$content`,
+ as well as a key for each unique tag for every node, which points to a list of elements of
+ the same structure as described here.
+
+   The `$tag` key is the full tag name, e.g., foo:bar. The `$localName` is the local portion of
+ the name (everything after the colon `:` character). If a namespace is given (everything before
+ the colon `:` character), it is provided in `$namespace` and the corresponding URI is given
+ in `$namespaceUri`. The attributes are stored in a dictionary in `$attributes` and the
+ child nodes are given as a list under `$content`.
