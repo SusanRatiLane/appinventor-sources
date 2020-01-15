@@ -16,18 +16,26 @@ Table of Contents:
 
 ## HorizontalArrangement  {#HorizontalArrangement}
 
+A horizontal arrangement of components
+
+
+
 ### Properties  {#HorizontalArrangement-Properties}
 
 {:.properties}
 
 {:id="HorizontalArrangement.AlignHorizontal" .number} *AlignHorizontal*
-: A number that encodes how contents of the HorizontalArrangement are aligned  horizontally. The choices are: 1 = left aligned, 2 = right aligned,  3 = horizontally centered.  Alignment has no effect if the arrangement's width is automatic.
+: Returns a number that encodes how contents of the HorizontalArrangement are aligned horizontally.
+ The choices are: 1 = left aligned, 2 = right aligned, 3 = horizontally centered
 
 {:id="HorizontalArrangement.AlignVertical" .number} *AlignVertical*
-: A number that encodes how the contents of the HorizontalArrangement are aligned  vertically. The choices are: 1 = aligned at the top, 2 = vertically centered, 3 = aligned at the bottom.  Alignment has no effect if the arrangement's height is automatic.
+: Returns a number that encodes how contents of the HorizontalArrangement are aligned vertically.
+ The choices are: 1 = aligned at the top, 2 = vertically centered, 3 = aligned at the bottom.
+ Alignment has no effect if the arrangement's height is automatic.
 
 {:id="HorizontalArrangement.BackgroundColor" .color} *BackgroundColor*
-: Returns the background color of the HorizontalArrangement
+: Returns the background color of the HorizontalArrangement as an alpha-red-green-blue
+ integer.
 
 {:id="HorizontalArrangement.Height" .number .bo} *Height*
 : Specifies the vertical height of the HorizontalArrangement, measured in pixels.
@@ -49,18 +57,26 @@ Table of Contents:
 
 ## HorizontalScrollArrangement  {#HorizontalScrollArrangement}
 
+A horizontal arrangement of components
+
+
+
 ### Properties  {#HorizontalScrollArrangement-Properties}
 
 {:.properties}
 
 {:id="HorizontalScrollArrangement.AlignHorizontal" .number} *AlignHorizontal*
-: A number that encodes how contents of the HorizontalScrollArrangement are aligned  horizontally. The choices are: 1 = left aligned, 2 = right aligned,  3 = horizontally centered.  Alignment has no effect if the arrangement's width is automatic.
+: Returns a number that encodes how contents of the HorizontalScrollArrangement are aligned horizontally.
+ The choices are: 1 = left aligned, 2 = right aligned, 3 = horizontally centered
 
 {:id="HorizontalScrollArrangement.AlignVertical" .number} *AlignVertical*
-: A number that encodes how the contents of the HorizontalScrollArrangement are aligned  vertically. The choices are: 1 = aligned at the top, 2 = vertically centered, 3 = aligned at the bottom.  Alignment has no effect if the arrangement's height is automatic.
+: Returns a number that encodes how contents of the HorizontalScrollArrangement are aligned vertically.
+ The choices are: 1 = aligned at the top, 2 = vertically centered, 3 = aligned at the bottom.
+ Alignment has no effect if the arrangement's height is automatic.
 
 {:id="HorizontalScrollArrangement.BackgroundColor" .color} *BackgroundColor*
-: Returns the background color of the HorizontalScrollArrangement
+: Returns the background color of the HorizontalScrollArrangement as an alpha-red-green-blue
+ integer.
 
 {:id="HorizontalScrollArrangement.Height" .number .bo} *Height*
 : Specifies the vertical height of the HorizontalScrollArrangement, measured in pixels.
@@ -81,6 +97,10 @@ Table of Contents:
 : Specifies the horizontal width of the HorizontalScrollArrangement as a percentage of the width of the Screen.
 
 ## TableArrangement  {#TableArrangement}
+
+A container for components that arranges them in tabular form.
+
+
 
 ### Properties  {#TableArrangement-Properties}
 
@@ -109,18 +129,26 @@ Table of Contents:
 
 ## VerticalArrangement  {#VerticalArrangement}
 
+A vertical arrangement of components
+
+
+
 ### Properties  {#VerticalArrangement-Properties}
 
 {:.properties}
 
 {:id="VerticalArrangement.AlignHorizontal" .number} *AlignHorizontal*
-: A number that encodes how contents of the VerticalArrangement are aligned  horizontally. The choices are: 1 = left aligned, 2 = right aligned,  3 = horizontally centered.  Alignment has no effect if the arrangement's width is automatic.
+: Returns a number that encodes how contents of the VerticalArrangement are aligned horizontally.
+ The choices are: 1 = left aligned, 2 = right aligned, 3 = horizontally centered
 
 {:id="VerticalArrangement.AlignVertical" .number} *AlignVertical*
-: A number that encodes how the contents of the VerticalArrangement are aligned  vertically. The choices are: 1 = aligned at the top, 2 = vertically centered, 3 = aligned at the bottom.  Alignment has no effect if the arrangement's height is automatic.
+: Returns a number that encodes how contents of the VerticalArrangement are aligned vertically.
+ The choices are: 1 = aligned at the top, 2 = vertically centered, 3 = aligned at the bottom.
+ Alignment has no effect if the arrangement's height is automatic.
 
 {:id="VerticalArrangement.BackgroundColor" .color} *BackgroundColor*
-: Returns the background color of the VerticalArrangement
+: Returns the background color of the VerticalArrangement as an alpha-red-green-blue
+ integer.
 
 {:id="VerticalArrangement.Height" .number .bo} *Height*
 : Specifies the vertical height of the VerticalArrangement, measured in pixels.
@@ -142,18 +170,26 @@ Table of Contents:
 
 ## VerticalScrollArrangement  {#VerticalScrollArrangement}
 
+A vertical arrangement of components
+
+
+
 ### Properties  {#VerticalScrollArrangement-Properties}
 
 {:.properties}
 
 {:id="VerticalScrollArrangement.AlignHorizontal" .number} *AlignHorizontal*
-: A number that encodes how contents of the VerticalScrollArrangement are aligned  horizontally. The choices are: 1 = left aligned, 2 = right aligned,  3 = horizontally centered.  Alignment has no effect if the arrangement's width is automatic.
+: Returns a number that encodes how contents of the VerticalScrollArrangement are aligned horizontally.
+ The choices are: 1 = left aligned, 2 = right aligned, 3 = horizontally centered
 
 {:id="VerticalScrollArrangement.AlignVertical" .number} *AlignVertical*
-: A number that encodes how the contents of the VerticalScrollArrangement are aligned  vertically. The choices are: 1 = aligned at the top, 2 = vertically centered, 3 = aligned at the bottom.  Alignment has no effect if the arrangement's height is automatic.
+: Returns a number that encodes how contents of the VerticalScrollArrangement are aligned vertically.
+ The choices are: 1 = aligned at the top, 2 = vertically centered, 3 = aligned at the bottom.
+ Alignment has no effect if the arrangement's height is automatic.
 
 {:id="VerticalScrollArrangement.BackgroundColor" .color} *BackgroundColor*
-: Returns the background color of the VerticalScrollArrangement
+: Returns the background color of the VerticalScrollArrangement as an alpha-red-green-blue
+ integer.
 
 {:id="VerticalScrollArrangement.Height" .number .bo} *Height*
 : Specifies the vertical height of the VerticalScrollArrangement, measured in pixels.

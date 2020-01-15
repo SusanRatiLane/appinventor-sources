@@ -143,6 +143,8 @@
 
 <h2 id="Camcorder">Camcorder</h2>
 
+<p>Camcorder provides access to the phone’s camcorder</p>
+
 <h3 id="Camcorder-Events">Events</h3>
 
 <dl class="events">
@@ -159,6 +161,8 @@
 </dl>
 
 <h2 id="Camera">Camera</h2>
+
+<p>Camera provides access to the phone’s camera</p>
 
 <h3 id="Camera-Properties">Properties</h3>
 
@@ -185,39 +189,51 @@
 
 <h2 id="ImagePicker">ImagePicker</h2>
 
+<p>Component enabling a user to select an image from the phone’s gallery.</p>
+
 <h3 id="ImagePicker-Properties">Properties</h3>
 
 <dl class="properties">
   <dt id="ImagePicker.BackgroundColor" class="color"><em>BackgroundColor</em></dt>
-  <dd>Returns the button’s background color</dd>
+  <dd>Returns the button’s background color as an alpha-red-green-blue
+ integer.</dd>
   <dt id="ImagePicker.Enabled" class="boolean"><em>Enabled</em></dt>
-  <dd>If set, user can tap ImagePicker to cause action.</dd>
+  <dd>Returns true if the ImagePicker is active and clickable.</dd>
   <dt id="ImagePicker.FontBold" class="boolean"><em>FontBold</em></dt>
-  <dd>If set, ImagePicker text is displayed in bold.</dd>
+  <dd>Returns true if the text of the ImagePicker should be bold.
+ If bold has been requested, this property will return true, even if the
+ font does not support bold.</dd>
   <dt id="ImagePicker.FontItalic" class="boolean"><em>FontItalic</em></dt>
-  <dd>If set, ImagePicker text is displayed in italics.</dd>
+  <dd>Returns true if the text of the ImagePicker should be italic.
+ If italic has been requested, this property will return true, even if the
+ font does not support italic.</dd>
   <dt id="ImagePicker.FontSize" class="number"><em>FontSize</em></dt>
-  <dd>Point size for ImagePicker text.</dd>
+  <dd>Returns the text font size of the ImagePicker, measured in sp(scale-independent pixels).</dd>
   <dt id="ImagePicker.FontTypeface" class="number do"><em>FontTypeface</em></dt>
-  <dd>Font family for ImagePicker text.</dd>
+  <dd>Returns the text font face of the ImagePicker as default, serif, sans
+ serif, or monospace.</dd>
   <dt id="ImagePicker.Height" class="number bo"><em>Height</em></dt>
   <dd>Specifies the vertical height of the ImagePicker, measured in pixels.</dd>
   <dt id="ImagePicker.HeightPercent" class="number wo bo"><em>HeightPercent</em></dt>
   <dd>Specifies the vertical height of the ImagePicker as a percentage of the height of the Screen.</dd>
   <dt id="ImagePicker.Image" class="text"><em>Image</em></dt>
-  <dd>Image to display on button.</dd>
+  <dd>Returns the path of the button’s image.</dd>
   <dt id="ImagePicker.Selection" class="text ro bo"><em>Selection</em></dt>
   <dd>Path to the file containing the image that was selected.</dd>
   <dt id="ImagePicker.Shape" class="number do"><em>Shape</em></dt>
   <dd>Returns the style of the button.</dd>
   <dt id="ImagePicker.ShowFeedback" class="boolean"><em>ShowFeedback</em></dt>
-  <dd>Specifies if a visual feedback should be shown  for a ImagePicker that as an image as background.</dd>
+  <dd>Specifies if a visual feedback should be shown when a ImagePicker with an assigned image
+ is pressed.</dd>
   <dt id="ImagePicker.Text" class="text"><em>Text</em></dt>
-  <dd>Text to display on ImagePicker.</dd>
+  <dd>Returns the text displayed by the ImagePicker.</dd>
   <dt id="ImagePicker.TextAlignment" class="number do"><em>TextAlignment</em></dt>
-  <dd>Left, center, or right.</dd>
+  <dd>Returns the alignment of the button’s text: center, normal
+ (e.g., left-justified if text is written left to right), or
+ opposite (e.g., right-justified if text is written left to right).</dd>
   <dt id="ImagePicker.TextColor" class="color"><em>TextColor</em></dt>
-  <dd>Color for button text.</dd>
+  <dd>Returns the text color of the ImagePicker as an alpha-red-green-blue
+ integer.</dd>
   <dt id="ImagePicker.Visible" class="boolean"><em>Visible</em></dt>
   <dd>Returns true iff the ImagePicker is visible.</dd>
   <dt id="ImagePicker.Width" class="number bo"><em>Width</em></dt>
@@ -237,37 +253,42 @@
  using the Open block.  This event occurs before the list of items is displayed, and 
  can be used to prepare the list before it is shown.</dd>
   <dt id="ImagePicker.GotFocus">GotFocus()</dt>
-  <dd>Indicates the cursor moved over the ImagePicker so it is now possible to click it.</dd>
+  <dd>Indicates the cursor moved over the button so it is now possible
+ to click it.</dd>
   <dt id="ImagePicker.LostFocus">LostFocus()</dt>
-  <dd>Indicates the cursor moved away from the ImagePicker so it is now no longer possible to click it.</dd>
+  <dd>Indicates the cursor moved away from the button so it is now no
+ longer possible to click it.</dd>
   <dt id="ImagePicker.TouchDown">TouchDown()</dt>
-  <dd>Indicates that the ImagePicker was pressed down.</dd>
+  <dd>Indicates when a button is touch down</dd>
   <dt id="ImagePicker.TouchUp">TouchUp()</dt>
-  <dd>Indicates that the ImagePicker has been released.</dd>
+  <dd>Indicates when a button touch ends</dd>
 </dl>
 
 <h3 id="ImagePicker-Methods">Methods</h3>
 
 <dl class="methods">
   <dt id="ImagePicker.Open" class="method"><i></i> Open()</dt>
-  <dd>Opens the picker, as though the user clicked on it.</dd>
+  <dd>Opens the ImagePicker, as though the user clicked on it.</dd>
 </dl>
 
 <h2 id="Player">Player</h2>
+
+<p>Multimedia component that plays audio and optionally
+ vibrates.  It is built on top of {</p>
 
 <h3 id="Player-Properties">Properties</h3>
 
 <dl class="properties">
   <dt id="Player.IsPlaying" class="boolean ro bo"><em>IsPlaying</em></dt>
-  <dd>Reports whether the media is playing</dd>
+  <dd>Reports whether the media is playing.</dd>
   <dt id="Player.Loop" class="boolean"><em>Loop</em></dt>
-  <dd>If true, the player will loop when it plays. Setting Loop while the player is playing will affect the current playing.</dd>
+  <dd>Reports whether the playing should loop.</dd>
   <dt id="Player.PlayOnlyInForeground" class="boolean"><em>PlayOnlyInForeground</em></dt>
-  <dd>If true, the player will pause playing when leaving the current screen; if false (default option), the player continues playing whenever the current screen is displaying or not.</dd>
+  <dd>Gets the policy whether playing should only work in foreground.</dd>
   <dt id="Player.Source" class="text"><em>Source</em></dt>
   <dd>Returns the path to the audio source</dd>
   <dt id="Player.Volume" class="number wo"><em>Volume</em></dt>
-  <dd>Sets the volume to a number between 0 and 100</dd>
+  <dd>Sets the volume property to a number between 0 and 100.</dd>
 </dl>
 
 <h3 id="Player-Events">Events</h3>
@@ -276,7 +297,7 @@
   <dt id="Player.Completed">Completed()</dt>
   <dd>Indicates that the media has reached the end</dd>
   <dt id="Player.OtherPlayerStarted">OtherPlayerStarted()</dt>
-  <dd>This event is signaled when another player has started (and the current player is playing or paused, but not stopped).</dd>
+  <dd>Indicates that the other player has requested the focus of media</dd>
 </dl>
 
 <h3 id="Player-Methods">Methods</h3>
@@ -295,13 +316,20 @@
 
 <h2 id="Sound">Sound</h2>
 
+<p>Multimedia component that plays sounds and optionally vibrates.  A
+ sound is specified via filename.  See also
+ {</p>
+
 <h3 id="Sound-Properties">Properties</h3>
 
 <dl class="properties">
   <dt id="Sound.MinimumInterval" class="number"><em>MinimumInterval</em></dt>
-  <dd>The minimum interval, in milliseconds, between sounds.  If you play a sound, all further Play() calls will be ignored until the interval has elapsed.</dd>
+  <dd>Returns the minimum interval required between calls to Play(), in
+ milliseconds.
+ Once the sound starts playing, all further Play() calls will be ignored
+ until the interval has elapsed.</dd>
   <dt id="Sound.Source" class="text"><em>Source</em></dt>
-  <dd>The name of the sound file.  Only certain formats are supported.  See http://developer.android.com/guide/appendix/media-formats.html.</dd>
+  <dd>Returns the sound’s filename.</dd>
 </dl>
 
 <h3 id="Sound-Events">Events</h3>
@@ -312,7 +340,7 @@
   <dt id="Sound.Pause" class="method"><i></i> Pause()</dt>
   <dd>Pauses playing the sound if it is being played.</dd>
   <dt id="Sound.Play" class="method"><i></i> Play()</dt>
-  <dd>Plays the sound specified by the Source property.</dd>
+  <dd>Plays the sound.</dd>
   <dt id="Sound.Resume" class="method"><i></i> Resume()</dt>
   <dd>Resumes playing the sound after a pause.</dd>
   <dt id="Sound.Stop" class="method"><i></i> Stop()</dt>
@@ -323,11 +351,14 @@
 
 <h2 id="SoundRecorder">SoundRecorder</h2>
 
+<p>Multimedia component that records audio using
+ {</p>
+
 <h3 id="SoundRecorder-Properties">Properties</h3>
 
 <dl class="properties">
   <dt id="SoundRecorder.SavedRecording" class="text"><em>SavedRecording</em></dt>
-  <dd>Specifies the path to the file where the recording should be stored. If this proprety is the empty string, then starting a recording will create a file in an appropriate location.  If the property is not the empty string, it should specify a complete path to a file in an existing directory, including a file name with the extension .3gp.</dd>
+  <dd>Returns the path to the saved recording</dd>
 </dl>
 
 <h3 id="SoundRecorder-Events">Events</h3>
@@ -351,6 +382,10 @@
 </dl>
 
 <h2 id="SpeechRecognizer">SpeechRecognizer</h2>
+
+<p>Component for using the built in VoiceRecognizer to convert speech to text.
+ For more details, please see:
+ http://developer.android.com/reference/android/speech/RecognizerIntent.html</p>
 
 <h3 id="SpeechRecognizer-Properties">Properties</h3>
 
@@ -387,6 +422,10 @@
 
 <h2 id="TextToSpeech">TextToSpeech</h2>
 
+<p>Component for converting text to speech using either the built-in TTS library or the
+ TextToSpeech Extended library (which must be pre-installed for Android versions earlier
+ than Donut).</p>
+
 <h3 id="TextToSpeech-Properties">Properties</h3>
 
 <dl class="properties">
@@ -395,15 +434,16 @@
   <dt id="TextToSpeech.AvailableLanguages" class="list ro bo"><em>AvailableLanguages</em></dt>
   <dd>List of the languages available on this device for use with TextToSpeech.  Check the Android developer documentation under supported languages to find the meanings of these abbreviations.</dd>
   <dt id="TextToSpeech.Country" class="text"><em>Country</em></dt>
-  <dd>Country code to use for speech generation.  This can affect the pronounciation.  For example, British English (GBR) will sound different from US English (USA).  Not every country code will affect every language.</dd>
+  <dd>Sets the country for this TextToSpeech component.</dd>
   <dt id="TextToSpeech.Language" class="text"><em>Language</em></dt>
-  <dd>Sets the language for TextToSpeech. This changes the way that words are pronounced, not the actual language that is spoken.  For example setting the language to and speaking English text with sound like someone speaking English with a Frernch accent.</dd>
+  <dd>Sets the language for this TextToSpeech component.</dd>
   <dt id="TextToSpeech.Pitch" class="number"><em>Pitch</em></dt>
-  <dd>Sets the Pitch for TextToSpeech The values should be between 0 and 2 where lower values lower the tone of synthesized voice and greater values raise it.</dd>
+  <dd>Sets the speech pitch for the TextToSpeech. 1.0 is the normal pitch, lower values lower the tone of
+ the synthesized voice, greater values increase it.</dd>
   <dt id="TextToSpeech.Result" class="boolean ro bo"><em>Result</em></dt>
   <dd>Result property getter method.</dd>
   <dt id="TextToSpeech.SpeechRate" class="number"><em>SpeechRate</em></dt>
-  <dd>Sets the SpeechRate for TextToSpeech. The values should be between 0 and 2 where lower values slow down the pitch and greater values accelerate it.</dd>
+  <dd>Sets the speech rate</dd>
 </dl>
 
 <h3 id="TextToSpeech-Events">Events</h3>
@@ -424,6 +464,8 @@
 
 <h2 id="VideoPlayer">VideoPlayer</h2>
 
+<p>Implementation of VideoPlayer, using {</p>
+
 <h3 id="VideoPlayer-Properties">Properties</h3>
 
 <dl class="properties">
@@ -435,11 +477,19 @@
   <dt id="VideoPlayer.HeightPercent" class="number wo bo"><em>HeightPercent</em></dt>
   <dd>Specifies the vertical height of the VideoPlayer as a percentage of the height of the Screen.</dd>
   <dt id="VideoPlayer.Source" class="text wo"><em>Source</em></dt>
-  <dd>The “path” to the video.  Usually, this will be the name of the video file, which should be added in the Designer.</dd>
+  <dd>Sets the video source.</dd>
+</dl>
+
+<p />
+
+<p>See <a href="#MediaUtil.determineMediaSource">MediaUtil’s determineMediaSource</a> for information about what a
+ path can be.</p>
+
+<dl>
   <dt id="VideoPlayer.Visible" class="boolean"><em>Visible</em></dt>
   <dd>Returns true iff the VideoPlayer is visible.</dd>
   <dt id="VideoPlayer.Volume" class="number wo"><em>Volume</em></dt>
-  <dd>Sets the volume to a number between 0 and 100. Values less than 0 will be treated as 0, and values greater than 100 will be treated as 100.</dd>
+  <dd>Sets the volume property to a number between 0 and 100.</dd>
   <dt id="VideoPlayer.Width" class="number bo"><em>Width</em></dt>
   <dd>Specifies the component’s horizontal width, measured in pixels.</dd>
   <dt id="VideoPlayer.WidthPercent" class="number wo bo"><em>WidthPercent</em></dt>
@@ -463,27 +513,29 @@
   <dt id="VideoPlayer.SeekTo" class="method"><i></i> SeekTo(<em class="number">ms</em>)</dt>
   <dd>Seeks to the requested time (specified in milliseconds) in the video. If the video is paused, the frame shown will not be updated by the seek. The player can jump only to key frames in the video, so seeking to times that differ by short intervals may not actually move to different frames.</dd>
   <dt id="VideoPlayer.Start" class="method"><i></i> Start()</dt>
-  <dd>Starts playback of the video.</dd>
+  <dd>Plays the media specified by the source. These won’t normally be used in
+ the most elementary applications, because videoView brings up its own
+ player controls when the video is touched.</dd>
   <dt id="VideoPlayer.Stop" class="method"><i></i> Stop()</dt>
   <dd>Resets to start of video and pauses it if video was playing.</dd>
 </dl>
 
 <h2 id="YandexTranslate">YandexTranslate</h2>
 
+<p>Component for YandexTranslate</p>
+
 <h3 id="YandexTranslate-Events">Events</h3>
 
 <dl class="events">
   <dt id="YandexTranslate.GotTranslation">GotTranslation(<em class="text">responseCode</em>,<em class="text">translation</em>)</dt>
-  <dd>Event triggered when the Yandex.Translate service returns the translated text. This event also provides a response code for error handling. If the responseCode is not 200, then something went wrong with the call, and the translation will not be available.</dd>
+  <dd>Event indicating that a request has finished and has returned data (translation).</dd>
 </dl>
 
 <h3 id="YandexTranslate-Methods">Methods</h3>
 
 <dl class="methods">
   <dt id="YandexTranslate.RequestTranslation" class="method"><i></i> RequestTranslation(<em class="text">languageToTranslateTo</em>,<em class="text">textToTranslate</em>)</dt>
-  <dd>By providing a target language to translate to (for instance, ‘es’ for Spanish, ‘en’ for English, or ‘ru’ for Russian), and a word or sentence to translate, this method will request a translation to the Yandex.Translate service.
-Once the text is translated by the external service, the event GotTranslation will be executed.
-Note: Yandex.Translate will attempt to detect the source language. You can also specify prepending it to the language translation. I.e., es-ru will specify Spanish to Russian translation.</dd>
+  <dd>Performs an HTTP GET request to the Yandex.Translate service</dd>
 </dl>
 
 </article>

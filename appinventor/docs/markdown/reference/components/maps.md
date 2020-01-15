@@ -18,6 +18,10 @@ Table of Contents:
 
 ## Circle  {#Circle}
 
+Component for Circle
+
+
+
 ### Properties  {#Circle-Properties}
 
 {:.properties}
@@ -62,7 +66,7 @@ Table of Contents:
 : The type of the feature. For Circles, this returns the text "Circle".
 
 {:id="Circle.Visible" .boolean} *Visible*
-: Specifies whether the Circle should be visible on the screen. Value is true if the component is showing and false if hidden.
+: Property for Visible
 
 ### Events  {#Circle-Events}
 
@@ -104,12 +108,16 @@ Table of Contents:
 
 ## FeatureCollection  {#FeatureCollection}
 
+Component for FeatureCollection
+
+
+
 ### Properties  {#FeatureCollection-Properties}
 
 {:.properties}
 
 {:id="FeatureCollection.Features" .list .bo} *Features*
-: The list of features placed on this FeatureCollection. This list also includes any features created by calls to FeatureFromDescription
+: 
 
 {:id="FeatureCollection.FeaturesFromGeoJSON" .text .wo} *FeaturesFromGeoJSON*
 : Loads a collection of features from the given string. If the string is not valid GeoJSON, the ErrorLoadingFeatureCollection error will be run with url = <string>.
@@ -179,9 +187,17 @@ Table of Contents:
  * visible becomes Visible
 
 {:id="FeatureCollection.LoadFromURL" class="method"} <i/> LoadFromURL(*url*{:.text})
-: <p>Load a feature collection in <a href="https://en.wikipedia.org/wiki/GeoJSON">GeoJSON</a> format from the given url. On success, the event GotFeatures will be raised with the given url and a list of the features parsed from the GeoJSON as a list of (key, value) pairs. On failure, the LoadError event will be raised with any applicable HTTP response code and error message.</p>
+: Load a feature collection in GeoJSON
+ format from the given url. On success, the event GotFeatures will be raised with the given url
+ and a list of features parsed from the GeoJSON as a list of (key, value) pairs. On failure,
+ the LoadError event will be raised with any applicable HTTP response code and error
+ message.
 
 ## LineString  {#LineString}
+
+Component for LineString
+
+
 
 ### Properties  {#LineString-Properties}
 
@@ -211,7 +227,7 @@ Table of Contents:
 : The opacity of the stroke used to outline the map feature.
 
 {:id="LineString.StrokeWidth" .number} *StrokeWidth*
-: The width of the stroke used to outline the LineString.
+: The width of the stroke used to outline the %type%.
 
 {:id="LineString.Title" .text} *Title*
 : The title displayed in the info window that appears when the user clicks on the LineString.
@@ -220,7 +236,7 @@ Table of Contents:
 : The type of the map feature. For LineString, this returns the text "LineString".
 
 {:id="LineString.Visible" .boolean} *Visible*
-: Specifies whether the LineString should be visible on the screen. Value is true if the component is showing and false if hidden.
+: Property for Visible
 
 ### Events  {#LineString-Events}
 
@@ -259,18 +275,36 @@ Table of Contents:
 
 ## Map  {#Map}
 
+<p>A two-dimensional container that renders map tiles in the background and allows for multiple
+ Marker elements to identify points on the map. Map tiles are supplied by OpenStreetMap
+ contributors and the the United States Geological Survey.</p>
+ <p>The Map component provides three utilities for manipulating its boundaries with App Inventor.
+ First, a locking mechanism is provided to allow the map to be moved relative to other components
+ on the Screen. Second, when unlocked, the user can pan the Map to any location. At this new
+ location, the &quot;Set Initial Boundary&quot; button can be pressed to save the current Map
+ coordinates to its properties. Lastly, if the Map is moved to a different location, for example
+ to add Markers off-screen, then the &quot;Reset Map to Initial Bounds&quot; button can be used
+ to re-center the Map at the starting location.</p>
+
+
+
 ### Properties  {#Map-Properties}
 
 {:.properties}
 
 {:id="Map.BoundingBox" .list .bo} *BoundingBox*
-: Bounding box for the map stored as [[North, West], [South, East]].
+: Property for BoundingBox
 
 {:id="Map.CenterFromString" .text .wo} *CenterFromString*
-: <p>Set the initial center coordinate of the map. The value is specified as a comma-separated pair of decimal latitude and longitude coordinates, for example, <code>42.359144, -71.093612</code>.</p><p>In blocks code, it is recommended for performance reasons to use SetCenter with numerical latitude and longitude rather than convert to the string representation for use with this property.</p>
+: <p>Set the initial center coordinate of the map. The value is specified as a
+ comma-separated pair of decimal latitude and longitude coordinates, for example,
+ <code>42.359144, -71.093612</code>.</p>
+ <p>In blocks code, it is recommended for performance reasons to use SetCenter with numerical
+ latitude and longitude rather than convert to the string representation for use with this
+ property.</p>
 
 {:id="Map.EnablePan" .boolean} *EnablePan*
-: Enable two-finger panning of the Map
+: Property for EnablePan
 
 {:id="Map.EnableRotation" .boolean} *EnableRotation*
 : Enable rotating the map based on the user's orientation.
@@ -281,7 +315,7 @@ Table of Contents:
  <a href="#Map.ShowZoom">ShowZoom</a>.
 
 {:id="Map.Features" .list .bo} *Features*
-: The list of features placed on this Map. This list also includes any features created by calls to FeatureFromDescription
+: 
 
 {:id="Map.Height" .number .bo} *Height*
 : Specifies the vertical height of the Map, measured in pixels.
@@ -290,13 +324,13 @@ Table of Contents:
 : Specifies the vertical height of the Map as a percentage of the height of the Screen.
 
 {:id="Map.Latitude" .number .ro .bo} *Latitude*
-: The latitude of the center of the map.
+: <p>The latitude of the center of the map.</p>
 
 {:id="Map.LocationSensor" .component .wo} *LocationSensor*
 : Uses the provided LocationSensor for user location data rather than the built-in location provider.
 
 {:id="Map.Longitude" .number .ro .bo} *Longitude*
-: The longitude of the center of the map.
+: <p>The longitude of the center of the map.</p>
 
 {:id="Map.MapType" .number} *MapType*
 : Set the type of map tile used for the base tile layer.
@@ -307,17 +341,17 @@ Table of Contents:
   3. Terrain
 
 {:id="Map.Rotation" .number} *Rotation*
-: Sets or gets the rotation of the map in decimal degrees if any
+: Property for Rotation
 
 {:id="Map.ScaleUnits" .number} *ScaleUnits*
-: 
+: Property for ScaleUnits
 
 {:id="Map.ShowCompass" .boolean} *ShowCompass*
 : Show a compass on the map. If the device provides a digital compass, orientation changes will
  be used to rotate the compass icon.
 
 {:id="Map.ShowScale" .boolean} *ShowScale*
-: Shows a scale reference on the map.
+: Property for ShowScale
 
 {:id="Map.ShowUser" .boolean} *ShowUser*
 : Show the user's location on the map.
@@ -419,7 +453,11 @@ Table of Contents:
  * visible becomes Visible
 
 {:id="Map.LoadFromURL" class="method"} <i/> LoadFromURL(*url*{:.text})
-: <p>Load a feature collection in <a href="https://en.wikipedia.org/wiki/GeoJSON">GeoJSON</a> format from the given url. On success, the event GotFeatures will be raised with the given url and a list of the features parsed from the GeoJSON as a list of (key, value) pairs. On failure, the LoadError event will be raised with any applicable HTTP response code and error message.</p>
+: Load a feature collection in GeoJSON
+ format from the given url. On success, the event GotFeatures will be raised with the given url
+ and a list of features parsed from the GeoJSON as a list of (key, value) pairs. On failure,
+ the LoadError event will be raised with any applicable HTTP response code and error
+ message.
 
 {:id="Map.PanTo" class="method"} <i/> PanTo(*latitude*{:.number},*longitude*{:.number},*zoom*{:.number})
 : Pan the map center to the given latitude and longitude and adjust the zoom level to the specified zoom.
@@ -428,6 +466,10 @@ Table of Contents:
 : Save the contents of the Map to the specified path.
 
 ## Marker  {#Marker}
+
+Component for Marker
+
+
 
 ### Properties  {#Marker-Properties}
 
@@ -461,7 +503,7 @@ Table of Contents:
 : Sets the height of the marker image, as a percentage of the screen height.
 
 {:id="Marker.ImageAsset" .text} *ImageAsset*
-: The ImageAsset property is used to provide an alternative image for the Marker.
+: Property for ImageAsset
 
 {:id="Marker.Latitude" .number} *Latitude*
 : The latitude of the marker, in decimal degrees, with positive values representing
@@ -487,7 +529,7 @@ Table of Contents:
 : The type of the map feature. For Marker, this returns the text "Marker".
 
 {:id="Marker.Visible" .boolean} *Visible*
-: Specifies whether the Marker should be visible on the screen. Value is true if the component is showing and false if hidden.
+: Property for Visible
 
 {:id="Marker.Width" .number .bo} *Width*
 : Sets the width of the marker image, in pixels.
@@ -541,6 +583,10 @@ Table of Contents:
 
 ## Polygon  {#Polygon}
 
+Component for Polygon
+
+
+
 ### Properties  {#Polygon-Properties}
 
 {:.properties}
@@ -588,7 +634,7 @@ Table of Contents:
 : The type of the feature. For polygons, this returns the text "Polygon".
 
 {:id="Polygon.Visible" .boolean} *Visible*
-: Specifies whether the Polygon should be visible on the screen. Value is true if the component is showing and false if hidden.
+: Property for Visible
 
 ### Events  {#Polygon-Events}
 
@@ -629,6 +675,10 @@ Table of Contents:
 : Show the infobox for the Polygon. This will show the infobox even if EnableInfobox is set to false.
 
 ## Rectangle  {#Rectangle}
+
+Component for Rectangle
+
+
 
 ### Properties  {#Rectangle-Properties}
 
@@ -674,7 +724,7 @@ Table of Contents:
 : The type of the feature. For rectangles, this returns the text "Rectangle".
 
 {:id="Rectangle.Visible" .boolean} *Visible*
-: Specifies whether the Rectangle should be visible on the screen. Value is true if the component is showing and false if hidden.
+: Property for Visible
 
 {:id="Rectangle.WestLongitude" .number} *WestLongitude*
 : The west edge of the rectangle, in decimal degrees east of the equator.

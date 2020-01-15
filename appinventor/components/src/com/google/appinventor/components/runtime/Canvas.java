@@ -56,22 +56,22 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * <p>A two-dimensional touch-sensitive rectangular panel on which drawing can
- * be done and sprites can be moved.</p>
+ * A two-dimensional touch-sensitive rectangular panel on which drawing can
+ * be done and sprites can be moved.
  *
- * <p>Conceptually, a sprite consists of the following layers, from back
+ * Conceptually, a sprite consists of the following layers, from back
  * to front (with items in front being drawn on top):
- * <ul>
- * <li> background color
- * <li> background image
- * <li> the "drawing layer", populated through calls to
- *      {@link #DrawPoint(int,int)}, {@link #DrawCircle(int,int,float)},
+ *
+ * * background color
+ * * background image
+ * * the "drawing layer", populated through calls to
+ *      {@link #DrawPoint(int,int)}, {@link #DrawCircle(int,int,float,boolean)},
  *      {@link #DrawText(String,int,int)}, and
  *      {@link #DrawTextAtAngle(String,int,int,float)}, and
  *      {@link #SetBackgroundPixelColor(int,int,int)}
- * <li> the sprite layer, where sprites with higher Z values are drawn
+ * * the sprite layer, where sprites with higher Z values are drawn
  *      in front of (after) sprites with lower Z values.
- * </ul>
+ *
  * To the user, the first three layers are all the background, in terms
  * of the behavior of {@link #SetBackgroundPixelColor(int,int,int)} and
  * {@link #GetBackgroundPixelColor(int,int)}.  For historical reasons,
@@ -1438,7 +1438,7 @@ public final class Canvas extends AndroidViewComponent implements ComponentConta
   }
 
   /**
-   * <p>Gets the color of the given pixel, ignoring sprites.</p>
+   * Gets the color of the given pixel, ignoring sprites.
    *
    * @param x the x-coordinate
    * @param y the y-coordinate
@@ -1456,8 +1456,8 @@ public final class Canvas extends AndroidViewComponent implements ComponentConta
   }
 
   /**
-   * <p>Sets the color of the given pixel.  This has no effect if the
-   * coordinates are out of bounds.</p>
+   * Sets the color of the given pixel.  This has no effect if the
+   * coordinates are out of bounds.
    *
    * @param x the x-coordinate
    * @param y the y-coordinate
@@ -1475,7 +1475,7 @@ public final class Canvas extends AndroidViewComponent implements ComponentConta
   }
 
   /**
-   * <p>Gets the color of the given pixel, including sprites.</p>
+   * Gets the color of the given pixel, including sprites.
    *
    * @param x the x-coordinate
    * @param y the y-coordinate

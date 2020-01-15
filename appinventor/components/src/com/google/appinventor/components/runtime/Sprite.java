@@ -155,7 +155,7 @@ public abstract class Sprite extends VisibleComponent
   // is a property of Ball only.
 
   /**
-   * Enabled property getter method.
+   * Controls whether the `%type%` moves when its speed is non-zero.
    *
    * @return  {@code true} indicates a running timer, {@code false} a stopped
    *          timer
@@ -181,6 +181,20 @@ public abstract class Sprite extends VisibleComponent
   }
 
   /**
+   * The sprite's heading in degrees above the positive x-axis. Zero degrees is toward the right of
+   * the screen; 90 degrees is toward the top of the screen.
+   *
+   * @return degrees above the positive x-axis
+   */
+  @SimpleProperty(
+      description = "Returns the %type%'s heading in degrees above the positive " +
+          "x-axis.  Zero degrees is toward the right of the screen; 90 degrees is toward the " +
+          "top of the screen.")
+  public double Heading() {
+    return userHeading;
+  }
+
+  /**
    * Sets heading in which sprite should move.  In addition to changing the
    * local variables {@link #userHeading} and {@link #heading}, this
    * sets {@link #headingCos}, {@link #headingSin}, and {@link #headingRadians}.
@@ -203,20 +217,9 @@ public abstract class Sprite extends VisibleComponent
   }
 
   /**
-   * Returns the heading of the sprite.
-   *
-   * @return degrees above the positive x-axis
-   */
-  @SimpleProperty(
-    description = "Returns the %type%'s heading in degrees above the positive " +
-        "x-axis.  Zero degrees is toward the right of the screen; 90 degrees is toward the " +
-        "top of the screen.")
-  public double Heading() {
-    return userHeading;
-  }
-
-  /**
-   * Interval property getter method.
+   * The interval in milliseconds at which the `%type%`'s position is updated. For example, if the
+   * `Interval` is 50 and the `Speed` is 10, then the `%type%` will move 10 pixels every 50
+   * milliseconds.
    *
    * @return  timer interval in ms
    */
@@ -242,7 +245,7 @@ public abstract class Sprite extends VisibleComponent
   }
 
   /**
-   * Sets the speed with which this sprite should move.
+   * The speed at which the sprite moves. The sprite moves this many pixels every interval.
    *
    * @param speed the magnitude (in pixels) to move every {@link #interval}
    * milliseconds
@@ -270,7 +273,7 @@ public abstract class Sprite extends VisibleComponent
   }
 
   /**
-   * Gets whether sprite is visible.
+   * The `Visible` property determines whether the %type is visible (`True`) or invisible (`False`).
    *
    * @return  {@code true} if the sprite is visible, {@code false} otherwise
    */

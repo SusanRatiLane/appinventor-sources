@@ -146,503 +146,716 @@
 
 <h2 id="AccelerometerSensor">AccelerometerSensor</h2>
 
-<h3 id="AccelerometerSensor-Properties">Properties</h3>
+<p>Physical world component that can detect shaking and measure
+ acceleration in three dimensions.  It is implemented using
+ android.hardware.SensorListener
+ (http://developer.android.com/reference/android/hardware/SensorListener.html).</p>
 
-<dl class="properties">
-  <dt id="AccelerometerSensor.Available" class="boolean ro bo"><em>Available</em></dt>
-  <dd>Available property getter method (read-only property).</dd>
-  <dt id="AccelerometerSensor.Enabled" class="boolean"><em>Enabled</em></dt>
-  <dd>If true, the sensor will generate events.  Otherwise, no events
- are generated even if the device is accelerated or shaken.</dd>
-  <dt id="AccelerometerSensor.LegacyMode" class="boolean wo do"><em>LegacyMode</em></dt>
-  <dd>Prior to the release that added this property the AccelerometerSensor component passed through sensor values directly as received from the Android system. However these values do not compensate for tablets that default to Landscape mode, requiring the MIT App Inventor programmer to compensate. However compensating would result in incorrect results in Portrait mode devices such as phones. We now detect Landscape mode tablets and perform the compensation. However if your project is already compensating for the change, you will now get incorrect results. Although our preferred solution is for you to update your project, you can also just set this property to “true” and our compensation code will be deactivated. Note: We recommend that you update your project as we may remove this property in a future release.</dd>
-  <dt id="AccelerometerSensor.MinimumInterval" class="number"><em>MinimumInterval</em></dt>
-  <dd>The minimum interval, in milliseconds, between phone shakes</dd>
-  <dt id="AccelerometerSensor.Sensitivity" class="number"><em>Sensitivity</em></dt>
-  <dd>A number that encodes how sensitive the accelerometer is. The choices are: 1 = weak, 2 = moderate,  3 = strong.</dd>
-  <dt id="AccelerometerSensor.XAccel" class="number ro bo"><em>XAccel</em></dt>
-  <dd>Returns the acceleration in the X-dimension in SI units (m/s^2).
- The sensor must be enabled to return meaningful values.</dd>
-  <dt id="AccelerometerSensor.YAccel" class="number ro bo"><em>YAccel</em></dt>
-  <dd>Returns the acceleration in the Y-dimension in SI units (m/s^2).
- The sensor must be enabled to return meaningful values.</dd>
-  <dt id="AccelerometerSensor.ZAccel" class="number ro bo"><em>ZAccel</em></dt>
-  <dd>Returns the acceleration in the Z-dimension in SI units (m/s^2).
- The sensor must be enabled to return meaningful values.</dd>
-</dl>
+<p>From the Android documentation:
+ "Sensor values are acceleration in the X, Y and Z axis, where the X axis
+ has positive direction toward the right side of the device, the Y axis has
+ positive direction toward the top of the device and the Z axis has
+ positive direction toward the front of the device. The direction of the
+ force of gravity is indicated by acceleration values in the X, Y and Z
+ axes. The typical case where the device is flat relative to the surface of
+ the Earth appears as -STANDARD_GRAVITY in the Z axis and X and Y values
+ close to zero. Acceleration values are given in SI units (m/s^2)."
 
-<h3 id="AccelerometerSensor-Events">Events</h3>
 
-<dl class="events">
-  <dt id="AccelerometerSensor.AccelerationChanged">AccelerationChanged(<em class="number">xAccel</em>,<em class="number">yAccel</em>,<em class="number">zAccel</em>)</dt>
-  <dd>Indicates the acceleration changed in the X, Y, and/or Z dimensions.</dd>
-  <dt id="AccelerometerSensor.Shaking">Shaking()</dt>
-  <dd>Indicates the device started being shaken or continues to be shaken.</dd>
-</dl>
 
-<h2 id="BarcodeScanner">BarcodeScanner</h2>
+### Properties  {#AccelerometerSensor-Properties}
 
-<h3 id="BarcodeScanner-Properties">Properties</h3>
+{:.properties}
 
-<dl class="properties">
-  <dt id="BarcodeScanner.Result" class="text ro bo"><em>Result</em></dt>
-  <dd>Text result of the previous scan.</dd>
-  <dt id="BarcodeScanner.UseExternalScanner" class="boolean"><em>UseExternalScanner</em></dt>
-  <dd>If true App Inventor will look for and use an external scanning program such as “Bar Code Scanner.”</dd>
-</dl>
+{:id="AccelerometerSensor.Available" .boolean .ro .bo} *Available*
+: Available property getter method (read-only property).
 
-<h3 id="BarcodeScanner-Events">Events</h3>
+{:id="AccelerometerSensor.Enabled" .boolean} *Enabled*
+: If true, the sensor will generate events.  Otherwise, no events
+ are generated even if the device is accelerated or shaken.
 
-<dl class="events">
-  <dt id="BarcodeScanner.AfterScan">AfterScan(<em class="text">result</em>)</dt>
-  <dd>Indicates that the scanner has read a (text) result and provides the result</dd>
-</dl>
+{:id="AccelerometerSensor.LegacyMode" .boolean .wo .do} *LegacyMode*
+: Prior to the release that added this property the AccelerometerSensor component passed through sensor values directly as received from the Android system. However these values do not compensate for tablets that default to Landscape mode, requiring the MIT App Inventor programmer to compensate. However compensating would result in incorrect results in Portrait mode devices such as phones. We now detect Landscape mode tablets and perform the compensation. However if your project is already compensating for the change, you will now get incorrect results. Although our preferred solution is for you to update your project, you can also just set this property to “true” and our compensation code will be deactivated. Note: We recommend that you update your project as we may remove this property in a future release.
 
-<h3 id="BarcodeScanner-Methods">Methods</h3>
+{:id="AccelerometerSensor.MinimumInterval" .number} *MinimumInterval*
+: Returns the minimum interval required between calls to Shaking(),
+ in milliseconds.
+ Once the phone starts being shaken, all further Shaking() calls will be ignored
+ until the interval has elapsed.
 
-<dl class="methods">
-  <dt id="BarcodeScanner.DoScan" class="method"><i></i> DoScan()</dt>
-  <dd>Begins a barcode scan, using the camera. When the scan is complete, the AfterScan event will be raised.</dd>
-</dl>
+{:id="AccelerometerSensor.Sensitivity" .number} *Sensitivity*
+: Returns a number that encodes how sensitive the AccelerometerSensor is.
+ The choices are: 1 = weak, 2 = moderate, 3 = strong.
 
-<h2 id="Barometer">Barometer</h2>
+{:id="AccelerometerSensor.XAccel" .number .ro .bo} *XAccel*
+: Returns the acceleration in the X-dimension in SI units (m/s^2).
+ The sensor must be enabled to return meaningful values.
 
-<h3 id="Barometer-Properties">Properties</h3>
+{:id="AccelerometerSensor.YAccel" .number .ro .bo} *YAccel*
+: Returns the acceleration in the Y-dimension in SI units (m/s^2).
+ The sensor must be enabled to return meaningful values.
 
-<dl class="properties">
-  <dt id="Barometer.AirPressure" class="number ro bo"><em>AirPressure</em></dt>
-  <dd>The air pressure in hPa (millibar), if the sensor is available and enabled.</dd>
-  <dt id="Barometer.Available" class="boolean ro bo"><em>Available</em></dt>
-  <dd>Specifies whether or not the device has the hardware to support the Barometer component.</dd>
-  <dt id="Barometer.Enabled" class="boolean"><em>Enabled</em></dt>
-  <dd>If enabled, then device will listen for changes.</dd>
-  <dt id="Barometer.RefreshTime" class="number"><em>RefreshTime</em></dt>
-  <dd>The requested minimum time in milliseconds between changes in readings being reported. Android is not guaranteed to honor the request. Setting this property has no effect on pre-Gingerbread devices.</dd>
-</dl>
+{:id="AccelerometerSensor.ZAccel" .number .ro .bo} *ZAccel*
+: Returns the acceleration in the Z-dimension in SI units (m/s^2).
+ The sensor must be enabled to return meaningful values.
 
-<h3 id="Barometer-Events">Events</h3>
+### Events  {#AccelerometerSensor-Events}
 
-<dl class="events">
-  <dt id="Barometer.AirPressureChanged">AirPressureChanged(<em class="number">pressure</em>)</dt>
-  <dd>Called when a change is detected in the air pressure (provided in hPa).</dd>
-</dl>
+{:.events}
 
-<h2 id="Clock">Clock</h2>
+{:id="AccelerometerSensor.AccelerationChanged"} AccelerationChanged(*xAccel*{:.number},*yAccel*{:.number},*zAccel*{:.number})
+: Indicates the acceleration changed in the X, Y, and/or Z dimensions.
 
-<h3 id="Clock-Properties">Properties</h3>
+{:id="AccelerometerSensor.Shaking"} Shaking()
+: Indicates the device started being shaken or continues to be shaken.
 
-<dl class="properties">
-  <dt id="Clock.TimerAlwaysFires" class="boolean"><em>TimerAlwaysFires</em></dt>
-  <dd>Will fire even when application is not showing on the screen if true</dd>
-  <dt id="Clock.TimerEnabled" class="boolean"><em>TimerEnabled</em></dt>
-  <dd>Fires timer if true</dd>
-  <dt id="Clock.TimerInterval" class="number"><em>TimerInterval</em></dt>
-  <dd>Interval between timer events in ms</dd>
-</dl>
+## BarcodeScanner  {#BarcodeScanner}
 
-<h3 id="Clock-Events">Events</h3>
+Component for scanning a barcode and getting back the resulting string.
 
-<dl class="events">
-  <dt id="Clock.Timer">Timer()</dt>
-  <dd>Timer has gone off.</dd>
-</dl>
 
-<h3 id="Clock-Methods">Methods</h3>
 
-<dl class="methods">
-  <dt id="Clock.AddDays" class="method returns InstantInTime"><i></i> AddDays(<em class="InstantInTime">instant</em>,<em class="number">quantity</em>)</dt>
-  <dd>An instant in time some days after the argument</dd>
-  <dt id="Clock.AddDuration" class="method returns InstantInTime"><i></i> AddDuration(<em class="InstantInTime">instant</em>,<em class="number">quantity</em>)</dt>
-  <dd>An instant in time some duration after the argument</dd>
-  <dt id="Clock.AddHours" class="method returns InstantInTime"><i></i> AddHours(<em class="InstantInTime">instant</em>,<em class="number">quantity</em>)</dt>
-  <dd>An instant in time some hours after the argument</dd>
-  <dt id="Clock.AddMinutes" class="method returns InstantInTime"><i></i> AddMinutes(<em class="InstantInTime">instant</em>,<em class="number">quantity</em>)</dt>
-  <dd>An instant in time some minutes after the argument</dd>
-  <dt id="Clock.AddMonths" class="method returns InstantInTime"><i></i> AddMonths(<em class="InstantInTime">instant</em>,<em class="number">quantity</em>)</dt>
-  <dd>An instant in time some months after the argument</dd>
-  <dt id="Clock.AddSeconds" class="method returns InstantInTime"><i></i> AddSeconds(<em class="InstantInTime">instant</em>,<em class="number">quantity</em>)</dt>
-  <dd>An instant in time some seconds after the argument</dd>
-  <dt id="Clock.AddWeeks" class="method returns InstantInTime"><i></i> AddWeeks(<em class="InstantInTime">instant</em>,<em class="number">quantity</em>)</dt>
-  <dd>An instant in time some weeks after the argument</dd>
-  <dt id="Clock.AddYears" class="method returns InstantInTime"><i></i> AddYears(<em class="InstantInTime">instant</em>,<em class="number">quantity</em>)</dt>
-  <dd>An instant in time some years after the argument</dd>
-  <dt id="Clock.DayOfMonth" class="method returns number"><i></i> DayOfMonth(<em class="InstantInTime">instant</em>)</dt>
-  <dd>The day of the month</dd>
-  <dt id="Clock.Duration" class="method returns number"><i></i> Duration(<em class="InstantInTime">start</em>,<em class="InstantInTime">end</em>)</dt>
-  <dd>Milliseconds elapsed between instants</dd>
-  <dt id="Clock.DurationToDays" class="method returns number"><i></i> DurationToDays(<em class="number">duration</em>)</dt>
-  <dd>convert duration to days</dd>
-  <dt id="Clock.DurationToHours" class="method returns number"><i></i> DurationToHours(<em class="number">duration</em>)</dt>
-  <dd>convert duration to hours</dd>
-  <dt id="Clock.DurationToMinutes" class="method returns number"><i></i> DurationToMinutes(<em class="number">duration</em>)</dt>
-  <dd>convert duration to minutes</dd>
-  <dt id="Clock.DurationToSeconds" class="method returns number"><i></i> DurationToSeconds(<em class="number">duration</em>)</dt>
-  <dd>convert duration to seconds</dd>
-  <dt id="Clock.DurationToWeeks" class="method returns number"><i></i> DurationToWeeks(<em class="number">duration</em>)</dt>
-  <dd>convert duration to weeks</dd>
-  <dt id="Clock.FormatDate" class="method returns text"><i></i> FormatDate(<em class="InstantInTime">instant</em>,<em class="text">pattern</em>)</dt>
-  <dd>Text representing the date of an instant in the specified pattern</dd>
-  <dt id="Clock.FormatDateTime" class="method returns text"><i></i> FormatDateTime(<em class="InstantInTime">instant</em>,<em class="text">pattern</em>)</dt>
-  <dd>Text representing the date and time of an instant in the specified pattern</dd>
-  <dt id="Clock.FormatTime" class="method returns text"><i></i> FormatTime(<em class="InstantInTime">instant</em>)</dt>
-  <dd>Text representing the time of an instant</dd>
-  <dt id="Clock.GetMillis" class="method returns number"><i></i> GetMillis(<em class="InstantInTime">instant</em>)</dt>
-  <dd>The instant in time measured as milliseconds since 1970.</dd>
-  <dt id="Clock.Hour" class="method returns number"><i></i> Hour(<em class="InstantInTime">instant</em>)</dt>
-  <dd>The hour of the day</dd>
-  <dt id="Clock.MakeDate" class="method returns InstantInTime"><i></i> MakeDate(<em class="number">year</em>,<em class="number">month</em>,<em class="number">day</em>)</dt>
-  <dd>Allows the user to set the clock to be a date value.
-Valid values for the month field are 1-12 and 1-31 for the day field.</dd>
-  <dt id="Clock.MakeInstant" class="method returns InstantInTime"><i></i> MakeInstant(<em class="text">from</em>)</dt>
-  <dd>An instant in time specified by MM/dd/YYYY hh:mm:ss or MM/dd/YYYY or hh:mm</dd>
-  <dt id="Clock.MakeInstantFromMillis" class="method returns InstantInTime"><i></i> MakeInstantFromMillis(<em class="number">millis</em>)</dt>
-  <dd>An instant in time specified by the milliseconds since 1970.</dd>
-  <dt id="Clock.MakeInstantFromParts" class="method returns InstantInTime"><i></i> MakeInstantFromParts(<em class="number">year</em>,<em class="number">month</em>,<em class="number">day</em>,<em class="number">hour</em>,<em class="number">minute</em>,<em class="number">second</em>)</dt>
-  <dd>Allows the user to set the date and time to be displayed when the clock opens.
-Valid values for the month field are 1-12 and 1-31 for the day field.</dd>
-  <dt id="Clock.MakeTime" class="method returns InstantInTime"><i></i> MakeTime(<em class="number">hour</em>,<em class="number">minute</em>,<em class="number">second</em>)</dt>
-  <dd>Allows the user to set the time of the clock - Valid format is hh:mm:ss</dd>
-  <dt id="Clock.Minute" class="method returns number"><i></i> Minute(<em class="InstantInTime">instant</em>)</dt>
-  <dd>The minute of the hour</dd>
-  <dt id="Clock.Month" class="method returns number"><i></i> Month(<em class="InstantInTime">instant</em>)</dt>
-  <dd>The month of the year represented as a number from 1 to 12)</dd>
-  <dt id="Clock.MonthName" class="method returns text"><i></i> MonthName(<em class="InstantInTime">instant</em>)</dt>
-  <dd>The name of the month</dd>
-  <dt id="Clock.Now" class="method returns InstantInTime"><i></i> Now()</dt>
-  <dd>The current instant in time read from phone’s clock</dd>
-  <dt id="Clock.Second" class="method returns number"><i></i> Second(<em class="InstantInTime">instant</em>)</dt>
-  <dd>The second of the minute</dd>
-  <dt id="Clock.SystemTime" class="method returns number"><i></i> SystemTime()</dt>
-  <dd>The phone’s internal time</dd>
-  <dt id="Clock.Weekday" class="method returns number"><i></i> Weekday(<em class="InstantInTime">instant</em>)</dt>
-  <dd>The day of the week represented as a number from 1 (Sunday) to 7 (Saturday)</dd>
-  <dt id="Clock.WeekdayName" class="method returns text"><i></i> WeekdayName(<em class="InstantInTime">instant</em>)</dt>
-  <dd>The name of the day of the week</dd>
-  <dt id="Clock.Year" class="method returns number"><i></i> Year(<em class="InstantInTime">instant</em>)</dt>
-  <dd>The year</dd>
-</dl>
+### Properties  {#BarcodeScanner-Properties}
 
-<h2 id="GyroscopeSensor">GyroscopeSensor</h2>
+{:.properties}
 
-<h3 id="GyroscopeSensor-Properties">Properties</h3>
+{:id="BarcodeScanner.Result" .text .ro .bo} *Result*
+: Result property getter method.
 
-<dl class="properties">
-  <dt id="GyroscopeSensor.Available" class="boolean ro bo"><em>Available</em></dt>
-  <dd>Indicates whether a gyroscope sensor is available.</dd>
-  <dt id="GyroscopeSensor.Enabled" class="boolean"><em>Enabled</em></dt>
-  <dd>Enabled property getter method.</dd>
-  <dt id="GyroscopeSensor.XAngularVelocity" class="number ro bo"><em>XAngularVelocity</em></dt>
-  <dd>The angular velocity around the X axis, in degrees per second.</dd>
-  <dt id="GyroscopeSensor.YAngularVelocity" class="number ro bo"><em>YAngularVelocity</em></dt>
-  <dd>The angular velocity around the Y axis, in degrees per second.</dd>
-  <dt id="GyroscopeSensor.ZAngularVelocity" class="number ro bo"><em>ZAngularVelocity</em></dt>
-  <dd>The angular velocity around the Z axis, in degrees per second.</dd>
-</dl>
+{:id="BarcodeScanner.UseExternalScanner" .boolean} *UseExternalScanner*
+: Gets whether or not you want to use an external scanning program to
+ scan barcodes.
 
-<h3 id="GyroscopeSensor-Events">Events</h3>
+### Events  {#BarcodeScanner-Events}
 
-<dl class="events">
-  <dt id="GyroscopeSensor.GyroscopeChanged">GyroscopeChanged(<em class="number">xAngularVelocity</em>,<em class="number">yAngularVelocity</em>,<em class="number">zAngularVelocity</em>,<em class="number">timestamp</em>)</dt>
-  <dd>Indicates that the gyroscope sensor data has changed. The timestamp parameter is the time in nanoseconds at which the event occurred.</dd>
-</dl>
+{:.events}
 
-<h2 id="Hygrometer">Hygrometer</h2>
+{:id="BarcodeScanner.AfterScan"} AfterScan(*result*{:.text})
+: Indicates that the scanner has read a (text) result and provides the result
 
-<h3 id="Hygrometer-Properties">Properties</h3>
+### Methods  {#BarcodeScanner-Methods}
 
-<dl class="properties">
-  <dt id="Hygrometer.Available" class="boolean ro bo"><em>Available</em></dt>
-  <dd>Specifies whether or not the device has the hardware to support the Hygrometer component.</dd>
-  <dt id="Hygrometer.Enabled" class="boolean"><em>Enabled</em></dt>
-  <dd>If enabled, then device will listen for changes.</dd>
-  <dt id="Hygrometer.Humidity" class="number ro bo"><em>Humidity</em></dt>
-  <dd>The relative ambient humidity as a percentage, if the sensor is available and enabled.</dd>
-  <dt id="Hygrometer.RefreshTime" class="number"><em>RefreshTime</em></dt>
-  <dd>The requested minimum time in milliseconds between changes in readings being reported. Android is not guaranteed to honor the request. Setting this property has no effect on pre-Gingerbread devices.</dd>
-</dl>
+{:.methods}
 
-<h3 id="Hygrometer-Events">Events</h3>
+{:id="BarcodeScanner.DoScan" class="method"} <i /> DoScan()
+: Begins a barcode scan, using the camera. When the scan is complete, the
+ AfterScan event will be raised.
 
-<dl class="events">
-  <dt id="Hygrometer.HumidityChanged">HumidityChanged(<em class="number">humidity</em>)</dt>
-  <dd>Called when a change is detected in the ambient air humidity (expressed as a percentage).</dd>
-</dl>
+## Barometer  {#Barometer}
 
-<h2 id="LightSensor">LightSensor</h2>
+Physical world component that can measure the ambient air pressure if
+ supported by the hardware.
 
-<h3 id="LightSensor-Properties">Properties</h3>
 
-<dl class="properties">
-  <dt id="LightSensor.Available" class="boolean ro bo"><em>Available</em></dt>
-  <dd>Specifies whether or not the device has the hardware to support the LightSensor component.</dd>
-  <dt id="LightSensor.AverageLux" class="number ro bo"><em>AverageLux</em></dt>
-  <dd>The average of the 10 most recent light levels measured, in lux.</dd>
-  <dt id="LightSensor.Enabled" class="boolean"><em>Enabled</em></dt>
-  <dd>If enabled, then device will listen for changes.</dd>
-  <dt id="LightSensor.Lux" class="number ro bo"><em>Lux</em></dt>
-  <dd>The most recent light level, in lux, if the sensor is available and enabled.</dd>
-  <dt id="LightSensor.RefreshTime" class="number"><em>RefreshTime</em></dt>
-  <dd>The requested minimum time in milliseconds between changes in readings being reported. Android is not guaranteed to honor the request. Setting this property has no effect on pre-Gingerbread devices.</dd>
-</dl>
 
-<h3 id="LightSensor-Events">Events</h3>
+### Properties  {#Barometer-Properties}
 
-<dl class="events">
-  <dt id="LightSensor.LightChanged">LightChanged(<em class="number">lux</em>)</dt>
-  <dd>Called when a change is detected in the light level.</dd>
-</dl>
+{:.properties}
 
-<h2 id="LocationSensor">LocationSensor</h2>
+{:id="Barometer.AirPressure" .number .ro .bo} *AirPressure*
+: The atmospheric pressure in hPa (millibar), if the sensor is available 
+ and enabled.
 
-<h3 id="LocationSensor-Properties">Properties</h3>
+{:id="Barometer.Available" .boolean .ro .bo} *Available*
+: Available property getter method (read-only property).
 
-<dl class="properties">
-  <dt id="LocationSensor.Accuracy" class="number ro bo"><em>Accuracy</em></dt>
-  <dd>The most recent measure of accuracy, in meters.  If no value is available,
- 0 will be returned.</dd>
-  <dt id="LocationSensor.Altitude" class="number ro bo"><em>Altitude</em></dt>
-  <dd>The most recently available altitude value, in meters.  If no value is
- available, 0 will be returned.</dd>
-  <dt id="LocationSensor.AvailableProviders" class="list ro bo"><em>AvailableProviders</em></dt>
-  <dd></dd>
-  <dt id="LocationSensor.CurrentAddress" class="text ro bo"><em>CurrentAddress</em></dt>
-  <dd>Provides a textual representation of the current address or
- “No address available”.</dd>
-  <dt id="LocationSensor.DistanceInterval" class="number"><em>DistanceInterval</em></dt>
-  <dd>Determines the minimum distance interval, in meters, that the sensor will try to use for sending out location updates. For example, if this is set to 5, then the sensor will fire a LocationChanged event only after 5 meters have been traversed. However, the sensor does not guarantee that an update will be received at exactly the distance interval. It may take more than 5 meters to fire an event, for instance.</dd>
-  <dt id="LocationSensor.Enabled" class="boolean"><em>Enabled</em></dt>
-  <dd>Indicates whether the user has specified that the sensor should
- listen for location changes and raise the corresponding events.</dd>
-  <dt id="LocationSensor.HasAccuracy" class="boolean ro bo"><em>HasAccuracy</em></dt>
-  <dd>Indicates whether information about location accuracy is available.</dd>
-  <dt id="LocationSensor.HasAltitude" class="boolean ro bo"><em>HasAltitude</em></dt>
-  <dd>Indicates whether altitude information is available.</dd>
-  <dt id="LocationSensor.HasLongitudeLatitude" class="boolean ro bo"><em>HasLongitudeLatitude</em></dt>
-  <dd>Indicates whether longitude and latitude information is available.  (It is
- always the case that either both or neither are.)</dd>
-  <dt id="LocationSensor.Latitude" class="number ro bo"><em>Latitude</em></dt>
-  <dd>The most recently available latitude value.  If no value is available,
- 0 will be returned.</dd>
-  <dt id="LocationSensor.Longitude" class="number ro bo"><em>Longitude</em></dt>
-  <dd>The most recent available longitude value.  If no value is available,
- 0 will be returned.</dd>
-  <dt id="LocationSensor.ProviderLocked" class="boolean bo"><em>ProviderLocked</em></dt>
-  <dd>Indicates whether the sensor should allow the developer to
- manually change the provider (GPS, GSM, Wifi, etc.)
- from which location updates are received.</dd>
-  <dt id="LocationSensor.ProviderName" class="text bo"><em>ProviderName</em></dt>
-  <dd>Indicates the source of the location information.  If there is no provider, the
- string “NO PROVIDER” is returned.  This is useful primarily for debugging.</dd>
-  <dt id="LocationSensor.TimeInterval" class="number"><em>TimeInterval</em></dt>
-  <dd>Determines the minimum time interval, in milliseconds, that the sensor will try to use for sending out location updates. However, location updates will only be received when the location of the phone actually changes, and use of the specified time interval is not guaranteed. For example, if 1000 is used as the time interval, location updates will never be fired sooner than 1000ms, but they may be fired anytime after.</dd>
-</dl>
+{:id="Barometer.Enabled" .boolean} *Enabled*
+: If true, the sensor will generate events.  Otherwise, no events
+ are generated.
 
-<h3 id="LocationSensor-Events">Events</h3>
+{:id="Barometer.RefreshTime" .number} *RefreshTime*
+: RefreshTime property getter method.
 
-<dl class="events">
-  <dt id="LocationSensor.LocationChanged">LocationChanged(<em class="number">latitude</em>,<em class="number">longitude</em>,<em class="number">altitude</em>,<em class="number">speed</em>)</dt>
-  <dd>Indicates that a new location has been detected.</dd>
-  <dt id="LocationSensor.StatusChanged">StatusChanged(<em class="text">provider</em>,<em class="text">status</em>)</dt>
-  <dd>Indicates that the status of the location provider service has changed, such as when a
- provider is lost or a new provider starts being used.</dd>
-</dl>
+### Events  {#Barometer-Events}
 
-<h3 id="LocationSensor-Methods">Methods</h3>
+{:.events}
 
-<dl class="methods">
-  <dt id="LocationSensor.LatitudeFromAddress" class="method returns number"><i></i> LatitudeFromAddress(<em class="text">locationName</em>)</dt>
-  <dd>Derives latitude of given address</dd>
-  <dt id="LocationSensor.LongitudeFromAddress" class="method returns number"><i></i> LongitudeFromAddress(<em class="text">locationName</em>)</dt>
-  <dd>Derives longitude of given address</dd>
-</dl>
+{:id="Barometer.AirPressureChanged"} AirPressureChanged(*pressure*{:.number})
+: Called when a change is detected in the air pressure (provided in hPa).
 
-<h2 id="NearField">NearField</h2>
+## Clock  {#Clock}
 
-<h3 id="NearField-Properties">Properties</h3>
+Clock provides the phone's clock, a timer, calendar and time calculations.
+ Everything is represented in milliseconds.
 
-<dl class="properties">
-  <dt id="NearField.LastMessage" class="text ro bo"><em>LastMessage</em></dt>
-  <dd>Returns the content of the most recently received tag.</dd>
-  <dt id="NearField.ReadMode" class="boolean"><em>ReadMode</em></dt>
-  <dd>Returns true if in read mode, false if in write mode.</dd>
-  <dt id="NearField.TextToWrite" class="text bo"><em>TextToWrite</em></dt>
-  <dd>Returns the content of the text that’s going to be written to the tag.</dd>
-  <dt id="NearField.WriteType" class="number ro bo"><em>WriteType</em></dt>
-  <dd></dd>
-</dl>
 
-<h3 id="NearField-Events">Events</h3>
 
-<dl class="events">
-  <dt id="NearField.TagRead">TagRead(<em class="text">message</em>)</dt>
-  <dd>Indicates that a new tag has been detected.
+### Properties  {#Clock-Properties}
+
+{:.properties}
+
+{:id="Clock.TimerAlwaysFires" .boolean} *TimerAlwaysFires*
+: TimerAlwaysFires property getter method.
+
+  return `true` if the timer event will fire even if the application
+   is not on the screen
+
+{:id="Clock.TimerEnabled" .boolean} *TimerEnabled*
+: Enabled property getter method.
+
+{:id="Clock.TimerInterval" .number} *TimerInterval*
+: Interval property getter method.
+
+### Events  {#Clock-Events}
+
+{:.events}
+
+{:id="Clock.Timer"} Timer()
+: Default Timer event handler.
+
+### Methods  {#Clock-Methods}
+
+{:.methods}
+
+{:id="Clock.AddDays" class="method returns InstantInTime"} <i /> AddDays(*instant*{:.InstantInTime},*quantity*{:.number})
+: An instant in time some days after the argument
+
+{:id="Clock.AddDuration" class="method returns InstantInTime"} <i /> AddDuration(*instant*{:.InstantInTime},*quantity*{:.number})
+: An instant in time some duration after the argument
+
+{:id="Clock.AddHours" class="method returns InstantInTime"} <i /> AddHours(*instant*{:.InstantInTime},*quantity*{:.number})
+: An instant in time some hours after the argument
+
+{:id="Clock.AddMinutes" class="method returns InstantInTime"} <i /> AddMinutes(*instant*{:.InstantInTime},*quantity*{:.number})
+: An instant in time some minutes after the argument
+
+{:id="Clock.AddMonths" class="method returns InstantInTime"} <i /> AddMonths(*instant*{:.InstantInTime},*quantity*{:.number})
+: An instant in time some months after the argument
+
+{:id="Clock.AddSeconds" class="method returns InstantInTime"} <i /> AddSeconds(*instant*{:.InstantInTime},*quantity*{:.number})
+: An instant in time some seconds after the argument
+
+{:id="Clock.AddWeeks" class="method returns InstantInTime"} <i /> AddWeeks(*instant*{:.InstantInTime},*quantity*{:.number})
+: An instant in time some weeks after the argument
+
+{:id="Clock.AddYears" class="method returns InstantInTime"} <i /> AddYears(*instant*{:.InstantInTime},*quantity*{:.number})
+: An instant in time some years after the argument
+
+{:id="Clock.DayOfMonth" class="method returns number"} <i /> DayOfMonth(*instant*{:.InstantInTime})
+: Returns the day of the month.
+
+{:id="Clock.Duration" class="method returns number"} <i /> Duration(*start*{:.InstantInTime},*end*{:.InstantInTime})
+: Returns the milliseconds by which end follows start (+ or -)
+
+{:id="Clock.DurationToDays" class="method returns number"} <i /> DurationToDays(*duration*{:.number})
+: Returns the duration converted from milliseconds to days.
+
+{:id="Clock.DurationToHours" class="method returns number"} <i /> DurationToHours(*duration*{:.number})
+: Returns the duration converted from milliseconds to hours.
+
+{:id="Clock.DurationToMinutes" class="method returns number"} <i /> DurationToMinutes(*duration*{:.number})
+: Returns the duration converted from milliseconds to minutes.
+
+{:id="Clock.DurationToSeconds" class="method returns number"} <i /> DurationToSeconds(*duration*{:.number})
+: Returns the duration converted from milliseconds to seconds.
+
+{:id="Clock.DurationToWeeks" class="method returns number"} <i /> DurationToWeeks(*duration*{:.number})
+: Returns the duration converted from milliseconds to weeks.
+
+{:id="Clock.FormatDate" class="method returns text"} <i /> FormatDate(*instant*{:.InstantInTime},*pattern*{:.text})
+: Converts and formats an instant into a string of date with the specified pattern.
+
+{:id="Clock.FormatDateTime" class="method returns text"} <i /> FormatDateTime(*instant*{:.InstantInTime},*pattern*{:.text})
+: Converts and formats an instant into a string of date and time with the specified pattern.   *
+
+{:id="Clock.FormatTime" class="method returns text"} <i /> FormatTime(*instant*{:.InstantInTime})
+: Converts and formats the given instant into a string.
+
+{:id="Clock.GetMillis" class="method returns number"} <i /> GetMillis(*instant*{:.InstantInTime})
+: Calendar property getter method: gets the raw millisecond representation of
+  a Calendar.
+
+{:id="Clock.Hour" class="method returns number"} <i /> Hour(*instant*{:.InstantInTime})
+: Returns the hours for the given date.
+
+{:id="Clock.MakeDate" class="method returns InstantInTime"} <i /> MakeDate(*year*{:.number},*month*{:.number},*day*{:.number})
+: An instant in time specified by number year, number month, number day
+
+{:id="Clock.MakeInstant" class="method returns InstantInTime"} <i /> MakeInstant(*from*{:.text})
+: An instant in time specified by MM/DD/YYYY hh:mm:ss or MM/DD/YYYY or hh:mm
+ where MM is the month (01-12), DD the day (01-31), YYYY the year
+ (0000-9999), hh the hours (00-23), mm the minutes (00-59) and ss
+ the seconds (00-59).
+
+{:id="Clock.MakeInstantFromMillis" class="method returns InstantInTime"} <i /> MakeInstantFromMillis(*millis*{:.number})
+: Create an Calendar from ms since 1/1/1970 00:00:00.0000
+ Probably should go in Calendar.
+
+{:id="Clock.MakeInstantFromParts" class="method returns InstantInTime"} <i /> MakeInstantFromParts(*year*{:.number},*month*{:.number},*day*{:.number},*hour*{:.number},*minute*{:.number},*second*{:.number})
+: An instant in time specified by number year, number month, number day, number hour,
+ number minute, number second
+
+{:id="Clock.MakeTime" class="method returns InstantInTime"} <i /> MakeTime(*hour*{:.number},*minute*{:.number},*second*{:.number})
+: An instant in time specified by integer hour, integer minute, and integer second
+
+{:id="Clock.Minute" class="method returns number"} <i /> Minute(*instant*{:.InstantInTime})
+: Returns the minutes for the given date.
+
+{:id="Clock.Month" class="method returns number"} <i /> Month(*instant*{:.InstantInTime})
+: Returns the number of the month for the given instant.
+
+{:id="Clock.MonthName" class="method returns text"} <i /> MonthName(*instant*{:.InstantInTime})
+: Returns the name of the month for the given instant.
+
+{:id="Clock.Now" class="method returns InstantInTime"} <i /> Now()
+: The current instant in time read from phone's clock
+
+{:id="Clock.Second" class="method returns number"} <i /> Second(*instant*{:.InstantInTime})
+: Returns the seconds for the given instant.
+
+{:id="Clock.SystemTime" class="method returns number"} <i /> SystemTime()
+: Returns the current system time in milliseconds.
+
+{:id="Clock.Weekday" class="method returns number"} <i /> Weekday(*instant*{:.InstantInTime})
+: Returns the weekday for the given instant.
+
+{:id="Clock.WeekdayName" class="method returns text"} <i /> WeekdayName(*instant*{:.InstantInTime})
+: Returns the name of the weekday for the given instant.
+
+{:id="Clock.Year" class="method returns number"} <i /> Year(*instant*{:.InstantInTime})
+: Returns the year of the given instant.
+
+## GyroscopeSensor  {#GyroscopeSensor}
+
+Component providing data from the device's gyroscope sensor.
+
+
+
+### Properties  {#GyroscopeSensor-Properties}
+
+{:.properties}
+
+{:id="GyroscopeSensor.Available" .boolean .ro .bo} *Available*
+: Available property getter method (read-only property).
+
+{:id="GyroscopeSensor.Enabled" .boolean} *Enabled*
+: Enabled property getter method.
+
+{:id="GyroscopeSensor.XAngularVelocity" .number .ro .bo} *XAngularVelocity*
+: XAngularVelocity property getter method (read-only property).
+
+ <p>To return meaningful values the sensor must be enabled.</p>
+
+{:id="GyroscopeSensor.YAngularVelocity" .number .ro .bo} *YAngularVelocity*
+: YAngularVelocity property getter method (read-only property).
+
+ <p>To return meaningful values the sensor must be enabled.</p>
+
+{:id="GyroscopeSensor.ZAngularVelocity" .number .ro .bo} *ZAngularVelocity*
+: ZAngularVelocity property getter method (read-only property).
+
+ <p>To return meaningful values the sensor must be enabled.</p>
+
+### Events  {#GyroscopeSensor-Events}
+
+{:.events}
+
+{:id="GyroscopeSensor.GyroscopeChanged"} GyroscopeChanged(*xAngularVelocity*{:.number},*yAngularVelocity*{:.number},*zAngularVelocity*{:.number},*timestamp*{:.number})
+: GyroscopeChanged event handler.
+
+## Hygrometer  {#Hygrometer}
+
+Physical world component that can measure the relative ambient air 
+ humidity if supported by the hardware.
+
+
+
+### Properties  {#Hygrometer-Properties}
+
+{:.properties}
+
+{:id="Hygrometer.Available" .boolean .ro .bo} *Available*
+: Available property getter method (read-only property).
+
+{:id="Hygrometer.Enabled" .boolean} *Enabled*
+: If true, the sensor will generate events.  Otherwise, no events
+ are generated.
+
+{:id="Hygrometer.Humidity" .number .ro .bo} *Humidity*
+: Returns the relative ambient humidity as a percentage.
+ The sensor must be enabled and available 
+ to return meaningful values.
+
+{:id="Hygrometer.RefreshTime" .number} *RefreshTime*
+: RefreshTime property getter method.
+
+### Events  {#Hygrometer-Events}
+
+{:.events}
+
+{:id="Hygrometer.HumidityChanged"} HumidityChanged(*humidity*{:.number})
+: Indicates the relative humidity changed.
+
+## LightSensor  {#LightSensor}
+
+Physical world component that can measure the light level.
+ It is implemented using
+ android.hardware.SensorListener
+ (http://developer.android.com/reference/android/hardware/SensorListener.html).
+
+
+
+### Properties  {#LightSensor-Properties}
+
+{:.properties}
+
+{:id="LightSensor.Available" .boolean .ro .bo} *Available*
+: Available property getter method (read-only property).
+
+{:id="LightSensor.AverageLux" .number .ro .bo} *AverageLux*
+: Returns the brightness in lux by averaging the previous 10 measured values.
+ The sensor must be enabled and available to return meaningful values.
+
+{:id="LightSensor.Enabled" .boolean} *Enabled*
+: If true, the sensor will generate events.  Otherwise, no events
+ are generated.
+
+{:id="LightSensor.Lux" .number .ro .bo} *Lux*
+: Returns the last measured brightness in lux.
+ The sensor must be enabled and available to return meaningful values.
+
+{:id="LightSensor.RefreshTime" .number} *RefreshTime*
+: RefreshTime property getter method.
+
+### Events  {#LightSensor-Events}
+
+{:.events}
+
+{:id="LightSensor.LightChanged"} LightChanged(*lux*{:.number})
+: Indicates the light level changed.
+
+## LocationSensor  {#LocationSensor}
+
+Sensor that can provide information on longitude, latitude, and altitude.
+
+
+
+### Properties  {#LocationSensor-Properties}
+
+{:.properties}
+
+{:id="LocationSensor.Accuracy" .number .ro .bo} *Accuracy*
+: The most recent measure of accuracy, in meters.  If no value is available,
+ 0 will be returned.
+
+{:id="LocationSensor.Altitude" .number .ro .bo} *Altitude*
+: The most recently available altitude value, in meters.  If no value is
+ available, 0 will be returned.
+
+{:id="LocationSensor.AvailableProviders" .list .ro .bo} *AvailableProviders*
+: Property for AvailableProviders
+
+{:id="LocationSensor.CurrentAddress" .text .ro .bo} *CurrentAddress*
+: Provides a textual representation of the current address or
+ "No address available".
+
+{:id="LocationSensor.DistanceInterval" .number} *DistanceInterval*
+: Property for DistanceInterval
+
+{:id="LocationSensor.Enabled" .boolean} *Enabled*
+: Indicates whether the user has specified that the sensor should
+ listen for location changes and raise the corresponding events.
+
+{:id="LocationSensor.HasAccuracy" .boolean .ro .bo} *HasAccuracy*
+: Indicates whether information about location accuracy is available.
+
+{:id="LocationSensor.HasAltitude" .boolean .ro .bo} *HasAltitude*
+: Indicates whether altitude information is available.
+
+{:id="LocationSensor.HasLongitudeLatitude" .boolean .ro .bo} *HasLongitudeLatitude*
+: Indicates whether longitude and latitude information is available.  (It is
+ always the case that either both or neither are.)
+
+{:id="LocationSensor.Latitude" .number .ro .bo} *Latitude*
+: The most recently available latitude value.  If no value is available,
+ 0 will be returned.
+
+{:id="LocationSensor.Longitude" .number .ro .bo} *Longitude*
+: The most recent available longitude value.  If no value is available,
+ 0 will be returned.
+
+{:id="LocationSensor.ProviderLocked" .boolean .bo} *ProviderLocked*
+: Property for ProviderLocked
+
+{:id="LocationSensor.ProviderName" .text .bo} *ProviderName*
+: Indicates the source of the location information.  If there is no provider, the
+ string "NO PROVIDER" is returned.  This is useful primarily for debugging.
+
+{:id="LocationSensor.TimeInterval" .number} *TimeInterval*
+: Property for TimeInterval
+
+### Events  {#LocationSensor-Events}
+
+{:.events}
+
+{:id="LocationSensor.LocationChanged"} LocationChanged(*latitude*{:.number},*longitude*{:.number},*altitude*{:.number},*speed*{:.number})
+: Indicates that a new location has been detected.
+
+{:id="LocationSensor.StatusChanged"} StatusChanged(*provider*{:.text},*status*{:.text})
+: Indicates that the status of the location provider service has changed, such as when a
+ provider is lost or a new provider starts being used.
+
+### Methods  {#LocationSensor-Methods}
+
+{:.methods}
+
+{:id="LocationSensor.LatitudeFromAddress" class="method returns number"} <i /> LatitudeFromAddress(*locationName*{:.text})
+: Derives Latitude from Address
+
+{:id="LocationSensor.LongitudeFromAddress" class="method returns number"} <i /> LongitudeFromAddress(*locationName*{:.text})
+: Derives Longitude from Address
+
+## NearField  {#NearField}
+
+Controller for Near Field Communication
+
+
+
+### Properties  {#NearField-Properties}
+
+{:.properties}
+
+{:id="NearField.LastMessage" .text .ro .bo} *LastMessage*
+: Returns the content of the most recently received tag.
+
+{:id="NearField.ReadMode" .boolean} *ReadMode*
+: Returns true if in read mode, false if in write mode.
+
+{:id="NearField.TextToWrite" .text .bo} *TextToWrite*
+: Returns the content of the text that's going to be written to the tag.
+
+{:id="NearField.WriteType" .number .ro .bo} *WriteType*
+: Property for WriteType
+
+### Events  {#NearField-Events}
+
+{:.events}
+
+{:id="NearField.TagRead"} TagRead(*message*{:.text})
+: Indicates that a new tag has been detected.
  Currently this is only a plain text tag, as specified in the
- manifest.  See Compiler.java.</dd>
-  <dt id="NearField.TagWritten">TagWritten()</dt>
-  <dd>Event for TagWritten</dd>
-</dl>
+ manifest.  See Compiler.java.
 
-<h2 id="OrientationSensor">OrientationSensor</h2>
+{:id="NearField.TagWritten"} TagWritten()
+: Event for TagWritten
 
-<h3 id="OrientationSensor-Properties">Properties</h3>
+## OrientationSensor  {#OrientationSensor}
 
-<dl class="properties">
-  <dt id="OrientationSensor.Angle" class="number ro bo"><em>Angle</em></dt>
-  <dd>
-    <p>Angle property getter method (read-only property).  Specifically, this
+Sensor that can measure absolute orientation in 3 dimensions.
+
+
+
+### Properties  {#OrientationSensor-Properties}
+
+{:.properties}
+
+{:id="OrientationSensor.Angle" .number .ro .bo} *Angle*
+: <p>Angle property getter method (read-only property).  Specifically, this
  provides the angle in which the orientation sensor is tilted, treating
+ -[Roll](#OrientationSensor.Roll) as the x-coordinate and [Pitch](#OrientationSensor.Pitch) as the
+ y-coordinate.  For the amount of the tilt, use [Magnitude](#OrientationSensor.Magnitude).</p>
 
-</p>
-  </dd>
-  <dt id="OrientationSensor.Available" class="boolean ro bo"><em>Available</em></dt>
-  <dd>Available property getter method (read-only property).</dd>
-  <dt id="OrientationSensor.Azimuth" class="number ro bo"><em>Azimuth</em></dt>
-  <dd>Azimuth property getter method (read-only property).</dd>
-</dl>
+ <p>To return meaningful values the sensor must be enabled.</p>
 
-<p>To return meaningful values the sensor must be enabled.</p>
+{:id="OrientationSensor.Available" .boolean .ro .bo} *Available*
+: Available property getter method (read-only property).
 
-<dl>
-  <dt id="OrientationSensor.Enabled" class="boolean"><em>Enabled</em></dt>
-  <dd>Enabled property getter method.</dd>
-  <dt id="OrientationSensor.Magnitude" class="number ro bo"><em>Magnitude</em></dt>
-  <dd>Magnitude property getter method (read-only property).  Specifically, this
+{:id="OrientationSensor.Azimuth" .number .ro .bo} *Azimuth*
+: Azimuth property getter method (read-only property).
+
+ <p>To return meaningful values the sensor must be enabled.</p>
+
+{:id="OrientationSensor.Enabled" .boolean} *Enabled*
+: Enabled property getter method.
+
+{:id="OrientationSensor.Magnitude" .number .ro .bo} *Magnitude*
+: Magnitude property getter method (read-only property).  Specifically, this
  returns a number between 0 and 1, indicating how much the device
- is tilted.  For the angle of tilt, use</dd>
-  <dt id="OrientationSensor.Pitch" class="number ro bo"><em>Pitch</em></dt>
-  <dd>Pitch property getter method (read-only property).</dd>
-</dl>
+ is tilted.  For the angle of tilt, use [Angle](#OrientationSensor.Angle).
 
-<p>To return meaningful values the sensor must be enabled.</p>
+ <p>To return meaningful values the sensor must be enabled.</p>
 
-<dl>
-  <dt id="OrientationSensor.Roll" class="number ro bo"><em>Roll</em></dt>
-  <dd>Roll property getter method (read-only property).</dd>
-</dl>
+{:id="OrientationSensor.Pitch" .number .ro .bo} *Pitch*
+: Pitch property getter method (read-only property).
 
-<p>To return meaningful values the sensor must be enabled.</p>
+ <p>To return meaningful values the sensor must be enabled.</p>
 
-<h3 id="OrientationSensor-Events">Events</h3>
+{:id="OrientationSensor.Roll" .number .ro .bo} *Roll*
+: Roll property getter method (read-only property).
 
-<dl class="events">
-  <dt id="OrientationSensor.OrientationChanged">OrientationChanged(<em class="number">azimuth</em>,<em class="number">pitch</em>,<em class="number">roll</em>)</dt>
-  <dd>Default OrientationChanged event handler.</dd>
-</dl>
+ <p>To return meaningful values the sensor must be enabled.</p>
 
-<p>This event is signalled when the device's orientation has changed.  It
+### Events  {#OrientationSensor-Events}
+
+{:.events}
+
+{:id="OrientationSensor.OrientationChanged"} OrientationChanged(*azimuth*{:.number},*pitch*{:.number},*roll*{:.number})
+: Default OrientationChanged event handler.
+
+ <p>This event is signalled when the device's orientation has changed.  It
  reports the new values of azimuth, pich, and roll, and it also sets the Azimuth, Pitch,
  and roll properties.</p>
-<p>Azimuth is the compass heading in degrees, pitch indicates how the device
+ <p>Azimuth is the compass heading in degrees, pitch indicates how the device
  is tilted from top to bottom, and roll indicates how much the device is tilted from
  side to side.</p>
 
-<h2 id="Pedometer">Pedometer</h2>
+## Pedometer  {#Pedometer}
 
-<h3 id="Pedometer-Properties">Properties</h3>
+This component keeps count of steps using the accelerometer.
 
-<dl class="properties">
-  <dt id="Pedometer.CalibrateStrideLength" class="boolean bo"><em>CalibrateStrideLength</em></dt>
-  <dd></dd>
-  <dt id="Pedometer.Distance" class="number ro bo"><em>Distance</em></dt>
-  <dd>The approximate distance traveled in meters.</dd>
-  <dt id="Pedometer.ElapsedTime" class="number ro bo"><em>ElapsedTime</em></dt>
-  <dd>Time elapsed in milliseconds since the pedometer was started.</dd>
-  <dt id="Pedometer.Moving" class="boolean ro bo"><em>Moving</em></dt>
-  <dd></dd>
-  <dt id="Pedometer.SimpleSteps" class="number ro bo"><em>SimpleSteps</em></dt>
-  <dd>The number of simple steps taken since the pedometer has started.</dd>
-  <dt id="Pedometer.StopDetectionTimeout" class="number"><em>StopDetectionTimeout</em></dt>
-  <dd>The duration in milliseconds of idleness (no steps detected) after which to go into a “stopped” state</dd>
-  <dt id="Pedometer.StrideLength" class="number"><em>StrideLength</em></dt>
-  <dd>Set the average stride length in meters.</dd>
-  <dt id="Pedometer.UseGPS" class="boolean wo bo"><em>UseGPS</em></dt>
-  <dd></dd>
-  <dt id="Pedometer.WalkSteps" class="number ro bo"><em>WalkSteps</em></dt>
-  <dd>the number of walk steps taken since the pedometer has started.</dd>
-</dl>
 
-<h3 id="Pedometer-Events">Events</h3>
 
-<dl class="events">
-  <dt id="Pedometer.CalibrationFailed">CalibrationFailed()</dt>
-  <dd>Event for CalibrationFailed</dd>
-  <dt id="Pedometer.GPSAvailable">GPSAvailable()</dt>
-  <dd>Event for GPSAvailable</dd>
-  <dt id="Pedometer.GPSLost">GPSLost()</dt>
-  <dd>Event for GPSLost</dd>
-  <dt id="Pedometer.SimpleStep">SimpleStep(<em class="number">simpleSteps</em>,<em class="number">distance</em>)</dt>
-  <dd>This event is run when a raw step is detected</dd>
-  <dt id="Pedometer.StartedMoving">StartedMoving()</dt>
-  <dd>Event for StartedMoving</dd>
-  <dt id="Pedometer.StoppedMoving">StoppedMoving()</dt>
-  <dd>Event for StoppedMoving</dd>
-  <dt id="Pedometer.WalkStep">WalkStep(<em class="number">walkSteps</em>,<em class="number">distance</em>)</dt>
-  <dd>This event is run when a walking step is detected. A walking step is a step that appears to be involved in forward motion.</dd>
-</dl>
+### Properties  {#Pedometer-Properties}
 
-<h3 id="Pedometer-Methods">Methods</h3>
+{:.properties}
 
-<dl class="methods">
-  <dt id="Pedometer.Pause" class="method"><i></i> Pause()</dt>
-  <dd>Pause counting of steps and distance.</dd>
-  <dt id="Pedometer.Reset" class="method"><i></i> Reset()</dt>
-  <dd>Resets the step counter, distance measure and time running.</dd>
-  <dt id="Pedometer.Resume" class="method"><i></i> Resume()</dt>
-  <dd>Resumes counting, synonym of Start.</dd>
-  <dt id="Pedometer.Save" class="method"><i></i> Save()</dt>
-  <dd>Saves the pedometer state to the phone. Permits permits accumulation of steps and distance between invocations of an App that uses the pedometer. Different Apps will have their own saved state.</dd>
-  <dt id="Pedometer.Start" class="method"><i></i> Start()</dt>
-  <dd>Start counting steps</dd>
-  <dt id="Pedometer.Stop" class="method"><i></i> Stop()</dt>
-  <dd>Stop counting steps</dd>
-</dl>
+{:id="Pedometer.CalibrateStrideLength" .boolean .bo} *CalibrateStrideLength*
+: Property for CalibrateStrideLength
 
-<h2 id="ProximitySensor">ProximitySensor</h2>
+{:id="Pedometer.Distance" .number .ro .bo} *Distance*
+: Returns the approximate distance traveled in meters.
 
-<h3 id="ProximitySensor-Properties">Properties</h3>
+{:id="Pedometer.ElapsedTime" .number .ro .bo} *ElapsedTime*
+: Returns the time elapsed in milliseconds since the pedometer has started.
 
-<dl class="properties">
-  <dt id="ProximitySensor.Available" class="boolean ro bo"><em>Available</em></dt>
-  <dd>Reports whether or not the device has a proximity sensor</dd>
-  <dt id="ProximitySensor.Distance" class="number ro bo"><em>Distance</em></dt>
-  <dd>Returns the distance from the object to the device</dd>
-  <dt id="ProximitySensor.Enabled" class="boolean"><em>Enabled</em></dt>
-  <dd>If true, the sensor will generate events.  Otherwise, no events
- are generated .</dd>
-  <dt id="ProximitySensor.KeepRunningWhenOnPause" class="boolean"><em>KeepRunningWhenOnPause</em></dt>
-  <dd>Returns value of keepRunningWhenOnPause</dd>
-  <dt id="ProximitySensor.MaximumRange" class="number ro bo"><em>MaximumRange</em></dt>
-  <dd>Reports the Maximum Range of the device’s ProximitySensor</dd>
-</dl>
+{:id="Pedometer.Moving" .boolean .ro .bo} *Moving*
+: Property for Moving
 
-<h3 id="ProximitySensor-Events">Events</h3>
+{:id="Pedometer.SimpleSteps" .number .ro .bo} *SimpleSteps*
+: Returns the number of simple steps taken since the pedometer has started.
 
-<dl class="events">
-  <dt id="ProximitySensor.ProximityChanged">ProximityChanged(<em class="number">distance</em>)</dt>
-  <dd>Triggered when distance (in cm) of the object to the device changes.</dd>
-</dl>
+{:id="Pedometer.StopDetectionTimeout" .number} *StopDetectionTimeout*
+: Sets the duration of idleness (no steps detected) after which to go into a "stopped" state.
 
-<h2 id="Thermometer">Thermometer</h2>
+{:id="Pedometer.StrideLength" .number} *StrideLength*
+: Specifies the stride length in meters. The application can use this to explicitly set
+ stride length to override the one calculated by the pedometer's calibration mechanism.
+ As a side effect, this method turns off calibration of stride length using the GPS.
 
-<h3 id="Thermometer-Properties">Properties</h3>
+{:id="Pedometer.UseGPS" .boolean .wo .bo} *UseGPS*
+: Property for UseGPS
 
-<dl class="properties">
-  <dt id="Thermometer.Available" class="boolean ro bo"><em>Available</em></dt>
-  <dd>Specifies whether or not the device has the hardware to support the Thermometer component.</dd>
-  <dt id="Thermometer.Enabled" class="boolean"><em>Enabled</em></dt>
-  <dd>If enabled, then device will listen for changes.</dd>
-  <dt id="Thermometer.RefreshTime" class="number"><em>RefreshTime</em></dt>
-  <dd>The requested minimum time in milliseconds between changes in readings being reported. Android is not guaranteed to honor the request. Setting this property has no effect on pre-Gingerbread devices.</dd>
-  <dt id="Thermometer.Temperature" class="number ro bo"><em>Temperature</em></dt>
-  <dd>The temperature in degrees Celsius, if the sensor is available and enabled</dd>
-</dl>
+{:id="Pedometer.WalkSteps" .number .ro .bo} *WalkSteps*
+: Returns the number of walk steps taken since the pedometer has started.
 
-<h3 id="Thermometer-Events">Events</h3>
+### Events  {#Pedometer-Events}
 
-<dl class="events">
-  <dt id="Thermometer.TemperatureChanged">TemperatureChanged(<em class="number">temperature</em>)</dt>
-  <dd>Called when a change is detected in the temperature (in degrees Celsius).</dd>
-</dl>
+{:.events}
+
+{:id="Pedometer.CalibrationFailed"} CalibrationFailed()
+: Event for CalibrationFailed
+
+{:id="Pedometer.GPSAvailable"} GPSAvailable()
+: Event for GPSAvailable
+
+{:id="Pedometer.GPSLost"} GPSLost()
+: Event for GPSLost
+
+{:id="Pedometer.SimpleStep"} SimpleStep(*simpleSteps*{:.number},*distance*{:.number})
+: Indicates that a step was taken.
+
+{:id="Pedometer.StartedMoving"} StartedMoving()
+: Event for StartedMoving
+
+{:id="Pedometer.StoppedMoving"} StoppedMoving()
+: Event for StoppedMoving
+
+{:id="Pedometer.WalkStep"} WalkStep(*walkSteps*{:.number},*distance*{:.number})
+: Indicates that a step was taken while walking. This will not be called if
+ a single step is taken while standing still.
+
+### Methods  {#Pedometer-Methods}
+
+{:.methods}
+
+{:id="Pedometer.Pause" class="method"} <i /> Pause()
+: Pauses the counting of steps.
+
+{:id="Pedometer.Reset" class="method"} <i /> Reset()
+: Resets the step count, distance, and clock.
+
+{:id="Pedometer.Resume" class="method"} <i /> Resume()
+: Resumes the counting of steps.
+
+{:id="Pedometer.Save" class="method"} <i /> Save()
+: Saves the pedometer state to shared preferences.
+
+{:id="Pedometer.Start" class="method"} <i /> Start()
+: Starts the pedometer.
+
+{:id="Pedometer.Stop" class="method"} <i /> Stop()
+: Stops the pedometer.
+
+## ProximitySensor  {#ProximitySensor}
+
+Component for ProximitySensor
+
+
+
+### Properties  {#ProximitySensor-Properties}
+
+{:.properties}
+
+{:id="ProximitySensor.Available" .boolean .ro .bo} *Available*
+: Used to determine if the device has ProximitySensor
+
+{:id="ProximitySensor.Distance" .number .ro .bo} *Distance*
+: Returns the distance.
+ The sensor must be enabled to return meaningful values.
+
+{:id="ProximitySensor.Enabled" .boolean} *Enabled*
+: If true, the sensor will generate events.  Otherwise, no events
+ are generated .
+
+{:id="ProximitySensor.KeepRunningWhenOnPause" .boolean} *KeepRunningWhenOnPause*
+: Returns value of keepRunningWhenOnPause
+
+{:id="ProximitySensor.MaximumRange" .number .ro .bo} *MaximumRange*
+: Determines a sensor's maximum range. Some proximity sensors return binary values
+ that represent "near" or "far." In this case, the sensor usually reports
+ its maximum range value in the far state and a lesser value in the near state.
+ Typically, the far value is a value &gt; 5 cm, but this can vary from sensor to sensor.
+
+### Events  {#ProximitySensor-Events}
+
+{:.events}
+
+{:id="ProximitySensor.ProximityChanged"} ProximityChanged(*distance*{:.number})
+: Triggered when distance (in cm) of the object to the device changes.
+
+## Thermometer  {#Thermometer}
+
+Physical world component that can measure the ambient air temperature if
+ supported by the hardware.
+
+
+
+### Properties  {#Thermometer-Properties}
+
+{:.properties}
+
+{:id="Thermometer.Available" .boolean .ro .bo} *Available*
+: Available property getter method (read-only property).
+
+{:id="Thermometer.Enabled" .boolean} *Enabled*
+: If true, the sensor will generate events.  Otherwise, no events
+ are generated.
+
+{:id="Thermometer.RefreshTime" .number} *RefreshTime*
+: RefreshTime property getter method.
+
+{:id="Thermometer.Temperature" .number .ro .bo} *Temperature*
+: Returns the temperature in degrees Celsius.
+ The sensor must be enabled and available 
+ to return meaningful values.
+
+### Events  {#Thermometer-Events}
+
+{:.events}
+
+{:id="Thermometer.TemperatureChanged"} TemperatureChanged(*temperature*{:.number})
+: Indicates a change of temperature, provided in degrees Celsius.
+</p>
 
 </article>
 <script>
