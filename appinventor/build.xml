@@ -44,10 +44,7 @@
 
   <target name="noplay">
     <ant inheritAll="false" useNativeBasedir="true" dir="appengine"/>
-    <ant inheritAll="false" useNativeBasedir="true" dir="blocklyeditor"/>
-    <ant inheritAll="false" useNativeBasedir="true" dir="common"/>
     <ant inheritAll="false" useNativeBasedir="true" dir="buildserver"/>
-    <ant inheritAll="false" useNativeBasedir="true" dir="components"/>
   </target>
 
   <target name="installplay">
@@ -72,6 +69,10 @@
 
   <target name="AIMergerApp">
     <ant inheritAll="false" useNativeBasedir="true" dir="aimerger" target="AIMergerApp"/>
+  </target>
+  
+  <target name="devmode" depends="noplay">
+    <ant inheritAll="false" useNativeBasedir="true" dir="appengine" target="devmode"/>
   </target>
 
   <!-- Convenient target for just running the blockly related tests -->
