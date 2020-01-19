@@ -15,6 +15,14 @@ Table of Contents:
 
 ## CloudDB  {#CloudDB}
 
+The CloudDB component stores and retrieves information in the Cloud using Redis, an
+ open source library. The component has methods to store a value under a tag and to
+ retrieve the value associated with the tag. It also possesses a listener to fire events
+ when stored values are changed. It also posseses a sync capability which helps CloudDB
+ to sync with data collected offline.
+
+
+
 ### Properties  {#CloudDB-Properties}
 
 {:.properties}
@@ -23,7 +31,7 @@ Table of Contents:
 : The Default Redis Server to use.
 
 {:id="CloudDB.ProjectID" .text .ro} *ProjectID*
-: Gets the ProjectID for this CloudDB project.
+: Getter for the ProjectID.
 
 {:id="CloudDB.RedisPort" .number .ro} *RedisPort*
 : The Redis Server port to use. Defaults to 6381
@@ -32,7 +40,7 @@ Table of Contents:
 : The Redis Server to use to store data. A setting of "DEFAULT" means that the MIT server will be used.
 
 {:id="CloudDB.Token" .text .ro .do} *Token*
-: This field contains the authentication token used to login to the backed Redis server. For the "DEFAULT" server, do not edit this value, the system will fill it in for you. A system administrator may also provide a special value to you which can be used to share data between multiple projects from multiple people. If using your own Redis server, set a password in the server's config and enter it here.
+: Getter for the authTokenSignature.
 
 {:id="CloudDB.UseSSL" .boolean .ro .do} *UseSSL*
 : Set to true to use SSL to talk to CloudDB/Redis server. This should be set to True for the "DEFAULT" server.
@@ -42,7 +50,7 @@ Table of Contents:
 {:.events}
 
 {:id="CloudDB.CloudDBError"} CloudDBError(*message*{:.text})
-: Indicates that an error occurred while communicating with the CloudDB Redis server.
+: Indicates that the communication with the CloudDB signaled an error.
 
 {:id="CloudDB.DataChanged"} DataChanged(*tag*{:.text},*value*{:.any})
 : Indicates that the data in the CloudDB project has changed.
@@ -55,7 +63,7 @@ Table of Contents:
 : Indicates that a GetValue request has succeeded.
 
 {:id="CloudDB.TagList"} TagList(*value*{:.list})
-: Event triggered when we have received the list of known tags. Used with the "GetTagList" Function.
+: Indicates that a GetTagList request has succeeded.
 
 ### Methods  {#CloudDB-Methods}
 
@@ -65,54 +73,68 @@ Table of Contents:
 : Append a value to the end of a list atomically. If two devices use this function simultaneously, both will be appended and no data lost.
 
 {:id="CloudDB.ClearTag" class="method"} <i/> ClearTag(*tag*{:.text})
-: Remove the tag from CloudDB
+: Asks CloudDB to forget (delete or set to "null") a given tag.
 
 {:id="CloudDB.CloudConnected" class="method returns boolean"} <i/> CloudConnected()
 : returns True if we are on the network and will likely be able to connect to the CloudDB server.
 
 {:id="CloudDB.GetTagList" class="method"} <i/> GetTagList()
-: Get the list of tags for this application. When complete a "TagList" event will be triggered with the list of known tags.
+: GetTagList asks CloudDB to retrieve all the tags belonging to this project.
+
+ The resulting list is returned in GotTagList
 
 {:id="CloudDB.GetValue" class="method"} <i/> GetValue(*tag*{:.text},*valueIfTagNotThere*{:.any})
-: Get the Value for a tag, doesn't return the value but will cause a GotValue event to fire when the value is looked up.
+: GetValue asks CloudDB to get the value stored under the given tag.
+ It will pass valueIfTagNotThere to GotValue if there is no value stored
+ under the tag.
 
 {:id="CloudDB.RemoveFirstFromList" class="method"} <i/> RemoveFirstFromList(*tag*{:.text})
 : Return the first element of a list and atomically remove it. If two devices use this function simultaneously, one will get the first element and the the other will get the second element, or an error if there is no available element. When the element is available, the "FirstRemoved" event will be triggered.
 
 {:id="CloudDB.StoreValue" class="method"} <i/> StoreValue(*tag*{:.text},*valueToStore*{:.any})
-: Store a value at a tag.
+: Asks CloudDB to store the given value under the given tag.
 
 ## File  {#File}
+
+A Component for working with files and directories on the device.
+
+
 
 ### Events  {#File-Events}
 
 {:.events}
 
 {:id="File.AfterFileSaved"} AfterFileSaved(*fileName*{:.text})
-: Event indicating that the contents of the file have been written.
+: Event indicating that a request has finished.
 
 {:id="File.GotText"} GotText(*text*{:.text})
-: Event indicating that the contents from the file have been read.
+: Event indicating that a request has finished.
 
 ### Methods  {#File-Methods}
 
 {:.methods}
 
 {:id="File.AppendToFile" class="method"} <i/> AppendToFile(*text*{:.text},*fileName*{:.text})
-: Appends text to the end of a file storage, creating the file if it does not exist. See the help text under SaveFile for information about where files are written.
+: Appends text to a specified file on the phone.
+ Calls the Write function to write to the file asynchronously to prevent
+ the UI from hanging when there is a large write.
 
 {:id="File.Delete" class="method"} <i/> Delete(*fileName*{:.text})
-: Deletes a file from storage. Prefix the filename with / to delete a specific file in the SD card, for instance /myFile.txt. will delete the file /sdcard/myFile.txt. If the file does not begin with a /, then the file located in the programs private storage will be deleted. Starting the file with // is an error because assets files cannot be deleted.
+: Delete the specified file.
 
 {:id="File.ReadFrom" class="method"} <i/> ReadFrom(*fileName*{:.text})
-: Reads text from a file in storage. Prefix the filename with / to read from a specific file on the SD card. for instance /myFile.txt will read the file /sdcard/myFile.txt. To read assets packaged with an application (also works for the Companion) start the filename with // (two slashes). If a filename does not start with a slash, it will be read from the applications private storage (for packaged apps) and from /sdcard/AppInventor/data for the Companion.
+: Retrieve the text stored in a specified file.
 
 {:id="File.SaveFile" class="method"} <i/> SaveFile(*text*{:.text},*fileName*{:.text})
-: Saves text to a file. If the filename begins with a slash (/) the file is written to the sdcard. For example writing to /myFile.txt will write the file to /sdcard/myFile.txt. If the filename does not start with a slash, it will be written in the programs private data directory where it will not be accessible to other programs on the phone. There is a special exception for the AI Companion where these files are written to /sdcard/AppInventor/data to facilitate debugging. Note that this block will overwrite a file if it already exists.
-
-If you want to add content to a file use the append block.
+: Stores the text to a specified file on the phone.
+ Calls the Write function to write to the file asynchronously to prevent
+ the UI from hanging when there is a large write.
 
 ## TinyDB  {#TinyDB}
+
+Persistently store YAIL values on the phone using tags to store and retrieve.
+
+
 
 ### Properties  {#TinyDB-Properties}
 
@@ -142,6 +164,20 @@ If you want to add content to a file use the append block.
  phone when the app is restarted.
 
 ## TinyWebDB  {#TinyWebDB}
+
+The TinyWebDB component communicates with a Web service to store
+ and retrieve information.  Although this component is usable, it is
+ very limited and meant primarily as a demonstration for people who
+ would like to create their own components that talk to the Web.
+ The accompanying Web service is at
+ (http://tinywebdb.appinventor.mit.edu).  The component has methods to
+ store a value under a tag and to retrieve the value associated with
+ the tag.  The interpretation of what "store" and "retrieve" means
+ is up to the Web service.  In this implementation, all tags and
+ values are strings (text).  This restriction may be relaxed in
+ future versions.
+
+
 
 ### Properties  {#TinyWebDB-Properties}
 

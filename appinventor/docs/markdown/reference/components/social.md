@@ -18,18 +18,23 @@ Table of Contents:
 
 ## ContactPicker  {#ContactPicker}
 
+Component enabling a user to select a contact.
+
+
+
 ### Properties  {#ContactPicker-Properties}
 
 {:.properties}
 
 {:id="ContactPicker.BackgroundColor" .color} *BackgroundColor*
-: Returns the button's background color
+: Returns the button's background color as an alpha-red-green-blue
+ integer.
 
 {:id="ContactPicker.ContactName" .text .ro .bo} *ContactName*
 : Name property getter method.
 
 {:id="ContactPicker.ContactUri" .text .ro .bo} *ContactUri*
-: URI that specifies the location of the contact on the device.
+: "URI that specifies the location of the contact on the device.",
 
 {:id="ContactPicker.EmailAddress" .text .ro .bo} *EmailAddress*
 : EmailAddress property getter method.
@@ -38,19 +43,24 @@ Table of Contents:
 : EmailAddressList property getter method.
 
 {:id="ContactPicker.Enabled" .boolean} *Enabled*
-: If set, user can tap ContactPicker to cause action.
+: Returns true if the ContactPicker is active and clickable.
 
 {:id="ContactPicker.FontBold" .boolean} *FontBold*
-: If set, ContactPicker text is displayed in bold.
+: Returns true if the text of the ContactPicker should be bold.
+ If bold has been requested, this property will return true, even if the
+ font does not support bold.
 
 {:id="ContactPicker.FontItalic" .boolean} *FontItalic*
-: If set, ContactPicker text is displayed in italics.
+: Returns true if the text of the ContactPicker should be italic.
+ If italic has been requested, this property will return true, even if the
+ font does not support italic.
 
 {:id="ContactPicker.FontSize" .number} *FontSize*
-: Point size for ContactPicker text.
+: Returns the text font size of the ContactPicker, measured in sp(scale-independent pixels).
 
 {:id="ContactPicker.FontTypeface" .number .do} *FontTypeface*
-: Font family for ContactPicker text.
+: Returns the text font face of the ContactPicker as default, serif, sans
+ serif, or monospace.
 
 {:id="ContactPicker.Height" .number .bo} *Height*
 : Specifies the vertical height of the ContactPicker, measured in pixels.
@@ -59,7 +69,7 @@ Table of Contents:
 : Specifies the vertical height of the ContactPicker as a percentage of the height of the Screen.
 
 {:id="ContactPicker.Image" .text} *Image*
-: Image to display on button.
+: Returns the path of the button's image.
 
 {:id="ContactPicker.PhoneNumber" .text .ro .bo} *PhoneNumber*
 : PhoneNumber property getter method.
@@ -75,16 +85,20 @@ Table of Contents:
 : Returns the style of the button.
 
 {:id="ContactPicker.ShowFeedback" .boolean} *ShowFeedback*
-: Specifies if a visual feedback should be shown  for a ContactPicker that as an image as background.
+: Specifies if a visual feedback should be shown when a ContactPicker with an assigned image
+ is pressed.
 
 {:id="ContactPicker.Text" .text} *Text*
-: Text to display on ContactPicker.
+: Returns the text displayed by the ContactPicker.
 
 {:id="ContactPicker.TextAlignment" .number .do} *TextAlignment*
-: Left, center, or right.
+: Returns the alignment of the button's text: center, normal
+ (e.g., left-justified if text is written left to right), or
+ opposite (e.g., right-justified if text is written left to right).
 
 {:id="ContactPicker.TextColor" .color} *TextColor*
-: Color for button text.
+: Returns the text color of the ContactPicker as an alpha-red-green-blue
+ integer.
 
 {:id="ContactPicker.Visible" .boolean} *Visible*
 : Returns true iff the ContactPicker is visible.
@@ -109,50 +123,62 @@ Table of Contents:
  can be used to prepare the list before it is shown.
 
 {:id="ContactPicker.GotFocus"} GotFocus()
-: Indicates the cursor moved over the ContactPicker so it is now possible to click it.
+: Indicates the cursor moved over the button so it is now possible
+ to click it.
 
 {:id="ContactPicker.LostFocus"} LostFocus()
-: Indicates the cursor moved away from the ContactPicker so it is now no longer possible to click it.
+: Indicates the cursor moved away from the button so it is now no
+ longer possible to click it.
 
 {:id="ContactPicker.TouchDown"} TouchDown()
-: Indicates that the ContactPicker was pressed down.
+: Indicates when a button is touch down
 
 {:id="ContactPicker.TouchUp"} TouchUp()
-: Indicates that the ContactPicker has been released.
+: Indicates when a button touch ends
 
 ### Methods  {#ContactPicker-Methods}
 
 {:.methods}
 
 {:id="ContactPicker.Open" class="method"} <i/> Open()
-: Opens the picker, as though the user clicked on it.
+: Opens the ContactPicker, as though the user clicked on it.
 
 {:id="ContactPicker.ViewContact" class="method"} <i/> ViewContact(*uri*{:.text})
-: view a contact via its URI
+: return nothing, just call another activity which is view contact
 
 ## EmailPicker  {#EmailPicker}
+
+Text box using auto-completion to pick out an email address from contacts.
+
+
 
 ### Properties  {#EmailPicker-Properties}
 
 {:.properties}
 
 {:id="EmailPicker.BackgroundColor" .color} *BackgroundColor*
-: The background color of the input box.  You can choose a color by name in the Designer or in the Blocks Editor.  The default background color is 'default' (shaded 3-D look).
+: Returns the background color of the EmailPicker as an alpha-red-green-blue
+ integer.
 
 {:id="EmailPicker.Enabled" .boolean} *Enabled*
-: Whether the user can enter text into the EmailPicker.  By default, this is true.
+: Returns true if the EmailPicker is active and useable.
 
 {:id="EmailPicker.FontBold" .boolean .do} *FontBold*
-: Whether the font for the text should be bold.  By default, it is not.
+: Returns true if the text of the EmailPicker should be bold.
+ If bold has been requested, this property will return true, even if the
+ font does not support bold.
 
 {:id="EmailPicker.FontItalic" .boolean .do} *FontItalic*
-: Whether the text should appear in italics.  By default, it does not.
+: Returns true if the text of the EmailPicker should be italic.
+ If italic has been requested, this property will return true, even if the
+ font does not support italic.
 
 {:id="EmailPicker.FontSize" .number} *FontSize*
-: The font size for the text.  By default, it is 14.0 points.
+: Returns the text font size of the EmailPicker, measured in sp(scale-independent pixels).
 
 {:id="EmailPicker.FontTypeface" .number .do} *FontTypeface*
-: The font for the text.  The value can be changed in the Designer.
+: Returns the text font face of the EmailPicker as default, serif, sans
+ serif, or monospace.
 
 {:id="EmailPicker.Height" .number .bo} *Height*
 : Specifies the vertical height of the EmailPicker, measured in pixels.
@@ -161,16 +187,19 @@ Table of Contents:
 : Specifies the vertical height of the EmailPicker as a percentage of the height of the Screen.
 
 {:id="EmailPicker.Hint" .text} *Hint*
-: Text that should appear faintly in the EmailPicker to provide a hint as to what the user should enter.  This can only be seen if the <code>Text</code> property is empty.
+: Hint property getter method.
 
 {:id="EmailPicker.Text" .text} *Text*
 : Returns the textbox contents.
 
 {:id="EmailPicker.TextAlignment" .number .do} *TextAlignment*
-: Whether the text should be left justified, centered, or right justified.  By default, text is left justified.
+: Returns the alignment of the textbox's text: center, normal
+ (e.g., left-justified if text is written left to right), or
+ opposite (e.g., right-justified if text is written left to right).
 
 {:id="EmailPicker.TextColor" .color} *TextColor*
-: The color for the text.  You can choose a color by name in the Designer or in the Blocks Editor.  The default text color is black.
+: Returns the text color of the EmailPicker as an alpha-red-green-blue
+ integer.
 
 {:id="EmailPicker.Visible" .boolean} *Visible*
 : Returns true iff the EmailPicker is visible.
@@ -198,9 +227,17 @@ Table of Contents:
 {:.methods}
 
 {:id="EmailPicker.RequestFocus" class="method"} <i/> RequestFocus()
-: Sets the EmailPicker active.
+: Request focus to current EmailPicker.
 
 ## PhoneCall  {#PhoneCall}
+
+Component for making a phone call to a programatically-specified number.
+
+ TODO(markf): Note that the initial carrier for Android phones only supports 3 participants
+              in a conference call, so that's all that the current implementation of this
+              component supports.  In the future we can generalize this to more participants.
+
+
 
 ### Properties  {#PhoneCall-Properties}
 
@@ -214,13 +251,15 @@ Table of Contents:
 {:.events}
 
 {:id="PhoneCall.IncomingCallAnswered"} IncomingCallAnswered(*phoneNumber*{:.text})
-: Event indicating that an incoming phone call is answered. phoneNumber is the incoming call phone number.
+: Event indicating that an incoming phone call is answered.
 
 {:id="PhoneCall.PhoneCallEnded"} PhoneCallEnded(*status*{:.number},*phoneNumber*{:.text})
-: Event indicating that a phone call has ended. If status is 1, incoming call is missed or rejected; if status is 2, incoming call is answered before hanging up; if status is 3, outgoing call is hung up. phoneNumber is the ended call phone number.
+: Event indicating that a phone call has ended.
+ status: 1:incoming call is missed or rejected; 2:incoming call is answered before hanging up; 3:Outgoing call is hung up.
 
 {:id="PhoneCall.PhoneCallStarted"} PhoneCallStarted(*status*{:.number},*phoneNumber*{:.text})
-: Event indicating that a phonecall has started. If status is 1, incoming call is ringing; if status is 2, outgoing call is dialled. phoneNumber is the incoming/outgoing phone number.
+: Event indicating that a phone call has started.
+ status: 1:incoming call is ringing; 2:outgoing call is dialled.
 
 ### Methods  {#PhoneCall-Methods}
 
@@ -234,18 +273,23 @@ Table of Contents:
 
 ## PhoneNumberPicker  {#PhoneNumberPicker}
 
+Component enabling a user to select a contact's phone number.
+
+
+
 ### Properties  {#PhoneNumberPicker-Properties}
 
 {:.properties}
 
 {:id="PhoneNumberPicker.BackgroundColor" .color} *BackgroundColor*
-: Returns the button's background color
+: Returns the button's background color as an alpha-red-green-blue
+ integer.
 
 {:id="PhoneNumberPicker.ContactName" .text .ro .bo} *ContactName*
 : Name property getter method.
 
 {:id="PhoneNumberPicker.ContactUri" .text .ro .bo} *ContactUri*
-: URI that specifies the location of the contact on the device.
+: "URI that specifies the location of the contact on the device.",
 
 {:id="PhoneNumberPicker.EmailAddress" .text .ro .bo} *EmailAddress*
 : EmailAddress property getter method.
@@ -254,28 +298,33 @@ Table of Contents:
 : EmailAddressList property getter method.
 
 {:id="PhoneNumberPicker.Enabled" .boolean} *Enabled*
-: If set, user can tap ContactPicker to cause action.
+: Returns true if the PhoneNumberPicker is active and clickable.
 
 {:id="PhoneNumberPicker.FontBold" .boolean} *FontBold*
-: If set, ContactPicker text is displayed in bold.
+: Returns true if the text of the PhoneNumberPicker should be bold.
+ If bold has been requested, this property will return true, even if the
+ font does not support bold.
 
 {:id="PhoneNumberPicker.FontItalic" .boolean} *FontItalic*
-: If set, ContactPicker text is displayed in italics.
+: Returns true if the text of the PhoneNumberPicker should be italic.
+ If italic has been requested, this property will return true, even if the
+ font does not support italic.
 
 {:id="PhoneNumberPicker.FontSize" .number} *FontSize*
-: Point size for ContactPicker text.
+: Returns the text font size of the PhoneNumberPicker, measured in sp(scale-independent pixels).
 
 {:id="PhoneNumberPicker.FontTypeface" .number .do} *FontTypeface*
-: Font family for ContactPicker text.
+: Returns the text font face of the PhoneNumberPicker as default, serif, sans
+ serif, or monospace.
 
 {:id="PhoneNumberPicker.Height" .number .bo} *Height*
-: Specifies the vertical height of the ContactPicker, measured in pixels.
+: Specifies the vertical height of the PhoneNumberPicker, measured in pixels.
 
 {:id="PhoneNumberPicker.HeightPercent" .number .wo .bo} *HeightPercent*
-: Specifies the vertical height of the ContactPicker as a percentage of the height of the Screen.
+: Specifies the vertical height of the PhoneNumberPicker as a percentage of the height of the Screen.
 
 {:id="PhoneNumberPicker.Image" .text} *Image*
-: Image to display on button.
+: Returns the path of the button's image.
 
 {:id="PhoneNumberPicker.PhoneNumber" .text .ro .bo} *PhoneNumber*
 : PhoneNumber property getter method.
@@ -291,25 +340,29 @@ Table of Contents:
 : Returns the style of the button.
 
 {:id="PhoneNumberPicker.ShowFeedback" .boolean} *ShowFeedback*
-: Specifies if a visual feedback should be shown  for a ContactPicker that as an image as background.
+: Specifies if a visual feedback should be shown when a PhoneNumberPicker with an assigned image
+ is pressed.
 
 {:id="PhoneNumberPicker.Text" .text} *Text*
-: Text to display on ContactPicker.
+: Returns the text displayed by the PhoneNumberPicker.
 
 {:id="PhoneNumberPicker.TextAlignment" .number .do} *TextAlignment*
-: Left, center, or right.
+: Returns the alignment of the button's text: center, normal
+ (e.g., left-justified if text is written left to right), or
+ opposite (e.g., right-justified if text is written left to right).
 
 {:id="PhoneNumberPicker.TextColor" .color} *TextColor*
-: Color for button text.
+: Returns the text color of the PhoneNumberPicker as an alpha-red-green-blue
+ integer.
 
 {:id="PhoneNumberPicker.Visible" .boolean} *Visible*
-: Returns true iff the ContactPicker is visible.
+: Returns true iff the PhoneNumberPicker is visible.
 
 {:id="PhoneNumberPicker.Width" .number .bo} *Width*
-: Specifies the horizontal width of the ContactPicker, measured in pixels.
+: Specifies the horizontal width of the PhoneNumberPicker, measured in pixels.
 
 {:id="PhoneNumberPicker.WidthPercent" .number .wo .bo} *WidthPercent*
-: Specifies the horizontal width of the ContactPicker as a percentage of the width of the Screen.
+: Specifies the horizontal width of the PhoneNumberPicker as a percentage of the width of the Screen.
 
 ### Events  {#PhoneNumberPicker-Events}
 
@@ -320,64 +373,77 @@ Table of Contents:
  result and the properties have been filled in.
 
 {:id="PhoneNumberPicker.BeforePicking"} BeforePicking()
-: Event to raise when the ContactPicker is clicked or the list is shown
+: Event to raise when the PhoneNumberPicker is clicked or the list is shown
  using the Open block.  This event occurs before the list of items is displayed, and 
  can be used to prepare the list before it is shown.
 
 {:id="PhoneNumberPicker.GotFocus"} GotFocus()
-: Indicates the cursor moved over the ContactPicker so it is now possible to click it.
+: Indicates the cursor moved over the button so it is now possible
+ to click it.
 
 {:id="PhoneNumberPicker.LostFocus"} LostFocus()
-: Indicates the cursor moved away from the ContactPicker so it is now no longer possible to click it.
+: Indicates the cursor moved away from the button so it is now no
+ longer possible to click it.
 
 {:id="PhoneNumberPicker.TouchDown"} TouchDown()
-: Indicates that the ContactPicker was pressed down.
+: Indicates when a button is touch down
 
 {:id="PhoneNumberPicker.TouchUp"} TouchUp()
-: Indicates that the ContactPicker has been released.
+: Indicates when a button touch ends
 
 ### Methods  {#PhoneNumberPicker-Methods}
 
 {:.methods}
 
 {:id="PhoneNumberPicker.Open" class="method"} <i/> Open()
-: Opens the picker, as though the user clicked on it.
+: Opens the PhoneNumberPicker, as though the user clicked on it.
 
 {:id="PhoneNumberPicker.ViewContact" class="method"} <i/> ViewContact(*uri*{:.text})
-: view a contact via its URI
+: return nothing, just call another activity which is view contact
 
 ## Sharing  {#Sharing}
+
+Component for sharing files and/or messages through Android's built-in sharing
+ functionality.
+
+
 
 ### Methods  {#Sharing-Methods}
 
 {:.methods}
 
 {:id="Sharing.ShareFile" class="method"} <i/> ShareFile(*file*{:.text})
-: Shares a file through any capable application installed on the phone by displaying a list of the available apps and allowing the user to choose one from the list. The selected app will open with the file inserted on it.
+: Shares a file using Android' built-in sharing.
 
 {:id="Sharing.ShareFileWithMessage" class="method"} <i/> ShareFileWithMessage(*file*{:.text},*message*{:.text})
-: Shares both a file and a message through any capable application installed on the phone by displaying a list of available apps and allowing the user to  choose one from the list. The selected app will open with the file and message inserted on it.
+: Shares a file along with a message using Android' built-in sharing.
 
 {:id="Sharing.ShareMessage" class="method"} <i/> ShareMessage(*message*{:.text})
-: Shares a message through any capable application installed on the phone by displaying a list of the available apps and allowing the user to choose one from the list. The selected app will open with the message inserted on it.
+: Shares a message using Android' built-in sharing.
 
 ## Texting  {#Texting}
+
+A component capable of sending and receiving text messages via SMS.
+
+
 
 ### Properties  {#Texting-Properties}
 
 {:.properties}
 
 {:id="Texting.GoogleVoiceEnabled" .boolean} *GoogleVoiceEnabled*
-: If true, then SendMessage will attempt to send messages over Wifi using Google Voice.  This requires that the Google Voice app must be installed and set up on the phone or tablet, with a Google Voice account.  If GoogleVoiceEnabled is false, the device must have phone and texting service in order to send or receive messages with this component.
+: If this property is true, then SendMessage will attempt to send messages using
+ Google voice.
 
 {:id="Texting.Message" .text} *Message*
-: The message that will be sent when the SendMessage method is called.
+: The text message to that will be sent when the SendMessage method is called.
 
 {:id="Texting.PhoneNumber" .text} *PhoneNumber*
 : Sets the phone number to send the text message to when the SendMessage function is called.
 
 {:id="Texting.ReceivingEnabled" .number} *ReceivingEnabled*
-: If set to 1 (OFF) no messages will be received.  If set to 2 (FOREGROUND) or3 (ALWAYS) the component will respond to messages if it is running. If the app is not running then the message will be discarded if set to 2 (FOREGROUND). If set to 3 (ALWAYS) and the app is not running the phone will show a notification.  Selecting the notification will bring up the app and signal the MessageReceived event.  Messages received when the app is dormant will be queued, and so several MessageReceived events might appear when the app awakens.  As an app developer, it would be a good idea to give your users control over this property, so they can make their phones ignore text messages when your app is installed.
+: Gets whether you want the [MessageReceived](#Texting.MessageReceived) event to
+ get run when a new text message is received.
 
 ### Events  {#Texting-Events}
 
@@ -397,6 +463,10 @@ Table of Contents:
 : Send a text message directly
 
 ## Twitter  {#Twitter}
+
+Component for accessing Twitter.
+
+
 
 ### Properties  {#Twitter-Properties}
 
@@ -439,44 +509,49 @@ The value of the property will then be the same as the parameter to <code>Search
 {:.events}
 
 {:id="Twitter.DirectMessagesReceived"} DirectMessagesReceived(*messages*{:.list})
-: This event is raised when the recent messages requested through <code>RequestDirectMessages</code> have been retrieved. A list of the messages can then be found in the <code>messages</code> parameter or the <code>Messages</code> property.
+: Indicates when all the direct messages requested through
+ [RequestDirectMessages](#Twitter.RequestDirectMessages) have been received.
 
 {:id="Twitter.FollowersReceived"} FollowersReceived(*followers2*{:.list})
-: This event is raised when all of the followers of the logged-in user requested through <code>RequestFollowers</code> have been retrieved. A list of the followers can then be found in the <code>followers</code> parameter or the <code>Followers</code> property.
+: Indicates when all of your followers requested through
+ [RequestFollowers](#Twitter.RequestFollowers) have been received.
 
 {:id="Twitter.FriendTimelineReceived"} FriendTimelineReceived(*timeline*{:.list})
-: This event is raised when the messages requested through <code>RequestFriendTimeline</code> have been retrieved. The <code>timeline</code> parameter and the <code>Timeline</code> property will contain a list of lists, where each sub-list contains a status update of the form (username message)
+: Indicates when the friend timeline requested through
+ [RequestFriendTimeline](#Twitter.RequestFriendTimeline) has been received.
 
 {:id="Twitter.IsAuthorized"} IsAuthorized()
-: This event is raised after the program calls <code>Authorize</code> if the authorization was successful.  It is also called after a call to <code>CheckAuthorized</code> if we already have a valid access token. After this event has been raised, any other method for this component can be called.
+: Indicates when the login has been successful.
 
 {:id="Twitter.MentionsReceived"} MentionsReceived(*mentions*{:.list})
-: This event is raised when the mentions of the logged-in user requested through <code>RequestMentions</code> have been retrieved.  A list of the mentions can then be found in the <code>mentions</code> parameter or the <code>Mentions</code> property.
+: Indicates when all the mentions requested through
+ [RequestMentions](#Twitter.RequestMentions) have been received.
 
 {:id="Twitter.SearchSuccessful"} SearchSuccessful(*searchResults*{:.list})
-: This event is raised when the results of the search requested through <code>SearchSuccessful</code> have been retrieved. A list of the results can then be found in the <code>results</code> parameter or the <code>Results</code> property.
+: Indicates when the search requested through [SearchTwitter](#Twitter.SearchTwitter)
+ has completed.
 
 ### Methods  {#Twitter-Methods}
 
 {:.methods}
 
 {:id="Twitter.Authorize" class="method"} <i/> Authorize()
-: Redirects user to login to Twitter via the Web browser using the OAuth protocol if we don't already have authorization.
+: Authenticate to Twitter using OAuth
 
 {:id="Twitter.CheckAuthorized" class="method"} <i/> CheckAuthorized()
-: Checks whether we already have access, and if so, causes IsAuthorized event handler to be called.
+: Check whether we already have a valid Twitter access token
 
 {:id="Twitter.DeAuthorize" class="method"} <i/> DeAuthorize()
-: Removes Twitter authorization from this running app instance
+: Remove authentication for this app instance
 
 {:id="Twitter.DirectMessage" class="method"} <i/> DirectMessage(*user*{:.text},*message*{:.text})
-: This sends a direct (private) message to the specified user.  The message will be trimmed if it exceeds 160characters. <p><u>Requirements</u>: This should only be called after the <code>IsAuthorized</code> event has been raised, indicating that the user has successfully logged in to Twitter.</p>
+: Sends a direct message to a specified username.
 
 {:id="Twitter.Follow" class="method"} <i/> Follow(*user*{:.text})
 : Starts following a user.
 
 {:id="Twitter.RequestDirectMessages" class="method"} <i/> RequestDirectMessages()
-: Requests the 20 most recent direct messages sent to the logged-in user.  When the messages have been retrieved, the system will raise the <code>DirectMessagesReceived</code> event and set the <code>DirectMessages</code> property to the list of messages.<p><u>Requirements</u>: This should only be called after the <code>IsAuthorized</code> event has been raised, indicating that the user has successfully logged in to Twitter.</p>
+: Gets the most recent messages sent directly to you.
 
 {:id="Twitter.RequestFollowers" class="method"} <i/> RequestFollowers()
 : Gets who is following you.
@@ -485,16 +560,16 @@ The value of the property will then be the same as the parameter to <code>Search
 : Gets the most recent 20 messages in the user's timeline.
 
 {:id="Twitter.RequestMentions" class="method"} <i/> RequestMentions()
-: Requests the 20 most recent mentions of the logged-in user.  When the mentions have been retrieved, the system will raise the <code>MentionsReceived</code> event and set the <code>Mentions</code> property to the list of mentions.<p><u>Requirements</u>: This should only be called after the <code>IsAuthorized</code> event has been raised, indicating that the user has successfully logged in to Twitter.</p>
+: Gets the most recent messages where your username is mentioned.
 
 {:id="Twitter.SearchTwitter" class="method"} <i/> SearchTwitter(*query*{:.text})
-: This searches Twitter for the given String query.<p><u>Requirements</u>: This should only be called after the <code>IsAuthorized</code> event has been raised, indicating that the user has successfully logged in to Twitter.</p>
+: Search for tweets or labels
 
 {:id="Twitter.StopFollowing" class="method"} <i/> StopFollowing(*user*{:.text})
 : Stops following a user.
 
 {:id="Twitter.Tweet" class="method"} <i/> Tweet(*status*{:.text})
-: This sends a tweet as the logged-in user with the specified Text, which will be trimmed if it exceeds 160 characters. <p><u>Requirements</u>: This should only be called after the <code>IsAuthorized</code> event has been raised, indicating that the user has successfully logged in to Twitter.</p>
+: Sends a Tweet of the currently logged in user.
 
 {:id="Twitter.TweetWithImage" class="method"} <i/> TweetWithImage(*status*{:.text},*imagePath*{:.text})
-: This sends a tweet as the logged-in user with the specified Text and a path to the image to be uploaded, which will be trimmed if it exceeds 160 characters. If an image is not found or invalid, only the text will be tweeted.<p><u>Requirements</u>: This should only be called after the <code>IsAuthorized</code> event has been raised, indicating that the user has successfully logged in to Twitter.</p>
+: Tweet with Image, Uploaded to Twitter

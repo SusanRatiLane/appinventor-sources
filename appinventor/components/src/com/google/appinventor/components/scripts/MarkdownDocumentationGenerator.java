@@ -30,7 +30,6 @@ public class MarkdownDocumentationGenerator extends ComponentProcessor {
         categoryDocs.put(component.getCategoryString(), new StringBuilder());
       }
       if (!sortedComponents.containsKey(component.getCategoryString())) {
-        //noinspection Convert2Diamond
         sortedComponents.put(component.getCategoryString(), new TreeMap<String, ComponentInfo>());
       }
       categoryNames.put(component.getCategoryString(), component.getCategory());
@@ -59,12 +58,15 @@ public class MarkdownDocumentationGenerator extends ComponentProcessor {
           String name = entry.getKey();
           out.write("\n\n## ");
           out.write(name);
-          out.write("  {#" + name + "}");
+          out.write("  {#" + name + "}\n\n");
           ComponentInfo info = entry.getValue();
+          out.write(info.getLongDescription(info));
+          out.write("\n\n");
           outputProperties(name, info, out);
           outputEvents(name, info, out);
           outputMethods(name, info, out);
         }
+        out.write("\n");
       }
     }
   }
@@ -80,7 +82,7 @@ public class MarkdownDocumentationGenerator extends ComponentProcessor {
       }
       out.write(String.format("%n%n{:id=\"%s.%s\" %s} *%s*%n: ", name, property.name,
           getPropertyClass(info, property), property.name));
-      out.write(property.getDescription());
+      out.write(property.getLongDescription(info));
     }
   }
 
@@ -117,7 +119,7 @@ public class MarkdownDocumentationGenerator extends ComponentProcessor {
       }
       out.write(String.format("%n%n{:id=\"%s.%s\"} %s(%s)%n: ", name, event.name, event.name,
           formatParameters(event.parameters)));
-      out.write(event.description);
+      out.write(event.getLongDescription(info));
     }
   }
 
@@ -137,7 +139,7 @@ public class MarkdownDocumentationGenerator extends ComponentProcessor {
       }
       out.write(String.format("%n%n{:id=\"%s.%s\" class=\"method%s\"} <i/> %s(%s)%n: ", name,
           method.name, returnType, method.name, formatParameters(method.parameters)));
-      out.write(method.description);
+      out.write(method.getLongDescription(info));
     }
   }
 
