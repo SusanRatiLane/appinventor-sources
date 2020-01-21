@@ -477,7 +477,6 @@ public class ProjectToolbar extends Toolbar {
     } else {
       setButtonText(WIDGET_NAME_PUBLISH_OR_UPDATE, MESSAGES.publishToGalleryButton());
     }
-    setButtonEnabled(WIDGET_NAME_PUBLISH_OR_UPDATE, true);
     Ode.getInstance().getTopToolbar().updateMenuState(numSelectedProjects, numProjects);
   }
 
