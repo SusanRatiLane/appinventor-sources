@@ -53,8 +53,8 @@ public class TrashProjectList extends ProjectList {
     }
   }
 
-//  @Override
-//  public void onProjectRemoved(Project project) { }
+  @Override
+  public void onProjectRemoved(Project project) { }
 
   @Override
   public void onDeletedProjectRemoved(Project project) {
@@ -65,12 +65,6 @@ public class TrashProjectList extends ProjectList {
 
     selectedProjects.remove(project);
     Ode.getInstance().getProjectToolbar().updateTrashButtons();
-  }
-
-  @Override
-  public void onProjectsLoaded() {
-    projectListLoading = false;
-    refreshTable(true);
   }
 
 }
