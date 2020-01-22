@@ -72,9 +72,9 @@ public class ProjectList extends Composite implements ProjectManagerEventListene
 
   private final List<String> selectedFolders;
   private final Map<String, FolderWidgets> folderWidgets;
-  private final List<Project> allProjects;
-  private final List<Project> selectedProjects;
-  private final Map<Project, ProjectWidgets> projectWidgets;
+  protected final List<Project> allProjects;
+  protected final List<Project> selectedProjects;
+  protected final Map<Project, ProjectWidgets> projectWidgets;
   private SortField sortField;
   private SortOrder sortOrder;
 
@@ -83,7 +83,7 @@ public class ProjectList extends Composite implements ProjectManagerEventListene
   private List<String> currentSubFolders;
   private final Map<String, List<Project>> projectsByFolder;
 
-  private boolean projectListLoading = true;
+  protected boolean projectListLoading = true;
 
   // UI elements
   private final Grid table;
@@ -324,14 +324,14 @@ public class ProjectList extends Composite implements ProjectManagerEventListene
     }
   }
 
-  private class ProjectWidgets extends ListEntryWidgets {
+  protected class ProjectWidgets extends ListEntryWidgets {
     final CheckBox checkBox;
     final Label nameLabel;
     final Label dateCreatedLabel;
     final Label dateModifiedLabel;
     final Label publishedLabel;
 
-    private ProjectWidgets(final Project project) {
+    protected ProjectWidgets(final Project project) {
       checkBox = new CheckBox();
       checkBox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
         @Override
