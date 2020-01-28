@@ -21,6 +21,10 @@ Table of Contents:
 
 ## Camcorder  {#Camcorder}
 
+Camcorder provides access to the phone's camcorder
+
+
+
 ### Events  {#Camcorder-Events}
 
 {:.events}
@@ -37,6 +41,10 @@ Table of Contents:
 : Records a video, then raises the AfterRecoding event.
 
 ## Camera  {#Camera}
+
+Camera provides access to the phone's camera
+
+
 
 ### Properties  {#Camera-Properties}
 
@@ -63,27 +71,37 @@ Table of Contents:
 
 ## ImagePicker  {#ImagePicker}
 
+Component enabling a user to select an image from the phone's gallery.
+
+
+
 ### Properties  {#ImagePicker-Properties}
 
 {:.properties}
 
 {:id="ImagePicker.BackgroundColor" .color} *BackgroundColor*
-: Returns the button's background color
+: Returns the button's background color as an alpha-red-green-blue
+ integer.
 
 {:id="ImagePicker.Enabled" .boolean} *Enabled*
-: If set, user can tap ImagePicker to cause action.
+: Returns true if the ImagePicker is active and clickable.
 
 {:id="ImagePicker.FontBold" .boolean} *FontBold*
-: If set, ImagePicker text is displayed in bold.
+: Returns true if the text of the ImagePicker should be bold.
+ If bold has been requested, this property will return true, even if the
+ font does not support bold.
 
 {:id="ImagePicker.FontItalic" .boolean} *FontItalic*
-: If set, ImagePicker text is displayed in italics.
+: Returns true if the text of the ImagePicker should be italic.
+ If italic has been requested, this property will return true, even if the
+ font does not support italic.
 
 {:id="ImagePicker.FontSize" .number} *FontSize*
-: Point size for ImagePicker text.
+: Returns the text font size of the ImagePicker, measured in sp(scale-independent pixels).
 
 {:id="ImagePicker.FontTypeface" .number .do} *FontTypeface*
-: Font family for ImagePicker text.
+: Returns the text font face of the ImagePicker as default, serif, sans
+ serif, or monospace.
 
 {:id="ImagePicker.Height" .number .bo} *Height*
 : Specifies the vertical height of the ImagePicker, measured in pixels.
@@ -92,7 +110,7 @@ Table of Contents:
 : Specifies the vertical height of the ImagePicker as a percentage of the height of the Screen.
 
 {:id="ImagePicker.Image" .text} *Image*
-: Image to display on button.
+: Returns the path of the button's image.
 
 {:id="ImagePicker.Selection" .text .ro .bo} *Selection*
 : Path to the file containing the image that was selected.
@@ -101,16 +119,20 @@ Table of Contents:
 : Returns the style of the button.
 
 {:id="ImagePicker.ShowFeedback" .boolean} *ShowFeedback*
-: Specifies if a visual feedback should be shown  for a ImagePicker that as an image as background.
+: Specifies if a visual feedback should be shown when a ImagePicker with an assigned image
+ is pressed.
 
 {:id="ImagePicker.Text" .text} *Text*
-: Text to display on ImagePicker.
+: Returns the text displayed by the ImagePicker.
 
 {:id="ImagePicker.TextAlignment" .number .do} *TextAlignment*
-: Left, center, or right.
+: Returns the alignment of the button's text: center, normal
+ (e.g., left-justified if text is written left to right), or
+ opposite (e.g., right-justified if text is written left to right).
 
 {:id="ImagePicker.TextColor" .color} *TextColor*
-: Color for button text.
+: Returns the text color of the ImagePicker as an alpha-red-green-blue
+ integer.
 
 {:id="ImagePicker.Visible" .boolean} *Visible*
 : Returns true iff the ImagePicker is visible.
@@ -135,44 +157,51 @@ Table of Contents:
  can be used to prepare the list before it is shown.
 
 {:id="ImagePicker.GotFocus"} GotFocus()
-: Indicates the cursor moved over the ImagePicker so it is now possible to click it.
+: Indicates the cursor moved over the button so it is now possible
+ to click it.
 
 {:id="ImagePicker.LostFocus"} LostFocus()
-: Indicates the cursor moved away from the ImagePicker so it is now no longer possible to click it.
+: Indicates the cursor moved away from the button so it is now no
+ longer possible to click it.
 
 {:id="ImagePicker.TouchDown"} TouchDown()
-: Indicates that the ImagePicker was pressed down.
+: Indicates when a button is touch down
 
 {:id="ImagePicker.TouchUp"} TouchUp()
-: Indicates that the ImagePicker has been released.
+: Indicates when a button touch ends
 
 ### Methods  {#ImagePicker-Methods}
 
 {:.methods}
 
 {:id="ImagePicker.Open" class="method"} <i/> Open()
-: Opens the picker, as though the user clicked on it.
+: Opens the ImagePicker, as though the user clicked on it.
 
 ## Player  {#Player}
+
+Multimedia component that plays audio and optionally
+ vibrates.  It is built on top of {
+
+
 
 ### Properties  {#Player-Properties}
 
 {:.properties}
 
 {:id="Player.IsPlaying" .boolean .ro .bo} *IsPlaying*
-: Reports whether the media is playing
+: Reports whether the media is playing.
 
 {:id="Player.Loop" .boolean} *Loop*
-: If true, the player will loop when it plays. Setting Loop while the player is playing will affect the current playing.
+: Reports whether the playing should loop.
 
 {:id="Player.PlayOnlyInForeground" .boolean} *PlayOnlyInForeground*
-: If true, the player will pause playing when leaving the current screen; if false (default option), the player continues playing whenever the current screen is displaying or not.
+: Gets the policy whether playing should only work in foreground.
 
 {:id="Player.Source" .text} *Source*
 : Returns the path to the audio source
 
 {:id="Player.Volume" .number .wo} *Volume*
-: Sets the volume to a number between 0 and 100
+: Sets the volume property to a number between 0 and 100.
 
 ### Events  {#Player-Events}
 
@@ -182,7 +211,7 @@ Table of Contents:
 : Indicates that the media has reached the end
 
 {:id="Player.OtherPlayerStarted"} OtherPlayerStarted()
-: This event is signaled when another player has started (and the current player is playing or paused, but not stopped).
+: Indicates that the other player has requested the focus of media
 
 ### Methods  {#Player-Methods}
 
@@ -203,15 +232,24 @@ Table of Contents:
 
 ## Sound  {#Sound}
 
+Multimedia component that plays sounds and optionally vibrates.  A
+ sound is specified via filename.  See also
+ {
+
+
+
 ### Properties  {#Sound-Properties}
 
 {:.properties}
 
 {:id="Sound.MinimumInterval" .number} *MinimumInterval*
-: The minimum interval, in milliseconds, between sounds.  If you play a sound, all further Play() calls will be ignored until the interval has elapsed.
+: Returns the minimum interval required between calls to Play(), in
+ milliseconds.
+ Once the sound starts playing, all further Play() calls will be ignored
+ until the interval has elapsed.
 
 {:id="Sound.Source" .text} *Source*
-: The name of the sound file.  Only certain formats are supported.  See http://developer.android.com/guide/appendix/media-formats.html.
+: Returns the sound's filename.
 
 ### Events  {#Sound-Events}
 
@@ -225,7 +263,7 @@ Table of Contents:
 : Pauses playing the sound if it is being played.
 
 {:id="Sound.Play" class="method"} <i/> Play()
-: Plays the sound specified by the Source property.
+: Plays the sound.
 
 {:id="Sound.Resume" class="method"} <i/> Resume()
 : Resumes playing the sound after a pause.
@@ -238,12 +276,17 @@ Table of Contents:
 
 ## SoundRecorder  {#SoundRecorder}
 
+Multimedia component that records audio using
+ {
+
+
+
 ### Properties  {#SoundRecorder-Properties}
 
 {:.properties}
 
 {:id="SoundRecorder.SavedRecording" .text} *SavedRecording*
-: Specifies the path to the file where the recording should be stored. If this proprety is the empty string, then starting a recording will create a file in an appropriate location.  If the property is not the empty string, it should specify a complete path to a file in an existing directory, including a file name with the extension .3gp.
+: Returns the path to the saved recording
 
 ### Events  {#SoundRecorder-Events}
 
@@ -269,6 +312,12 @@ Table of Contents:
 : Stops recording.
 
 ## SpeechRecognizer  {#SpeechRecognizer}
+
+Component for using the built in VoiceRecognizer to convert speech to text.
+ For more details, please see:
+ http://developer.android.com/reference/android/speech/RecognizerIntent.html
+
+
 
 ### Properties  {#SpeechRecognizer-Properties}
 
@@ -308,6 +357,12 @@ Table of Contents:
 
 ## TextToSpeech  {#TextToSpeech}
 
+Component for converting text to speech using either the built-in TTS library or the
+ TextToSpeech Extended library (which must be pre-installed for Android versions earlier
+ than Donut).
+
+
+
 ### Properties  {#TextToSpeech-Properties}
 
 {:.properties}
@@ -319,19 +374,20 @@ Table of Contents:
 : List of the languages available on this device for use with TextToSpeech.  Check the Android developer documentation under supported languages to find the meanings of these abbreviations.
 
 {:id="TextToSpeech.Country" .text} *Country*
-: Country code to use for speech generation.  This can affect the pronounciation.  For example, British English (GBR) will sound different from US English (USA).  Not every country code will affect every language.
+: Sets the country for this TextToSpeech component.
 
 {:id="TextToSpeech.Language" .text} *Language*
-: Sets the language for TextToSpeech. This changes the way that words are pronounced, not the actual language that is spoken.  For example setting the language to and speaking English text with sound like someone speaking English with a Frernch accent.
+: Sets the language for this TextToSpeech component.
 
 {:id="TextToSpeech.Pitch" .number} *Pitch*
-: Sets the Pitch for TextToSpeech The values should be between 0 and 2 where lower values lower the tone of synthesized voice and greater values raise it.
+: Sets the speech pitch for the TextToSpeech. 1.0 is the normal pitch, lower values lower the tone of
+ the synthesized voice, greater values increase it.
 
 {:id="TextToSpeech.Result" .boolean .ro .bo} *Result*
 : Result property getter method.
 
 {:id="TextToSpeech.SpeechRate" .number} *SpeechRate*
-: Sets the SpeechRate for TextToSpeech. The values should be between 0 and 2 where lower values slow down the pitch and greater values accelerate it.
+: Sets the speech rate
 
 ### Events  {#TextToSpeech-Events}
 
@@ -352,6 +408,10 @@ Table of Contents:
 
 ## VideoPlayer  {#VideoPlayer}
 
+Implementation of VideoPlayer, using {
+
+
+
 ### Properties  {#VideoPlayer-Properties}
 
 {:.properties}
@@ -367,13 +427,17 @@ Table of Contents:
 : Specifies the vertical height of the VideoPlayer as a percentage of the height of the Screen.
 
 {:id="VideoPlayer.Source" .text .wo} *Source*
-: The "path" to the video.  Usually, this will be the name of the video file, which should be added in the Designer.
+: Sets the video source.
+
+ <p/>
+ See [MediaUtil's determineMediaSource](#MediaUtil.determineMediaSource) for information about what a
+ path can be.
 
 {:id="VideoPlayer.Visible" .boolean} *Visible*
 : Returns true iff the VideoPlayer is visible.
 
 {:id="VideoPlayer.Volume" .number .wo} *Volume*
-: Sets the volume to a number between 0 and 100. Values less than 0 will be treated as 0, and values greater than 100 will be treated as 100.
+: Sets the volume property to a number between 0 and 100.
 
 {:id="VideoPlayer.Width" .number .bo} *Width*
 : Specifies the component's horizontal width, measured in pixels.
@@ -402,25 +466,29 @@ Table of Contents:
 : Seeks to the requested time (specified in milliseconds) in the video. If the video is paused, the frame shown will not be updated by the seek. The player can jump only to key frames in the video, so seeking to times that differ by short intervals may not actually move to different frames.
 
 {:id="VideoPlayer.Start" class="method"} <i/> Start()
-: Starts playback of the video.
+: Plays the media specified by the source. These won't normally be used in
+ the most elementary applications, because videoView brings up its own
+ player controls when the video is touched.
 
 {:id="VideoPlayer.Stop" class="method"} <i/> Stop()
 : Resets to start of video and pauses it if video was playing.
 
 ## YandexTranslate  {#YandexTranslate}
 
+Component for YandexTranslate
+
+
+
 ### Events  {#YandexTranslate-Events}
 
 {:.events}
 
 {:id="YandexTranslate.GotTranslation"} GotTranslation(*responseCode*{:.text},*translation*{:.text})
-: Event triggered when the Yandex.Translate service returns the translated text. This event also provides a response code for error handling. If the responseCode is not 200, then something went wrong with the call, and the translation will not be available.
+: Event indicating that a request has finished and has returned data (translation).
 
 ### Methods  {#YandexTranslate-Methods}
 
 {:.methods}
 
 {:id="YandexTranslate.RequestTranslation" class="method"} <i/> RequestTranslation(*languageToTranslateTo*{:.text},*textToTranslate*{:.text})
-: By providing a target language to translate to (for instance, 'es' for Spanish, 'en' for English, or 'ru' for Russian), and a word or sentence to translate, this method will request a translation to the Yandex.Translate service.
-Once the text is translated by the external service, the event GotTranslation will be executed.
-Note: Yandex.Translate will attempt to detect the source language. You can also specify prepending it to the language translation. I.e., es-ru will specify Spanish to Russian translation.
+: Performs an HTTP GET request to the Yandex.Translate service

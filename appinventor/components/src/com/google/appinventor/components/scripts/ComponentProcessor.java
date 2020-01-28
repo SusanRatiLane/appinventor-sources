@@ -72,6 +72,8 @@ import javax.lang.model.util.Types;
 import java.lang.annotation.Annotation;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.tools.Diagnostic;
 import javax.tools.Diagnostic.Kind;
@@ -256,10 +258,15 @@ public abstract class ComponentProcessor extends AbstractProcessor {
    * Represents a component feature that has a name and a description.
    */
   protected abstract static class Feature {
+    private static final Pattern AT_SIGN = Pattern.compile("[^\\\\]@");
+    private static final Pattern LINK_FORM = Pattern.compile("\\{@link ([A-Za-z]*)#([A-Za-z]*)[^}]*}");
+    private static final Pattern CODE_FORM = Pattern.compile("\\{@code ([^}]*)}");
+
     protected final String name;
     protected String description;
+    protected String longDescription;
 
-    protected Feature(String name, String description, String featureType) {
+    protected Feature(String name, String description, String longDescription, String featureType) {
       this.name = name;
       if (description == null || description.isEmpty()) {
         this.description = featureType + " for " + name;
@@ -268,6 +275,63 @@ public abstract class ComponentProcessor extends AbstractProcessor {
         // in order to strip out @param, @author, {@link ...}, etc.
         this.description = description.split("[@{]")[0].trim();
       }
+      if (longDescription == null || longDescription.isEmpty()) {
+        this.longDescription = this.description;
+      } else {
+        this.longDescription = longDescription;
+      }
+      // Handle links
+      Matcher linkMatcher = LINK_FORM.matcher(this.longDescription);
+      StringBuffer sb = new StringBuffer();
+      int lastEnd = 0;
+      while (linkMatcher.find(lastEnd)) {
+        sb.append(this.longDescription, lastEnd, linkMatcher.start());
+        String clazz = linkMatcher.group(1);
+        String func = linkMatcher.group(2);
+        sb.append("[");
+        if (!clazz.isEmpty()) {
+          sb.append(clazz);
+          sb.append("'s ");
+        }
+        sb.append(func);
+        sb.append("](#");
+        if (clazz.isEmpty()) {
+          sb.append("%type%.");
+        } else {
+          sb.append(clazz);
+          sb.append(".");
+        }
+        sb.append(func);
+        sb.append(")");
+        lastEnd = linkMatcher.end();
+      }
+      sb.append(this.longDescription.substring(lastEnd));
+      this.longDescription = sb.toString();
+      // Map {@code foo} to `foo`
+      sb = new StringBuffer();
+      Matcher codeMatcher = CODE_FORM.matcher(this.longDescription);
+      lastEnd = 0;
+      while (codeMatcher.find(lastEnd)) {
+        sb.append(this.longDescription, lastEnd, codeMatcher.start());
+        sb.append("`");
+        sb.append(codeMatcher.group(1));
+        sb.append("`");
+        lastEnd = codeMatcher.end();
+      }
+      sb.append(this.longDescription.substring(lastEnd));
+      this.longDescription = sb.toString();
+      // Strip out the Javadoc annotations (@param, etc.) for end-user documentation
+      Matcher m = AT_SIGN.matcher(this.longDescription);
+      if (m.find()) {
+        this.longDescription = this.longDescription.substring(0, m.start() + 1);
+      }
+    }
+
+    public String getLongDescription(ComponentInfo component) {
+      if (longDescription == null || longDescription.isEmpty()) {
+        return description;
+      }
+      return longDescription.replaceAll("%type%", component.name).trim();
     }
   }
 
@@ -281,9 +345,9 @@ public abstract class ComponentProcessor extends AbstractProcessor {
     protected final boolean userVisible;
     protected final boolean deprecated; // [lyn, 2015/12/29] added
 
-    protected ParameterizedFeature(String name, String description, String feature,
-        boolean userVisible, boolean deprecated) {
-      super(name, description, feature);
+    protected ParameterizedFeature(String name, String description, String longDescription,
+        String feature, boolean userVisible, boolean deprecated) {
+      super(name, description, longDescription, feature);
       this.userVisible = userVisible;
       this.deprecated = deprecated;
       parameters = Lists.newArrayList();
@@ -327,13 +391,13 @@ public abstract class ComponentProcessor extends AbstractProcessor {
       implements Cloneable, Comparable<Event> {
     // Inherits name, description, and parameters
 
-    protected Event(String name, String description, boolean userVisible, boolean deprecated) {
-      super(name, description, "Event", userVisible, deprecated);
+    protected Event(String name, String description, String longDescription, boolean userVisible, boolean deprecated) {
+      super(name, description, longDescription, "Event", userVisible, deprecated);
     }
 
     @Override
     public Event clone() {
-      Event that = new Event(name, description, userVisible, deprecated);
+      Event that = new Event(name, description, longDescription, userVisible, deprecated);
       for (Parameter p : parameters) {
         that.addParameter(p.name, p.type);
       }
@@ -356,8 +420,9 @@ public abstract class ComponentProcessor extends AbstractProcessor {
     private String returnType;
     private boolean color;
 
-    protected Method(String name, String description, boolean userVisible, boolean deprecated) {
-      super(name, description, "Method", userVisible, deprecated);
+    protected Method(String name, String description, String longDescription, boolean userVisible,
+        boolean deprecated) {
+      super(name, description, longDescription, "Method", userVisible, deprecated);
       // returnType defaults to null
     }
 
@@ -371,7 +436,7 @@ public abstract class ComponentProcessor extends AbstractProcessor {
 
     @Override
     public Method clone() {
-      Method that = new Method(name, description, userVisible, deprecated);
+      Method that = new Method(name, description, longDescription, userVisible, deprecated);
       for (Parameter p : parameters) {
         that.addParameter(p.name, p.type);
       }
@@ -389,7 +454,7 @@ public abstract class ComponentProcessor extends AbstractProcessor {
    * Represents an App Inventor component property (annotated with
    * {@link SimpleProperty}).
    */
-  protected static final class Property implements Cloneable {
+  protected static final class Property extends Feature implements Cloneable {
     protected final String name;
     private String description;
     private PropertyCategory propertyCategory;
@@ -401,8 +466,9 @@ public abstract class ComponentProcessor extends AbstractProcessor {
     private String componentInfoName;
     private boolean color;
 
-    protected Property(String name, String description,
+    protected Property(String name, String description, String longDescription,
                        PropertyCategory category, boolean userVisible, boolean deprecated) {
+      super(name, description, longDescription, "Property");
       this.name = name;
       this.description = description;
       this.propertyCategory = category;
@@ -414,7 +480,8 @@ public abstract class ComponentProcessor extends AbstractProcessor {
 
     @Override
     public Property clone() {
-      Property that = new Property(name, description, propertyCategory, userVisible, deprecated);
+      Property that = new Property(name, description, longDescription, propertyCategory,
+          userVisible, deprecated);
       that.type = type;
       that.readable = readable;
       that.writable = writable;
@@ -638,6 +705,7 @@ public abstract class ComponentProcessor extends AbstractProcessor {
 
     protected ComponentInfo(Element element) {
       super(element.getSimpleName().toString(),  // Short name
+            elementUtils.getDocComment(element),
             elementUtils.getDocComment(element),
             "Component");
       type = element.asType().toString();
@@ -1166,6 +1234,7 @@ public abstract class ComponentProcessor extends AbstractProcessor {
 
     // Use Javadoc for property unless description is set to a non-empty string.
     String description = elementUtils.getDocComment(element);
+    String longDescription = description;
     if (!simpleProperty.description().isEmpty()) {
       description = simpleProperty.description();
     }
@@ -1177,6 +1246,7 @@ public abstract class ComponentProcessor extends AbstractProcessor {
 
     Property property = new Property(propertyName,
                                      description,
+                                     longDescription,
                                      simpleProperty.category(),
                                      simpleProperty.userVisible(),
                                      elementUtils.isDeprecated(element));
@@ -1456,6 +1526,10 @@ public abstract class ComponentProcessor extends AbstractProcessor {
               && !newProperty.description.isEmpty()) {
             priorProperty.description = newProperty.description;
           }
+          if ((priorProperty.longDescription.isEmpty() || element.getAnnotation(Override.class) != null)
+              && !newProperty.longDescription.isEmpty()) {
+            priorProperty.longDescription = newProperty.description;
+          }
           if (priorProperty.propertyCategory == PropertyCategory.UNSET) {
             priorProperty.propertyCategory = newProperty.propertyCategory;
           } else if (newProperty.propertyCategory != priorProperty.propertyCategory &&
@@ -1518,8 +1592,9 @@ public abstract class ComponentProcessor extends AbstractProcessor {
         }
       } else {
         String eventDescription = simpleEventAnnotation.description();
+        String longEventDescription = elementUtils.getDocComment(element);
         if (eventDescription.isEmpty()) {
-          eventDescription = elementUtils.getDocComment(element);
+          eventDescription = longEventDescription;
           if (eventDescription == null) {
             messager.printMessage(Diagnostic.Kind.WARNING,
                                   "In component " + componentInfo.name +
@@ -1530,7 +1605,7 @@ public abstract class ComponentProcessor extends AbstractProcessor {
         }
         boolean userVisible = simpleEventAnnotation.userVisible();
         boolean deprecated = elementUtils.isDeprecated(element);
-        Event event = new Event(eventName, eventDescription, userVisible, deprecated);
+        Event event = new Event(eventName, eventDescription, longEventDescription, userVisible, deprecated);
         componentInfo.events.put(event.name, event);
 
         // Verify that this element has an ExecutableType.
@@ -1572,9 +1647,10 @@ public abstract class ComponentProcessor extends AbstractProcessor {
           componentInfo.methods.remove(methodName);
         }
       } else {
+        String methodLongDescription = elementUtils.getDocComment(element);
         String methodDescription = simpleFunctionAnnotation.description();
         if (methodDescription.isEmpty()) {
-          methodDescription = elementUtils.getDocComment(element);
+          methodDescription = methodLongDescription;
           if (methodDescription == null) {
             messager.printMessage(Diagnostic.Kind.WARNING,
                                   "In component " + componentInfo.name +
@@ -1585,7 +1661,7 @@ public abstract class ComponentProcessor extends AbstractProcessor {
         }
         boolean userVisible = simpleFunctionAnnotation.userVisible();
         boolean deprecated = elementUtils.isDeprecated(element);
-        Method method = new Method(methodName, methodDescription, userVisible, deprecated);
+        Method method = new Method(methodName, methodDescription, methodLongDescription, userVisible, deprecated);
         componentInfo.methods.put(method.name, method);
 
         // Verify that this element has an ExecutableType.
@@ -1693,6 +1769,12 @@ public abstract class ComponentProcessor extends AbstractProcessor {
     // List<?> -> list
     if (type.startsWith("java.util.List")) {
       return "list";
+    }
+    if (type.equals("com.google.appinventor.components.runtime.util.YailDictionary")) {
+      return "dictionary";
+    }
+    if (type.equals("com.google.appinventor.components.runtime.util.YailObject")) {
+      return "yailobject";
     }
 
     // Calendar -> InstantInTime

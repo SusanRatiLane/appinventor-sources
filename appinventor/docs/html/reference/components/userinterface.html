@@ -151,37 +151,51 @@
 
 <h2 id="Button">Button</h2>
 
+<p>Button with the ability to launch events on initialization, focus
+ change, or a user click.  It is implemented using
+ {</p>
+
 <h3 id="Button-Properties">Properties</h3>
 
 <dl class="properties">
   <dt id="Button.BackgroundColor" class="color"><em>BackgroundColor</em></dt>
-  <dd>Returns the button’s background color</dd>
+  <dd>Returns the button’s background color as an alpha-red-green-blue
+ integer.</dd>
   <dt id="Button.Enabled" class="boolean"><em>Enabled</em></dt>
-  <dd>If set, user can tap Button to cause action.</dd>
+  <dd>Returns true if the Button is active and clickable.</dd>
   <dt id="Button.FontBold" class="boolean"><em>FontBold</em></dt>
-  <dd>If set, Button text is displayed in bold.</dd>
+  <dd>Returns true if the text of the Button should be bold.
+ If bold has been requested, this property will return true, even if the
+ font does not support bold.</dd>
   <dt id="Button.FontItalic" class="boolean"><em>FontItalic</em></dt>
-  <dd>If set, Button text is displayed in italics.</dd>
+  <dd>Returns true if the text of the Button should be italic.
+ If italic has been requested, this property will return true, even if the
+ font does not support italic.</dd>
   <dt id="Button.FontSize" class="number"><em>FontSize</em></dt>
-  <dd>Point size for Button text.</dd>
+  <dd>Returns the text font size of the Button, measured in sp(scale-independent pixels).</dd>
   <dt id="Button.FontTypeface" class="number do"><em>FontTypeface</em></dt>
-  <dd>Font family for Button text.</dd>
+  <dd>Returns the text font face of the Button as default, serif, sans
+ serif, or monospace.</dd>
   <dt id="Button.Height" class="number bo"><em>Height</em></dt>
   <dd>Specifies the vertical height of the Button, measured in pixels.</dd>
   <dt id="Button.HeightPercent" class="number wo bo"><em>HeightPercent</em></dt>
   <dd>Specifies the vertical height of the Button as a percentage of the height of the Screen.</dd>
   <dt id="Button.Image" class="text"><em>Image</em></dt>
-  <dd>Image to display on button.</dd>
+  <dd>Returns the path of the button’s image.</dd>
   <dt id="Button.Shape" class="number do"><em>Shape</em></dt>
   <dd>Returns the style of the button.</dd>
   <dt id="Button.ShowFeedback" class="boolean"><em>ShowFeedback</em></dt>
-  <dd>Specifies if a visual feedback should be shown  for a Button that as an image as background.</dd>
+  <dd>Specifies if a visual feedback should be shown when a Button with an assigned image
+ is pressed.</dd>
   <dt id="Button.Text" class="text"><em>Text</em></dt>
-  <dd>Text to display on Button.</dd>
+  <dd>Returns the text displayed by the Button.</dd>
   <dt id="Button.TextAlignment" class="number do"><em>TextAlignment</em></dt>
-  <dd>Left, center, or right.</dd>
+  <dd>Returns the alignment of the button’s text: center, normal
+ (e.g., left-justified if text is written left to right), or
+ opposite (e.g., right-justified if text is written left to right).</dd>
   <dt id="Button.TextColor" class="color"><em>TextColor</em></dt>
-  <dd>Color for button text.</dd>
+  <dd>Returns the text color of the Button as an alpha-red-green-blue
+ integer.</dd>
   <dt id="Button.Visible" class="boolean"><em>Visible</em></dt>
   <dd>Returns true iff the Button is visible.</dd>
   <dt id="Button.Width" class="number bo"><em>Width</em></dt>
@@ -194,20 +208,25 @@
 
 <dl class="events">
   <dt id="Button.Click">Click()</dt>
-  <dd>User tapped and released the button.</dd>
+  <dd>Indicates a user has clicked on the button.</dd>
   <dt id="Button.GotFocus">GotFocus()</dt>
-  <dd>Indicates the cursor moved over the Button so it is now possible to click it.</dd>
+  <dd>Indicates the cursor moved over the button so it is now possible
+ to click it.</dd>
   <dt id="Button.LongClick">LongClick()</dt>
-  <dd>User held the button down.</dd>
+  <dd>Indicates a user has long clicked on the button.</dd>
   <dt id="Button.LostFocus">LostFocus()</dt>
-  <dd>Indicates the cursor moved away from the Button so it is now no longer possible to click it.</dd>
+  <dd>Indicates the cursor moved away from the button so it is now no
+ longer possible to click it.</dd>
   <dt id="Button.TouchDown">TouchDown()</dt>
-  <dd>Indicates that the Button was pressed down.</dd>
+  <dd>Indicates when a button is touch down</dd>
   <dt id="Button.TouchUp">TouchUp()</dt>
-  <dd>Indicates that the Button has been released.</dd>
+  <dd>Indicates when a button touch ends</dd>
 </dl>
 
 <h2 id="CheckBox">CheckBox</h2>
+
+<p>Check box with the ability to detect initialization, focus
+ change (mousing on or off of it), and user clicks.</p>
 
 <h3 id="CheckBox-Properties">Properties</h3>
 
@@ -262,45 +281,60 @@
 
 <h2 id="DatePicker">DatePicker</h2>
 
+<p>A button allowing a user to launch a DatePickerDialog. This component is
+ is based off the ButtonBase class instead of the base Picker class because
+ unlike the other pickers, the DatePicker does not need to launch a new
+ activity and get a result. The DatePicker is launched as a dialog.</p>
+
 <h3 id="DatePicker-Properties">Properties</h3>
 
 <dl class="properties">
   <dt id="DatePicker.BackgroundColor" class="color"><em>BackgroundColor</em></dt>
-  <dd>Returns the button’s background color</dd>
+  <dd>Returns the button’s background color as an alpha-red-green-blue
+ integer.</dd>
   <dt id="DatePicker.Day" class="number ro bo"><em>Day</em></dt>
-  <dd>the Day of the month that was last picked using the DatePicker.</dd>
+  <dd>Returns the Day of the month that was last picked using the DatePicker.</dd>
   <dt id="DatePicker.Enabled" class="boolean"><em>Enabled</em></dt>
-  <dd>If set, user can tap DatePicker to cause action.</dd>
+  <dd>Returns true if the DatePicker is active and clickable.</dd>
   <dt id="DatePicker.FontBold" class="boolean"><em>FontBold</em></dt>
-  <dd>If set, DatePicker text is displayed in bold.</dd>
+  <dd>Returns true if the text of the DatePicker should be bold.
+ If bold has been requested, this property will return true, even if the
+ font does not support bold.</dd>
   <dt id="DatePicker.FontItalic" class="boolean"><em>FontItalic</em></dt>
-  <dd>If set, DatePicker text is displayed in italics.</dd>
+  <dd>Returns true if the text of the DatePicker should be italic.
+ If italic has been requested, this property will return true, even if the
+ font does not support italic.</dd>
   <dt id="DatePicker.FontSize" class="number"><em>FontSize</em></dt>
-  <dd>Point size for DatePicker text.</dd>
+  <dd>Returns the text font size of the DatePicker, measured in sp(scale-independent pixels).</dd>
   <dt id="DatePicker.FontTypeface" class="number do"><em>FontTypeface</em></dt>
-  <dd>Font family for DatePicker text.</dd>
+  <dd>Returns the text font face of the DatePicker as default, serif, sans
+ serif, or monospace.</dd>
   <dt id="DatePicker.Height" class="number bo"><em>Height</em></dt>
   <dd>Specifies the vertical height of the DatePicker, measured in pixels.</dd>
   <dt id="DatePicker.HeightPercent" class="number wo bo"><em>HeightPercent</em></dt>
   <dd>Specifies the vertical height of the DatePicker as a percentage of the height of the Screen.</dd>
   <dt id="DatePicker.Image" class="text"><em>Image</em></dt>
-  <dd>Image to display on button.</dd>
+  <dd>Returns the path of the button’s image.</dd>
   <dt id="DatePicker.Instant" class="InstantInTime ro bo"><em>Instant</em></dt>
-  <dd>the instant of the date that was last picked using the DatePicker.</dd>
+  <dd>Returns instant of the date that was last picked using the DatePicker.</dd>
   <dt id="DatePicker.Month" class="number ro bo"><em>Month</em></dt>
-  <dd>the number of the Month that was last picked using the DatePicker. Note that months start in 1 = January, 12 = December.</dd>
+  <dd>Returns the number of the Month that was last picked using the DatePicker.</dd>
   <dt id="DatePicker.MonthInText" class="text ro bo"><em>MonthInText</em></dt>
-  <dd>Returns the name of the Month that was last picked using the DatePicker, in textual format.</dd>
+  <dd>Returns the name of the Month that was last picked using the DatePicker.</dd>
   <dt id="DatePicker.Shape" class="number do"><em>Shape</em></dt>
   <dd>Returns the style of the button.</dd>
   <dt id="DatePicker.ShowFeedback" class="boolean"><em>ShowFeedback</em></dt>
-  <dd>Specifies if a visual feedback should be shown  for a DatePicker that as an image as background.</dd>
+  <dd>Specifies if a visual feedback should be shown when a DatePicker with an assigned image
+ is pressed.</dd>
   <dt id="DatePicker.Text" class="text"><em>Text</em></dt>
-  <dd>Text to display on DatePicker.</dd>
+  <dd>Returns the text displayed by the DatePicker.</dd>
   <dt id="DatePicker.TextAlignment" class="number do"><em>TextAlignment</em></dt>
-  <dd>Left, center, or right.</dd>
+  <dd>Returns the alignment of the button’s text: center, normal
+ (e.g., left-justified if text is written left to right), or
+ opposite (e.g., right-justified if text is written left to right).</dd>
   <dt id="DatePicker.TextColor" class="color"><em>TextColor</em></dt>
-  <dd>Color for button text.</dd>
+  <dd>Returns the text color of the DatePicker as an alpha-red-green-blue
+ integer.</dd>
   <dt id="DatePicker.Visible" class="boolean"><em>Visible</em></dt>
   <dd>Returns true iff the DatePicker is visible.</dd>
   <dt id="DatePicker.Width" class="number bo"><em>Width</em></dt>
@@ -308,22 +342,24 @@
   <dt id="DatePicker.WidthPercent" class="number wo bo"><em>WidthPercent</em></dt>
   <dd>Specifies the horizontal width of the DatePicker as a percentage of the width of the Screen.</dd>
   <dt id="DatePicker.Year" class="number ro bo"><em>Year</em></dt>
-  <dd>the Year that was last picked using the DatePicker</dd>
+  <dd>Returns the Year that was last picked using the DatePicker.</dd>
 </dl>
 
 <h3 id="DatePicker-Events">Events</h3>
 
 <dl class="events">
   <dt id="DatePicker.AfterDateSet">AfterDateSet()</dt>
-  <dd>Event that runs after the user chooses a Date in the dialog</dd>
+  <dd>Runs when the user sets the date in the Dialog.</dd>
   <dt id="DatePicker.GotFocus">GotFocus()</dt>
-  <dd>Indicates the cursor moved over the DatePicker so it is now possible to click it.</dd>
+  <dd>Indicates the cursor moved over the button so it is now possible
+ to click it.</dd>
   <dt id="DatePicker.LostFocus">LostFocus()</dt>
-  <dd>Indicates the cursor moved away from the DatePicker so it is now no longer possible to click it.</dd>
+  <dd>Indicates the cursor moved away from the button so it is now no
+ longer possible to click it.</dd>
   <dt id="DatePicker.TouchDown">TouchDown()</dt>
-  <dd>Indicates that the DatePicker was pressed down.</dd>
+  <dd>Indicates when a button is touch down</dd>
   <dt id="DatePicker.TouchUp">TouchUp()</dt>
-  <dd>Indicates that the DatePicker has been released.</dd>
+  <dd>Indicates when a button touch ends</dd>
 </dl>
 
 <h3 id="DatePicker-Methods">Methods</h3>
@@ -340,11 +376,13 @@ Valid values for the month field are 1-12 and 1-31 for the day field.</dd>
 
 <h2 id="Image">Image</h2>
 
+<p>Component for displaying images and animations.</p>
+
 <h3 id="Image-Properties">Properties</h3>
 
 <dl class="properties">
   <dt id="Image.Animation" class="text wo bo"><em>Animation</em></dt>
-  <dd>This is a limited form of animation that can attach a small number of motion types to images.  The allowable motions are ScrollRightSlow, ScrollRight, ScrollRightFast, ScrollLeftSlow, ScrollLeft, ScrollLeftFast, and Stop</dd>
+  <dd>Animation property setter method.</dd>
   <dt id="Image.Height" class="number bo"><em>Height</em></dt>
   <dd>Specifies the vertical height of the Image, measured in pixels.</dd>
   <dt id="Image.HeightPercent" class="number wo bo"><em>HeightPercent</em></dt>
@@ -366,6 +404,8 @@ Valid values for the month field are 1-12 and 1-31 for the day field.</dd>
 </dl>
 
 <h2 id="Label">Label</h2>
+
+<p>Label containing a text string.</p>
 
 <h3 id="Label-Properties">Properties</h3>
 
@@ -390,9 +430,9 @@ Valid values for the month field are 1-12 and 1-31 for the day field.</dd>
   <dd>Returns the content of the Label as HTML. This is only useful if the
  HTMLFormat property is true.</dd>
   <dt id="Label.HTMLFormat" class="boolean do"><em>HTMLFormat</em></dt>
-  <dd>If true, then this label will show html text else it will show plain text. Note: Not all HTML is supported.</dd>
+  <dd>Returns the label’s text’s format</dd>
   <dt id="Label.HasMargins" class="boolean"><em>HasMargins</em></dt>
-  <dd>Reports whether or not the label appears with margins.  All four margins (left, right, top, bottom) are the same.  This property has no effect in the designer, where labels are always shown with margins.</dd>
+  <dd>Returns true if the label should have  margins.</dd>
   <dt id="Label.Height" class="number bo"><em>Height</em></dt>
   <dd>Specifies the vertical height of the Label, measured in pixels.</dd>
   <dt id="Label.HeightPercent" class="number wo bo"><em>HeightPercent</em></dt>
@@ -416,53 +456,65 @@ Valid values for the month field are 1-12 and 1-31 for the day field.</dd>
 
 <h2 id="ListPicker">ListPicker</h2>
 
+<p>A button allowing a user to select one among a list of text strings.</p>
+
 <h3 id="ListPicker-Properties">Properties</h3>
 
 <dl class="properties">
   <dt id="ListPicker.BackgroundColor" class="color"><em>BackgroundColor</em></dt>
-  <dd>Returns the button’s background color</dd>
+  <dd>Returns the button’s background color as an alpha-red-green-blue
+ integer.</dd>
   <dt id="ListPicker.Elements" class="list bo"><em>Elements</em></dt>
   <dd>Elements property getter method</dd>
   <dt id="ListPicker.ElementsFromString" class="text wo"><em>ElementsFromString</em></dt>
   <dd>ElementsFromString property setter method</dd>
   <dt id="ListPicker.Enabled" class="boolean"><em>Enabled</em></dt>
-  <dd>If set, user can tap ListPicker to cause action.</dd>
+  <dd>Returns true if the ListPicker is active and clickable.</dd>
   <dt id="ListPicker.FontBold" class="boolean"><em>FontBold</em></dt>
-  <dd>If set, ListPicker text is displayed in bold.</dd>
+  <dd>Returns true if the text of the ListPicker should be bold.
+ If bold has been requested, this property will return true, even if the
+ font does not support bold.</dd>
   <dt id="ListPicker.FontItalic" class="boolean"><em>FontItalic</em></dt>
-  <dd>If set, ListPicker text is displayed in italics.</dd>
+  <dd>Returns true if the text of the ListPicker should be italic.
+ If italic has been requested, this property will return true, even if the
+ font does not support italic.</dd>
   <dt id="ListPicker.FontSize" class="number"><em>FontSize</em></dt>
-  <dd>Point size for ListPicker text.</dd>
+  <dd>Returns the text font size of the ListPicker, measured in sp(scale-independent pixels).</dd>
   <dt id="ListPicker.FontTypeface" class="number do"><em>FontTypeface</em></dt>
-  <dd>Font family for ListPicker text.</dd>
+  <dd>Returns the text font face of the ListPicker as default, serif, sans
+ serif, or monospace.</dd>
   <dt id="ListPicker.Height" class="number bo"><em>Height</em></dt>
   <dd>Specifies the vertical height of the ListPicker, measured in pixels.</dd>
   <dt id="ListPicker.HeightPercent" class="number wo bo"><em>HeightPercent</em></dt>
   <dd>Specifies the vertical height of the ListPicker as a percentage of the height of the Screen.</dd>
   <dt id="ListPicker.Image" class="text"><em>Image</em></dt>
-  <dd>Image to display on button.</dd>
+  <dd>Returns the path of the button’s image.</dd>
   <dt id="ListPicker.ItemBackgroundColor" class="color"><em>ItemBackgroundColor</em></dt>
-  <dd>The background color of the ListPicker items.</dd>
+  <dd>Property for ItemBackgroundColor</dd>
   <dt id="ListPicker.ItemTextColor" class="color"><em>ItemTextColor</em></dt>
-  <dd>The text color of the ListPicker items.</dd>
+  <dd>Property for ItemTextColor</dd>
   <dt id="ListPicker.Selection" class="text"><em>Selection</em></dt>
-  <dd>The selected item.  When directly changed by the programmer, the SelectionIndex property is also changed to the first item in the ListPicker with the given value.  If the value does not appear, SelectionIndex will be set to 0.</dd>
+  <dd>Selection property getter method.</dd>
   <dt id="ListPicker.SelectionIndex" class="number bo"><em>SelectionIndex</em></dt>
-  <dd>The index of the currently selected item, starting at 1.  If no item is selected, the value will be 0.  If an attempt is made to set this to a number less than 1 or greater than the number of items in the ListPicker, SelectionIndex will be set to 0, and Selection will be set to the empty text.</dd>
+  <dd>Selection index property getter method.</dd>
   <dt id="ListPicker.Shape" class="number do"><em>Shape</em></dt>
   <dd>Returns the style of the button.</dd>
   <dt id="ListPicker.ShowFeedback" class="boolean"><em>ShowFeedback</em></dt>
-  <dd>Specifies if a visual feedback should be shown  for a ListPicker that as an image as background.</dd>
+  <dd>Specifies if a visual feedback should be shown when a ListPicker with an assigned image
+ is pressed.</dd>
   <dt id="ListPicker.ShowFilterBar" class="boolean"><em>ShowFilterBar</em></dt>
-  <dd>Returns current state of ShowFilterBar indicating if Search Filter Bar will be displayed on ListPicker or not</dd>
+  <dd>Property for ShowFilterBar</dd>
   <dt id="ListPicker.Text" class="text"><em>Text</em></dt>
-  <dd>Text to display on ListPicker.</dd>
+  <dd>Returns the text displayed by the ListPicker.</dd>
   <dt id="ListPicker.TextAlignment" class="number do"><em>TextAlignment</em></dt>
-  <dd>Left, center, or right.</dd>
+  <dd>Returns the alignment of the button’s text: center, normal
+ (e.g., left-justified if text is written left to right), or
+ opposite (e.g., right-justified if text is written left to right).</dd>
   <dt id="ListPicker.TextColor" class="color"><em>TextColor</em></dt>
-  <dd>Color for button text.</dd>
+  <dd>Returns the text color of the ListPicker as an alpha-red-green-blue
+ integer.</dd>
   <dt id="ListPicker.Title" class="text"><em>Title</em></dt>
-  <dd>Optional title displayed at the top of the list of choices.</dd>
+  <dd>Title property getter method.</dd>
   <dt id="ListPicker.Visible" class="boolean"><em>Visible</em></dt>
   <dd>Returns true iff the ListPicker is visible.</dd>
   <dt id="ListPicker.Width" class="number bo"><em>Width</em></dt>
@@ -482,49 +534,63 @@ Valid values for the month field are 1-12 and 1-31 for the day field.</dd>
  using the Open block.  This event occurs before the list of items is displayed, and 
  can be used to prepare the list before it is shown.</dd>
   <dt id="ListPicker.GotFocus">GotFocus()</dt>
-  <dd>Indicates the cursor moved over the ListPicker so it is now possible to click it.</dd>
+  <dd>Indicates the cursor moved over the button so it is now possible
+ to click it.</dd>
   <dt id="ListPicker.LostFocus">LostFocus()</dt>
-  <dd>Indicates the cursor moved away from the ListPicker so it is now no longer possible to click it.</dd>
+  <dd>Indicates the cursor moved away from the button so it is now no
+ longer possible to click it.</dd>
   <dt id="ListPicker.TouchDown">TouchDown()</dt>
-  <dd>Indicates that the ListPicker was pressed down.</dd>
+  <dd>Indicates when a button is touch down</dd>
   <dt id="ListPicker.TouchUp">TouchUp()</dt>
-  <dd>Indicates that the ListPicker has been released.</dd>
+  <dd>Indicates when a button touch ends</dd>
 </dl>
 
 <h3 id="ListPicker-Methods">Methods</h3>
 
 <dl class="methods">
   <dt id="ListPicker.Open" class="method"><i></i> Open()</dt>
-  <dd>Opens the picker, as though the user clicked on it.</dd>
+  <dd>Opens the ListPicker, as though the user clicked on it.</dd>
 </dl>
 
 <h2 id="ListView">ListView</h2>
+
+<p>ListView Component. Non-Visible component to create a ListView in the Screen from a series of
+ elements added from a comma separated set of text elements. It is similar to the ListPicker
+ component but this one is placed on screen instead of opening a new Activity.
+ TOFO(hal): Think about generalizing this to include more than text/</p>
 
 <h3 id="ListView-Properties">Properties</h3>
 
 <dl class="properties">
   <dt id="ListView.BackgroundColor" class="color"><em>BackgroundColor</em></dt>
-  <dd>The color of the listview background.</dd>
+  <dd>Returns the listview’s background color as an alpha-red-green-blue
+ integer, i.e., <code class="highlighter-rouge">0xAARRGGBB</code>.  An alpha of <code class="highlighter-rouge">00</code>
+ indicates fully transparent and <code class="highlighter-rouge">FF</code> means opaque.</dd>
   <dt id="ListView.Elements" class="list bo"><em>Elements</em></dt>
-  <dd>List of text elements to show in the ListView.  This willsignal an error if the elements are not text strings.</dd>
+  <dd>Set a list of text elements to build a ListView</dd>
   <dt id="ListView.ElementsFromString" class="text wo"><em>ElementsFromString</em></dt>
-  <dd>The TextView elements specified as a string with the items separated by commas such as: Cheese,Fruit,Bacon,Radish. Each word before the comma will be an element in the list.</dd>
+  <dd>Specifies the text elements of the ListView.</dd>
   <dt id="ListView.Height" class="number bo"><em>Height</em></dt>
   <dd>Determines the height of the list on the view.</dd>
   <dt id="ListView.HeightPercent" class="number wo bo"><em>HeightPercent</em></dt>
   <dd>Specifies the vertical height of the ListView as a percentage of the height of the Screen.</dd>
   <dt id="ListView.Selection" class="text"><em>Selection</em></dt>
-  <dd>Returns the text last selected in the ListView.</dd>
+  <dd>Returns the text in the ListView at the position set by SelectionIndex</dd>
   <dt id="ListView.SelectionColor" class="color"><em>SelectionColor</em></dt>
-  <dd>The color of the item when it is selected.</dd>
+  <dd>Returns the listview’s selection color as an alpha-red-green-blue
+ integer, i.e., <code class="highlighter-rouge">0xAARRGGBB</code>.  An alpha of <code class="highlighter-rouge">00</code>
+ indicates fully transparent and <code class="highlighter-rouge">FF</code> means opaque.
+ Is not supported on Icecream Sandwich or earlier</dd>
   <dt id="ListView.SelectionIndex" class="number bo"><em>SelectionIndex</em></dt>
-  <dd>The index of the currently selected item, starting at 1.  If no item is selected, the value will be 0.  If an attempt is made to set this to a number less than 1 or greater than the number of items in the ListView, SelectionIndex will be set to 0, and Selection will be set to the empty text.</dd>
+  <dd>Selection index property getter method.</dd>
   <dt id="ListView.ShowFilterBar" class="boolean"><em>ShowFilterBar</em></dt>
-  <dd>Sets visibility of ShowFilterBar. True will show the bar, False will hide it.</dd>
+  <dd>Sets true or false to determine whether the search filter box is displayed in the ListView</dd>
   <dt id="ListView.TextColor" class="color"><em>TextColor</em></dt>
-  <dd>The text color of the listview items.</dd>
+  <dd>Returns the listview’s text item color as an alpha-red-green-blue
+ integer, i.e., <code class="highlighter-rouge">0xAARRGGBB</code>.  An alpha of <code class="highlighter-rouge">00</code>
+ indicates fully transparent and <code class="highlighter-rouge">FF</code> means opaque.</dd>
   <dt id="ListView.TextSize" class="number"><em>TextSize</em></dt>
-  <dd>The text size of the listview items.</dd>
+  <dd>Returns the listview’s text font Size</dd>
   <dt id="ListView.Visible" class="boolean"><em>Visible</em></dt>
   <dd>Returns true iff the ListView is visible.</dd>
   <dt id="ListView.Width" class="number bo"><em>Width</em></dt>
@@ -537,541 +603,852 @@ Valid values for the month field are 1-12 and 1-31 for the day field.</dd>
 
 <dl class="events">
   <dt id="ListView.AfterPicking">AfterPicking()</dt>
-  <dd>Simple event to be raised after the an element has been chosen in the list. The selected element is available in the Selection property.</dd>
+  <dd>Simple event to be raised after the an element has been chosen in the list.
+ The selected element is available in the Selection property.</dd>
 </dl>
 
 <h2 id="Notifier">Notifier</h2>
 
-<h3 id="Notifier-Properties">Properties</h3>
+<p>The Notifier component displays alert messages and creates Android log entries through
+ the following methods:</p>
+<ul>
+ <li> ShowMessageDialog: user must dismiss the message by pressing a button.
+ <li> ShowChooseDialog: displays two buttons to let the user choose one of two responses,
+      for example, yes or no, after which the AfterChoosing event is raised.
+ <li> ShowTextDialog: lets the user enter text in response to the message, after
+      which the AfterTextInput event is raised.
+ <li> ShowPasswordDialog: lets the user enter password in response to the message, after
+      which the AfterTextInput event is raised.
+ <li> ShowAlert: displays an alert that goes away by itself after
+      a short time.
+ <li> ShowProgressDialog: displays an alert with a loading spinner that cannot be dismissed by
+      the user. Can only be dismissed by using the DismissProgressDialog block.
+ <li> DismissProgressDialog: Dismisses the progress dialog displayed by ShowProgressDialog.
+ <li> LogError: logs an error message to the Android log.
+ <li> LogInfo: logs an info message to the Android log.
+ <li> LogWarning: logs a warning message to the Android log.
+ &lt;/ul&gt;
 
-<dl class="properties">
-  <dt id="Notifier.BackgroundColor" class="color wo"><em>BackgroundColor</em></dt>
-  <dd>Specifies the background color for alerts (not dialogs).</dd>
-  <dt id="Notifier.NotifierLength" class="number do"><em>NotifierLength</em></dt>
-  <dd>Specifies the length of time that the alert is shown – either “short” or “long”.</dd>
-  <dt id="Notifier.TextColor" class="color"><em>TextColor</em></dt>
-  <dd>Specifies the text color for alerts (not dialogs).</dd>
-</dl>
 
-<h3 id="Notifier-Events">Events</h3>
 
-<dl class="events">
-  <dt id="Notifier.AfterChoosing">AfterChoosing(<em class="text">choice</em>)</dt>
-  <dd>Event after the user has made a selection for ShowChooseDialog.</dd>
-  <dt id="Notifier.AfterTextInput">AfterTextInput(<em class="text">response</em>)</dt>
-  <dd>Event raised after the user has responded to ShowTextDialog.</dd>
-  <dt id="Notifier.ChoosingCanceled">ChoosingCanceled()</dt>
-  <dd>Event raised when the user canceled ShowChooseDialog.</dd>
-  <dt id="Notifier.TextInputCanceled">TextInputCanceled()</dt>
-  <dd>Event raised when the user canceled ShowTextDialog.</dd>
-</dl>
+### Properties  {#Notifier-Properties}
 
-<h3 id="Notifier-Methods">Methods</h3>
+{:.properties}
 
-<dl class="methods">
-  <dt id="Notifier.DismissProgressDialog" class="method"><i></i> DismissProgressDialog()</dt>
-  <dd>Dismiss a previously displayed ProgressDialog box</dd>
-  <dt id="Notifier.LogError" class="method"><i></i> LogError(<em class="text">message</em>)</dt>
-  <dd>Writes an error message to the Android system log. See the Google Android documentation for how to access the log.</dd>
-  <dt id="Notifier.LogInfo" class="method"><i></i> LogInfo(<em class="text">message</em>)</dt>
-  <dd>Writes an information message to the Android log.</dd>
-  <dt id="Notifier.LogWarning" class="method"><i></i> LogWarning(<em class="text">message</em>)</dt>
-  <dd>Writes a warning message to the Android log. See the Google Android documentation for how to access the log.</dd>
-  <dt id="Notifier.ShowAlert" class="method"><i></i> ShowAlert(<em class="text">notice</em>)</dt>
-  <dd>Display a temporary notification</dd>
-  <dt id="Notifier.ShowChooseDialog" class="method"><i></i> ShowChooseDialog(<em class="text">message</em>,<em class="text">title</em>,<em class="text">button1Text</em>,<em class="text">button2Text</em>,<em class="boolean">cancelable</em>)</dt>
-  <dd>Shows a dialog box with two buttons, from which the user can choose.  If cancelable is true there will be an additional CANCEL button. Pressing a button will raise the AfterChoosing event.  The “choice” parameter to AfterChoosing will be the text on the button that was pressed, or “Cancel” if the  CANCEL button was pressed.</dd>
-  <dt id="Notifier.ShowMessageDialog" class="method"><i></i> ShowMessageDialog(<em class="text">message</em>,<em class="text">title</em>,<em class="text">buttonText</em>)</dt>
-  <dd>Display an alert dialog with a single button that dismisses the alert.</dd>
-  <dt id="Notifier.ShowPasswordDialog" class="method"><i></i> ShowPasswordDialog(<em class="text">message</em>,<em class="text">title</em>,<em class="boolean">cancelable</em>)</dt>
-  <dd>Shows a dialog box where the user can enter password (input is masked), after which the AfterTextInput event will be raised.  If cancelable is true there will be an additional CANCEL button. Entering password will raise the AfterTextInput event.  The “response” parameter to AfterTextInput will be the entered password, or “Cancel” if CANCEL button was pressed.</dd>
-  <dt id="Notifier.ShowProgressDialog" class="method"><i></i> ShowProgressDialog(<em class="text">message</em>,<em class="text">title</em>)</dt>
-  <dd>Shows a dialog box with an optional title and message (use empty strings if they are not wanted). This dialog box contains a spinning artifact to indicate that the program is working. It cannot be canceled by the user but must be dismissed by the App Inventor Program by using the DismissProgressDialog block.</dd>
-  <dt id="Notifier.ShowTextDialog" class="method"><i></i> ShowTextDialog(<em class="text">message</em>,<em class="text">title</em>,<em class="boolean">cancelable</em>)</dt>
-  <dd>Shows a dialog box where the user can enter text, after which the AfterTextInput event will be raised.  If cancelable is true there will be an additional CANCEL button. Entering text will raise the AfterTextInput event.  The “response” parameter to AfterTextInput will be the text that was entered, or “Cancel” if the CANCEL button was pressed.</dd>
-</dl>
+{:id="Notifier.BackgroundColor" .color .wo} *BackgroundColor*
+: Specifies the alert's background color.
 
-<h2 id="PasswordTextBox">PasswordTextBox</h2>
+{:id="Notifier.NotifierLength" .number .do} *NotifierLength*
+: Specifies the length of time that the alert is shown -- either "short" or "long".
 
-<h3 id="PasswordTextBox-Properties">Properties</h3>
+{:id="Notifier.TextColor" .color} *TextColor*
+: Returns the alert's text color.
 
-<dl class="properties">
-  <dt id="PasswordTextBox.BackgroundColor" class="color"><em>BackgroundColor</em></dt>
-  <dd>The background color of the input box.  You can choose a color by name in the Designer or in the Blocks Editor.  The default background color is ‘default’ (shaded 3-D look).</dd>
-  <dt id="PasswordTextBox.Enabled" class="boolean"><em>Enabled</em></dt>
-  <dd>Whether the user can enter text into the PasswordTextBox.  By default, this is true.</dd>
-  <dt id="PasswordTextBox.FontBold" class="boolean do"><em>FontBold</em></dt>
-  <dd>Whether the font for the text should be bold.  By default, it is not.</dd>
-  <dt id="PasswordTextBox.FontItalic" class="boolean do"><em>FontItalic</em></dt>
-  <dd>Whether the text should appear in italics.  By default, it does not.</dd>
-  <dt id="PasswordTextBox.FontSize" class="number"><em>FontSize</em></dt>
-  <dd>The font size for the text.  By default, it is 14.0 points.</dd>
-  <dt id="PasswordTextBox.FontTypeface" class="number do"><em>FontTypeface</em></dt>
-  <dd>The font for the text.  The value can be changed in the Designer.</dd>
-  <dt id="PasswordTextBox.Height" class="number bo"><em>Height</em></dt>
-  <dd>Specifies the vertical height of the PasswordTextBox, measured in pixels.</dd>
-  <dt id="PasswordTextBox.HeightPercent" class="number wo bo"><em>HeightPercent</em></dt>
-  <dd>Specifies the vertical height of the PasswordTextBox as a percentage of the height of the Screen.</dd>
-  <dt id="PasswordTextBox.Hint" class="text"><em>Hint</em></dt>
-  <dd>Text that should appear faintly in the PasswordTextBox to provide a hint as to what the user should enter.  This can only be seen if the <code>Text</code> property is empty.</dd>
-  <dt id="PasswordTextBox.PasswordVisible" class="boolean bo"><em>PasswordVisible</em></dt>
-  <dd>Visibility of password.</dd>
-  <dt id="PasswordTextBox.Text" class="text"><em>Text</em></dt>
-  <dd>Returns the textbox contents.</dd>
-  <dt id="PasswordTextBox.TextAlignment" class="number do"><em>TextAlignment</em></dt>
-  <dd>Whether the text should be left justified, centered, or right justified.  By default, text is left justified.</dd>
-  <dt id="PasswordTextBox.TextColor" class="color"><em>TextColor</em></dt>
-  <dd>The color for the text.  You can choose a color by name in the Designer or in the Blocks Editor.  The default text color is black.</dd>
-  <dt id="PasswordTextBox.Visible" class="boolean"><em>Visible</em></dt>
-  <dd>Returns true iff the PasswordTextBox is visible.</dd>
-  <dt id="PasswordTextBox.Width" class="number bo"><em>Width</em></dt>
-  <dd>Specifies the horizontal width of the PasswordTextBox, measured in pixels.</dd>
-  <dt id="PasswordTextBox.WidthPercent" class="number wo bo"><em>WidthPercent</em></dt>
-  <dd>Specifies the horizontal width of the PasswordTextBox as a percentage of the width of the Screen.</dd>
-</dl>
+### Events  {#Notifier-Events}
 
-<h3 id="PasswordTextBox-Events">Events</h3>
+{:.events}
 
-<dl class="events">
-  <dt id="PasswordTextBox.GotFocus">GotFocus()</dt>
-  <dd>Event raised when the PasswordTextBox is selected for input, such as by
- the user touching it.</dd>
-  <dt id="PasswordTextBox.LostFocus">LostFocus()</dt>
-  <dd>Event raised when the PasswordTextBox is no longer selected for input, such
- as if the user touches a different text box.</dd>
-</dl>
+{:id="Notifier.AfterChoosing"} AfterChoosing(*choice*{:.text})
+: Event after the user has made a selection for ShowChooseDialog.
 
-<h3 id="PasswordTextBox-Methods">Methods</h3>
+{:id="Notifier.AfterTextInput"} AfterTextInput(*response*{:.text})
+: Event raised after the user has responded to ShowTextDialog.
 
-<dl class="methods">
-  <dt id="PasswordTextBox.RequestFocus" class="method"><i></i> RequestFocus()</dt>
-  <dd>Sets the PasswordTextBox active.</dd>
-</dl>
+{:id="Notifier.ChoosingCanceled"} ChoosingCanceled()
+: Event raised when the user canceled ShowChooseDialog.
 
-<h2 id="Screen">Screen</h2>
+{:id="Notifier.TextInputCanceled"} TextInputCanceled()
+: Event raised when the user canceled ShowTextDialog.
 
-<h3 id="Screen-Properties">Properties</h3>
+### Methods  {#Notifier-Methods}
 
-<dl class="properties">
-  <dt id="Screen.AboutScreen" class="text"><em>AboutScreen</em></dt>
-  <dd>Information about the screen.  It appears when “About this Application” is selected from the system menu. Use it to inform people about your app.  In multiple screen apps, each screen has its own AboutScreen info.</dd>
-  <dt id="Screen.AccentColor" class="color do"><em>AccentColor</em></dt>
-  <dd>This is the accent color used for highlights and other user interface accents.</dd>
-  <dt id="Screen.AlignHorizontal" class="number"><em>AlignHorizontal</em></dt>
-  <dd>A number that encodes how contents of the screen are aligned  horizontally. The choices are: 1 = left aligned, 2 = horizontally centered,  3 = right aligned.</dd>
-  <dt id="Screen.AlignVertical" class="number"><em>AlignVertical</em></dt>
-  <dd>A number that encodes how the contents of the arrangement are aligned vertically. The choices are: 1 = aligned at the top, 2 = vertically centered, 3 = aligned at the bottom. Vertical alignment has no effect if the screen is scrollable.</dd>
-  <dt id="Screen.AppName" class="text wo do"><em>AppName</em></dt>
-  <dd>This is the display name of the installed application in the phone.If the AppName is blank, it will be set to the name of the project when the project is built.</dd>
-  <dt id="Screen.BackgroundColor" class="color"><em>BackgroundColor</em></dt>
-  <dd>BackgroundColor property getter method.</dd>
-  <dt id="Screen.BackgroundImage" class="text"><em>BackgroundImage</em></dt>
-  <dd>The screen background image.</dd>
-  <dt id="Screen.BlocksToolkit" class="text wo do"><em>BlocksToolkit</em></dt>
-  <dd>A JSON string representing the subset for the screen</dd>
-  <dt id="Screen.CloseScreenAnimation" class="text"><em>CloseScreenAnimation</em></dt>
-  <dd>The animation for closing current screen and returning  to the previous screen. Valid options are default, fade, zoom, slidehorizontal, slidevertical, and none</dd>
-  <dt id="Screen.Height" class="number ro bo"><em>Height</em></dt>
-  <dd>Screen height (y-size).</dd>
-  <dt id="Screen.Icon" class="text wo do"><em>Icon</em></dt>
-  <dd>Specifies the name of the application icon.</dd>
-  <dt id="Screen.OpenScreenAnimation" class="text"><em>OpenScreenAnimation</em></dt>
-  <dd>The animation for switching to another screen. Valid options are default, fade, zoom, slidehorizontal, slidevertical, and none</dd>
-  <dt id="Screen.PrimaryColor" class="color do"><em>PrimaryColor</em></dt>
-  <dd>This is the primary color used for Material UI elements, such as the ActionBar.</dd>
-  <dt id="Screen.PrimaryColorDark" class="color do"><em>PrimaryColorDark</em></dt>
-  <dd>This is the primary color used for darker elements in Material UI.</dd>
-  <dt id="Screen.ScreenOrientation" class="text"><em>ScreenOrientation</em></dt>
-  <dd>The requested screen orientation, specified as a text value.  Commonly used values are landscape, portrait, sensor, user and unspecified.  See the Android developer documentation for ActivityInfo.Screen_Orientation for the complete list of possible settings.</dd>
-  <dt id="Screen.Scrollable" class="boolean"><em>Scrollable</em></dt>
-  <dd>When checked, there will be a vertical scrollbar on the screen, and the height of the application can exceed the physical height of the device. When unchecked, the application height is constrained to the height of the device.</dd>
-  <dt id="Screen.ShowListsAsJson" class="boolean do"><em>ShowListsAsJson</em></dt>
-  <dd>If false, lists will be converted to strings using Lisp notation, i.e., as symbols separated by spaces, e.g., (a 1 b2 (c d). If true, lists will appear as in Json or Python, e.g.  [“a”, 1, “b”, 2, [“c”, “d”]].  This property appears only in Screen 1, and the value for Screen 1 determines the behavior for all screens. The property defaults to “true” meaning that the App Inventor programmer must explicitly set it to “false” if Lisp syntax is desired. In older versions of App Inventor, this setting defaulted to false. Older projects should not have been affected by this default settings update.</dd>
-  <dt id="Screen.ShowStatusBar" class="boolean"><em>ShowStatusBar</em></dt>
-  <dd>The status bar is the topmost bar on the screen. This property reports whether the status bar is visible.</dd>
-  <dt id="Screen.Sizing" class="text wo do"><em>Sizing</em></dt>
-  <dd>If set to fixed,  screen layouts will be created for a single fixed-size screen and autoscaled. If set to responsive, screen layouts will use the actual resolution of the device.  See the documentation on responsive design in App Inventor for more information. This property appears on Screen1 only and controls the sizing for all screens in the app.</dd>
-  <dt id="Screen.Theme" class="text wo do"><em>Theme</em></dt>
-  <dd>Sets the theme used by the application.</dd>
-  <dt id="Screen.Title" class="text"><em>Title</em></dt>
-  <dd>The caption for the form, which apears in the title bar</dd>
-  <dt id="Screen.TitleVisible" class="boolean"><em>TitleVisible</em></dt>
-  <dd>The title bar is the top gray bar on the screen. This property reports whether the title bar is visible.</dd>
-  <dt id="Screen.TutorialURL" class="text wo do"><em>TutorialURL</em></dt>
-  <dd>A URL to use to populate the Tutorial Sidebar while editing a project. Used as a teaching aid.</dd>
-  <dt id="Screen.VersionCode" class="number wo do"><em>VersionCode</em></dt>
-  <dd>An integer value which must be incremented each time a new Android Application Package File (APK) is created for the Google Play Store.</dd>
-  <dt id="Screen.VersionName" class="text wo do"><em>VersionName</em></dt>
-  <dd>A string which can be changed to allow Google Play Store users to distinguish between different versions of the App.</dd>
-  <dt id="Screen.Width" class="number ro bo"><em>Width</em></dt>
-  <dd>Screen width (x-size).</dd>
-</dl>
+{:.methods}
 
-<h3 id="Screen-Events">Events</h3>
+{:id="Notifier.DismissProgressDialog" class="method"} <i /> DismissProgressDialog()
+: Dismisses the alert created by the ShowProgressDialog block
 
-<dl class="events">
-  <dt id="Screen.BackPressed">BackPressed()</dt>
-  <dd>Device back button pressed.</dd>
-  <dt id="Screen.ErrorOccurred">ErrorOccurred(<em class="component">component</em>,<em class="text">functionName</em>,<em class="number">errorNumber</em>,<em class="text">message</em>)</dt>
-  <dd>Event raised when an error occurs. Only some errors will raise this condition.  For those errors, the system will show a notification by default.  You can use this event handler to prescribe an error behavior different than the default.</dd>
-  <dt id="Screen.Initialize">Initialize()</dt>
-  <dd>Screen starting</dd>
-  <dt id="Screen.OtherScreenClosed">OtherScreenClosed(<em class="text">otherScreenName</em>,<em class="any">result</em>)</dt>
-  <dd>Event raised when another screen has closed and control has returned to this screen.</dd>
-  <dt id="Screen.PermissionDenied">PermissionDenied(<em class="component">component</em>,<em class="text">functionName</em>,<em class="text">permissionName</em>)</dt>
-  <dd>Event to handle when the app user has denied a needed permission.</dd>
-  <dt id="Screen.PermissionGranted">PermissionGranted(<em class="text">permissionName</em>)</dt>
-  <dd>Event to handle when the app user has granted a needed permission. This event is only run when permission is
- granted in response to the AskForPermission method.</dd>
-  <dt id="Screen.ScreenOrientationChanged">ScreenOrientationChanged()</dt>
-  <dd>Screen orientation changed</dd>
-</dl>
+{:id="Notifier.LogError" class="method"} <i /> LogError(*message*{:.text})
+: Log an error message.
 
-<h3 id="Screen-Methods">Methods</h3>
+{:id="Notifier.LogInfo" class="method"} <i /> LogInfo(*message*{:.text})
+: Log an information message.
 
-<dl class="methods">
-  <dt id="Screen.AskForPermission" class="method"><i></i> AskForPermission(<em class="text">permissionName</em>)</dt>
-  <dd>Ask the user to grant access to a dangerous permission.</dd>
-  <dt id="Screen.HideKeyboard" class="method"><i></i> HideKeyboard()</dt>
-  <dd>Hide the onscreen soft keyboard.</dd>
-</dl>
+{:id="Notifier.LogWarning" class="method"} <i /> LogWarning(*message*{:.text})
+: Log a warning message.
 
-<h2 id="Slider">Slider</h2>
+{:id="Notifier.ShowAlert" class="method"} <i /> ShowAlert(*notice*{:.text})
+: Display a temporary notification
 
-<h3 id="Slider-Properties">Properties</h3>
+{:id="Notifier.ShowChooseDialog" class="method"} <i /> ShowChooseDialog(*message*{:.text},*title*{:.text},*button1Text*{:.text},*button2Text*{:.text},*cancelable*{:.boolean})
+: Displays an alert with two buttons that have specified text.  If cancelable is true,
+ there is an additional button marked CANCEL that cancels the dialog.
+ Raises the AfterChoosing event when the choice has been made, and returns the text of
+ the button that was pressed.
 
-<dl class="properties">
-  <dt id="Slider.ColorLeft" class="color"><em>ColorLeft</em></dt>
-  <dd>The color of slider to the left of the thumb.</dd>
-  <dt id="Slider.ColorRight" class="color"><em>ColorRight</em></dt>
-  <dd>The color of slider to the left of the thumb.</dd>
-  <dt id="Slider.HeightPercent" class="number wo bo"><em>HeightPercent</em></dt>
-  <dd>Specifies the vertical height of the Slider as a percentage of the height of the Screen.</dd>
-  <dt id="Slider.MaxValue" class="number"><em>MaxValue</em></dt>
-  <dd>Sets the maximum value of slider.  Changing the maximum value also resets Thumbposition to be halfway between the minimum and the (new) maximum. If the new maximum is less than the current minimum, then minimum and maximum will both be set to this value.  Setting MaxValue resets the thumb position to halfway between MinValue and MaxValue and signals the PositionChanged event.</dd>
-  <dt id="Slider.MinValue" class="number"><em>MinValue</em></dt>
-  <dd>Sets the minimum value of slider.  Changing the minimum value also resets Thumbposition to be halfway between the (new) minimum and the maximum. If the new minimum is greater than the current maximum, then minimum and maximum will both be set to this value.  Setting MinValue resets the thumb position to halfway between MinValue and MaxValue and signals the PositionChanged event.</dd>
-  <dt id="Slider.ThumbEnabled" class="boolean"><em>ThumbEnabled</em></dt>
-  <dd>Sets whether or not to display the slider thumb.</dd>
-  <dt id="Slider.ThumbPosition" class="number"><em>ThumbPosition</em></dt>
-  <dd>Sets the position of the slider thumb. If this value is greater than MaxValue, then it will be set to same value as MaxValue. If this value is less than MinValue, then it will be set to same value as MinValue.</dd>
-  <dt id="Slider.Visible" class="boolean"><em>Visible</em></dt>
-  <dd>Returns true iff the Slider is visible.</dd>
-  <dt id="Slider.Width" class="number bo"><em>Width</em></dt>
-  <dd>Specifies the horizontal width of the Slider, measured in pixels.</dd>
-  <dt id="Slider.WidthPercent" class="number wo bo"><em>WidthPercent</em></dt>
-  <dd>Specifies the horizontal width of the Slider as a percentage of the width of the Screen.</dd>
-</dl>
+{:id="Notifier.ShowMessageDialog" class="method"} <i /> ShowMessageDialog(*message*{:.text},*title*{:.text},*buttonText*{:.text})
+: Display an alert dialog with a single button that dismisses the alert.
 
-<h3 id="Slider-Events">Events</h3>
+{:id="Notifier.ShowPasswordDialog" class="method"} <i /> ShowPasswordDialog(*message*{:.text},*title*{:.text},*cancelable*{:.boolean})
+: Shows a dialog box in which the user can enter password (input is masked),
+ after which the AfterTextInput event is raised.
 
-<dl class="events">
-  <dt id="Slider.PositionChanged">PositionChanged(<em class="number">thumbPosition</em>)</dt>
-  <dd>Indicates that position of the slider thumb has changed.</dd>
-</dl>
+{:id="Notifier.ShowProgressDialog" class="method"} <i /> ShowProgressDialog(*message*{:.text},*title*{:.text})
+: Display a progress dialog that cannot be dismissed by the user. To dismiss
+ this alert, you must use the DismissProgressDialog block
 
-<h2 id="Spinner">Spinner</h2>
+{:id="Notifier.ShowTextDialog" class="method"} <i /> ShowTextDialog(*message*{:.text},*title*{:.text},*cancelable*{:.boolean})
+: Shows a dialog box in which the user can enter text, after which the
+ AfterTextInput event is raised.
 
-<h3 id="Spinner-Properties">Properties</h3>
+## PasswordTextBox  {#PasswordTextBox}
 
-<dl class="properties">
-  <dt id="Spinner.Elements" class="list bo"><em>Elements</em></dt>
-  <dd>returns a list of text elements to be picked from.</dd>
-  <dt id="Spinner.ElementsFromString" class="text wo"><em>ElementsFromString</em></dt>
-  <dd>sets the Spinner list to the elements passed in the comma-separated string</dd>
-  <dt id="Spinner.Height" class="number bo"><em>Height</em></dt>
-  <dd>Specifies the vertical height of the Spinner, measured in pixels.</dd>
-  <dt id="Spinner.HeightPercent" class="number wo bo"><em>HeightPercent</em></dt>
-  <dd>Specifies the vertical height of the Spinner as a percentage of the height of the Screen.</dd>
-  <dt id="Spinner.Prompt" class="text"><em>Prompt</em></dt>
-  <dd>Text with the current title for the Spinner window</dd>
-  <dt id="Spinner.Selection" class="text"><em>Selection</em></dt>
-  <dd>Returns the current selected item in the spinner</dd>
-  <dt id="Spinner.SelectionIndex" class="number bo"><em>SelectionIndex</em></dt>
-  <dd>The index of the currently selected item, starting at 1. If no item is selected, the value will be 0.</dd>
-  <dt id="Spinner.Visible" class="boolean"><em>Visible</em></dt>
-  <dd>Returns true iff the Spinner is visible.</dd>
-  <dt id="Spinner.Width" class="number bo"><em>Width</em></dt>
-  <dd>Specifies the horizontal width of the Spinner, measured in pixels.</dd>
-  <dt id="Spinner.WidthPercent" class="number wo bo"><em>WidthPercent</em></dt>
-  <dd>Specifies the horizontal width of the Spinner as a percentage of the width of the Screen.</dd>
-</dl>
+Text box for entering passwords.
 
-<h3 id="Spinner-Events">Events</h3>
 
-<dl class="events">
-  <dt id="Spinner.AfterSelecting">AfterSelecting(<em class="text">selection</em>)</dt>
-  <dd>Event called after the user selects an item from the dropdown list.</dd>
-</dl>
 
-<h3 id="Spinner-Methods">Methods</h3>
+### Properties  {#PasswordTextBox-Properties}
 
-<dl class="methods">
-  <dt id="Spinner.DisplayDropdown" class="method"><i></i> DisplayDropdown()</dt>
-  <dd>displays the dropdown list for selection, same action as when the user clicks on the spinner.</dd>
-</dl>
+{:.properties}
 
-<h2 id="Switch">Switch</h2>
+{:id="PasswordTextBox.BackgroundColor" .color} *BackgroundColor*
+: Returns the background color of the PasswordTextBox as an alpha-red-green-blue
+ integer.
 
-<h3 id="Switch-Properties">Properties</h3>
+{:id="PasswordTextBox.Enabled" .boolean} *Enabled*
+: Returns true if the PasswordTextBox is active and useable.
 
-<dl class="properties">
-  <dt id="Switch.BackgroundColor" class="color"><em>BackgroundColor</em></dt>
-  <dd>Returns the background color of the Switch as an alpha-red-green-blue
- integer.</dd>
-  <dt id="Switch.Enabled" class="boolean"><em>Enabled</em></dt>
-  <dd>Returns true if the Switch is active and clickable.</dd>
-  <dt id="Switch.FontBold" class="boolean do"><em>FontBold</em></dt>
-  <dd>Returns true if the text of the Switch should be bold.
+{:id="PasswordTextBox.FontBold" .boolean .do} *FontBold*
+: Returns true if the text of the PasswordTextBox should be bold.
  If bold has been requested, this property will return true, even if the
- font does not support bold.</dd>
-  <dt id="Switch.FontItalic" class="boolean do"><em>FontItalic</em></dt>
-  <dd>Returns true if the text of the Switch should be italic.
+ font does not support bold.
+
+{:id="PasswordTextBox.FontItalic" .boolean .do} *FontItalic*
+: Returns true if the text of the PasswordTextBox should be italic.
  If italic has been requested, this property will return true, even if the
- font does not support italic.</dd>
-  <dt id="Switch.FontSize" class="number"><em>FontSize</em></dt>
-  <dd>Returns the text font size of the Switch, measured in sp(scale-independent pixels).</dd>
-  <dt id="Switch.FontTypeface" class="number do"><em>FontTypeface</em></dt>
-  <dd>Returns the text font face of the Switch as default, serif, sans
- serif, or monospace.</dd>
-  <dt id="Switch.Height" class="number bo"><em>Height</em></dt>
-  <dd>Specifies the vertical height of the Switch, measured in pixels.</dd>
-  <dt id="Switch.HeightPercent" class="number wo bo"><em>HeightPercent</em></dt>
-  <dd>Specifies the vertical height of the Switch as a percentage of the height of the Screen.</dd>
-  <dt id="Switch.On" class="boolean"><em>On</em></dt>
-  <dd>Returns true if the checkbox is checked.</dd>
-  <dt id="Switch.Text" class="text"><em>Text</em></dt>
-  <dd>Returns the text displayed by the Switch.</dd>
-  <dt id="Switch.TextColor" class="color"><em>TextColor</em></dt>
-  <dd>Returns the text color of the Switch as an alpha-red-green-blue
- integer.</dd>
-  <dt id="Switch.ThumbColorActive" class="color do"><em>ThumbColorActive</em></dt>
-  <dd>Returns the switch’s thumb color (button that toggles back and forth)
- when the switch is ON/Checked</dd>
-  <dt id="Switch.ThumbColorInactive" class="color"><em>ThumbColorInactive</em></dt>
-  <dd>Returns the switch’s thumb color (button that toggles back and forth)
- when the switch is Off/Unchecked</dd>
-  <dt id="Switch.TrackColorActive" class="color"><em>TrackColorActive</em></dt>
-  <dd>Returns the switch’s track color</dd>
-  <dt id="Switch.TrackColorInactive" class="color"><em>TrackColorInactive</em></dt>
-  <dd>Color of the toggle track when switched off</dd>
-  <dt id="Switch.Visible" class="boolean"><em>Visible</em></dt>
-  <dd>Returns true iff the Switch is visible.</dd>
-  <dt id="Switch.Width" class="number bo"><em>Width</em></dt>
-  <dd>Specifies the horizontal width of the Switch, measured in pixels.</dd>
-  <dt id="Switch.WidthPercent" class="number wo bo"><em>WidthPercent</em></dt>
-  <dd>Specifies the horizontal width of the Switch as a percentage of the width of the Screen.</dd>
-</dl>
+ font does not support italic.
 
-<h3 id="Switch-Events">Events</h3>
+{:id="PasswordTextBox.FontSize" .number} *FontSize*
+: Returns the text font size of the PasswordTextBox, measured in sp(scale-independent pixels).
 
-<dl class="events">
-  <dt id="Switch.Changed">Changed()</dt>
-  <dd>Default Changed event handler.</dd>
-  <dt id="Switch.GotFocus">GotFocus()</dt>
-  <dd>Default GotFocus event handler.</dd>
-  <dt id="Switch.LostFocus">LostFocus()</dt>
-  <dd>Default LostFocus event handler.</dd>
-</dl>
+{:id="PasswordTextBox.FontTypeface" .number .do} *FontTypeface*
+: Returns the text font face of the PasswordTextBox as default, serif, sans
+ serif, or monospace.
 
-<h2 id="TextBox">TextBox</h2>
+{:id="PasswordTextBox.Height" .number .bo} *Height*
+: Specifies the vertical height of the PasswordTextBox, measured in pixels.
 
-<h3 id="TextBox-Properties">Properties</h3>
+{:id="PasswordTextBox.HeightPercent" .number .wo .bo} *HeightPercent*
+: Specifies the vertical height of the PasswordTextBox as a percentage of the height of the Screen.
 
-<dl class="properties">
-  <dt id="TextBox.BackgroundColor" class="color"><em>BackgroundColor</em></dt>
-  <dd>The background color of the input box.  You can choose a color by name in the Designer or in the Blocks Editor.  The default background color is ‘default’ (shaded 3-D look).</dd>
-  <dt id="TextBox.Enabled" class="boolean"><em>Enabled</em></dt>
-  <dd>Whether the user can enter text into the TextBox.  By default, this is true.</dd>
-  <dt id="TextBox.FontBold" class="boolean do"><em>FontBold</em></dt>
-  <dd>Whether the font for the text should be bold.  By default, it is not.</dd>
-  <dt id="TextBox.FontItalic" class="boolean do"><em>FontItalic</em></dt>
-  <dd>Whether the text should appear in italics.  By default, it does not.</dd>
-  <dt id="TextBox.FontSize" class="number"><em>FontSize</em></dt>
-  <dd>The font size for the text.  By default, it is 14.0 points.</dd>
-  <dt id="TextBox.FontTypeface" class="number do"><em>FontTypeface</em></dt>
-  <dd>The font for the text.  The value can be changed in the Designer.</dd>
-  <dt id="TextBox.Height" class="number bo"><em>Height</em></dt>
-  <dd>Specifies the vertical height of the TextBox, measured in pixels.</dd>
-  <dt id="TextBox.HeightPercent" class="number wo bo"><em>HeightPercent</em></dt>
-  <dd>Specifies the vertical height of the TextBox as a percentage of the height of the Screen.</dd>
-  <dt id="TextBox.Hint" class="text"><em>Hint</em></dt>
-  <dd>Text that should appear faintly in the TextBox to provide a hint as to what the user should enter.  This can only be seen if the <code>Text</code> property is empty.</dd>
-  <dt id="TextBox.MultiLine" class="boolean"><em>MultiLine</em></dt>
-  <dd>If true, then this text box accepts multiple lines of input, which are entered using the return key.  For single line text boxes there is a Done key instead of a return key, and pressing Done hides the keyboard.  The app should call the HideKeyboard method to hide the keyboard for a mutiline text box.</dd>
-  <dt id="TextBox.NumbersOnly" class="boolean"><em>NumbersOnly</em></dt>
-  <dd>If true, then this text box accepts only numbers as keyboard input.  Numbers can include a decimal point and an optional leading minus sign.  This applies to keyboard input only.  Even if NumbersOnly is true, you can use [set Text to] to enter any text at all.</dd>
-  <dt id="TextBox.ReadOnly" class="boolean"><em>ReadOnly</em></dt>
-  <dd>Whether the TextBox is read-only. By default, this is true.</dd>
-  <dt id="TextBox.Text" class="text"><em>Text</em></dt>
-  <dd>Returns the textbox contents.</dd>
-  <dt id="TextBox.TextAlignment" class="number do"><em>TextAlignment</em></dt>
-  <dd>Whether the text should be left justified, centered, or right justified.  By default, text is left justified.</dd>
-  <dt id="TextBox.TextColor" class="color"><em>TextColor</em></dt>
-  <dd>The color for the text.  You can choose a color by name in the Designer or in the Blocks Editor.  The default text color is black.</dd>
-  <dt id="TextBox.Visible" class="boolean"><em>Visible</em></dt>
-  <dd>Returns true iff the TextBox is visible.</dd>
-  <dt id="TextBox.Width" class="number bo"><em>Width</em></dt>
-  <dd>Specifies the horizontal width of the TextBox, measured in pixels.</dd>
-  <dt id="TextBox.WidthPercent" class="number wo bo"><em>WidthPercent</em></dt>
-  <dd>Specifies the horizontal width of the TextBox as a percentage of the width of the Screen.</dd>
-</dl>
+{:id="PasswordTextBox.Hint" .text} *Hint*
+: Hint property getter method.
 
-<h3 id="TextBox-Events">Events</h3>
+{:id="PasswordTextBox.PasswordVisible" .boolean .bo} *PasswordVisible*
+: Visibility of password.
 
-<dl class="events">
-  <dt id="TextBox.GotFocus">GotFocus()</dt>
-  <dd>Event raised when the TextBox is selected for input, such as by
- the user touching it.</dd>
-  <dt id="TextBox.LostFocus">LostFocus()</dt>
-  <dd>Event raised when the TextBox is no longer selected for input, such
- as if the user touches a different text box.</dd>
-</dl>
+{:id="PasswordTextBox.Text" .text} *Text*
+: Returns the textbox contents.
 
-<h3 id="TextBox-Methods">Methods</h3>
+{:id="PasswordTextBox.TextAlignment" .number .do} *TextAlignment*
+: Returns the alignment of the textbox's text: center, normal
+ (e.g., left-justified if text is written left to right), or
+ opposite (e.g., right-justified if text is written left to right).
 
-<dl class="methods">
-  <dt id="TextBox.HideKeyboard" class="method"><i></i> HideKeyboard()</dt>
-  <dd>Hide the keyboard.  Only multiline text boxes need this. Single line text boxes close the keyboard when the users presses the Done key.</dd>
-  <dt id="TextBox.RequestFocus" class="method"><i></i> RequestFocus()</dt>
-  <dd>Sets the TextBox active.</dd>
-</dl>
+{:id="PasswordTextBox.TextColor" .color} *TextColor*
+: Returns the text color of the PasswordTextBox as an alpha-red-green-blue
+ integer.
 
-<h2 id="TimePicker">TimePicker</h2>
+{:id="PasswordTextBox.Visible" .boolean} *Visible*
+: Returns true iff the PasswordTextBox is visible.
 
-<h3 id="TimePicker-Properties">Properties</h3>
+{:id="PasswordTextBox.Width" .number .bo} *Width*
+: Specifies the horizontal width of the PasswordTextBox, measured in pixels.
 
-<dl class="properties">
-  <dt id="TimePicker.BackgroundColor" class="color"><em>BackgroundColor</em></dt>
-  <dd>Returns the button’s background color</dd>
-  <dt id="TimePicker.Enabled" class="boolean"><em>Enabled</em></dt>
-  <dd>If set, user can tap TimePicker to cause action.</dd>
-  <dt id="TimePicker.FontBold" class="boolean"><em>FontBold</em></dt>
-  <dd>If set, TimePicker text is displayed in bold.</dd>
-  <dt id="TimePicker.FontItalic" class="boolean"><em>FontItalic</em></dt>
-  <dd>If set, TimePicker text is displayed in italics.</dd>
-  <dt id="TimePicker.FontSize" class="number"><em>FontSize</em></dt>
-  <dd>Point size for TimePicker text.</dd>
-  <dt id="TimePicker.FontTypeface" class="number do"><em>FontTypeface</em></dt>
-  <dd>Font family for TimePicker text.</dd>
-  <dt id="TimePicker.Height" class="number bo"><em>Height</em></dt>
-  <dd>Specifies the vertical height of the TimePicker, measured in pixels.</dd>
-  <dt id="TimePicker.HeightPercent" class="number wo bo"><em>HeightPercent</em></dt>
-  <dd>Specifies the vertical height of the TimePicker as a percentage of the height of the Screen.</dd>
-  <dt id="TimePicker.Hour" class="number ro bo"><em>Hour</em></dt>
-  <dd>The hour of the last time set using the time picker. The hour is in a 24 hour format. If the last time set was 11:53 pm, this property will return 23.</dd>
-  <dt id="TimePicker.Image" class="text"><em>Image</em></dt>
-  <dd>Image to display on button.</dd>
-  <dt id="TimePicker.Instant" class="InstantInTime ro bo"><em>Instant</em></dt>
-  <dd>The instant of the last time set using the time picker</dd>
-  <dt id="TimePicker.Minute" class="number ro bo"><em>Minute</em></dt>
-  <dd>The minute of the last time set using the time picker</dd>
-  <dt id="TimePicker.Shape" class="number do"><em>Shape</em></dt>
-  <dd>Returns the style of the button.</dd>
-  <dt id="TimePicker.ShowFeedback" class="boolean"><em>ShowFeedback</em></dt>
-  <dd>Specifies if a visual feedback should be shown  for a TimePicker that as an image as background.</dd>
-  <dt id="TimePicker.Text" class="text"><em>Text</em></dt>
-  <dd>Text to display on TimePicker.</dd>
-  <dt id="TimePicker.TextAlignment" class="number do"><em>TextAlignment</em></dt>
-  <dd>Left, center, or right.</dd>
-  <dt id="TimePicker.TextColor" class="color"><em>TextColor</em></dt>
-  <dd>Color for button text.</dd>
-  <dt id="TimePicker.Visible" class="boolean"><em>Visible</em></dt>
-  <dd>Returns true iff the TimePicker is visible.</dd>
-  <dt id="TimePicker.Width" class="number bo"><em>Width</em></dt>
-  <dd>Specifies the horizontal width of the TimePicker, measured in pixels.</dd>
-  <dt id="TimePicker.WidthPercent" class="number wo bo"><em>WidthPercent</em></dt>
-  <dd>Specifies the horizontal width of the TimePicker as a percentage of the width of the Screen.</dd>
-</dl>
+{:id="PasswordTextBox.WidthPercent" .number .wo .bo} *WidthPercent*
+: Specifies the horizontal width of the PasswordTextBox as a percentage of the width of the Screen.
 
-<h3 id="TimePicker-Events">Events</h3>
+### Events  {#PasswordTextBox-Events}
 
-<dl class="events">
-  <dt id="TimePicker.AfterTimeSet">AfterTimeSet()</dt>
-  <dd>This event is run when a user has set the time in the popup dialog.</dd>
-  <dt id="TimePicker.GotFocus">GotFocus()</dt>
-  <dd>Indicates the cursor moved over the TimePicker so it is now possible to click it.</dd>
-  <dt id="TimePicker.LostFocus">LostFocus()</dt>
-  <dd>Indicates the cursor moved away from the TimePicker so it is now no longer possible to click it.</dd>
-  <dt id="TimePicker.TouchDown">TouchDown()</dt>
-  <dd>Indicates that the TimePicker was pressed down.</dd>
-  <dt id="TimePicker.TouchUp">TouchUp()</dt>
-  <dd>Indicates that the TimePicker has been released.</dd>
-</dl>
+{:.events}
 
-<h3 id="TimePicker-Methods">Methods</h3>
+{:id="PasswordTextBox.GotFocus"} GotFocus()
+: Event raised when the PasswordTextBox is selected for input, such as by
+ the user touching it.
 
-<dl class="methods">
-  <dt id="TimePicker.LaunchPicker" class="method"><i></i> LaunchPicker()</dt>
-  <dd>Launches the TimePicker popup.</dd>
-  <dt id="TimePicker.SetTimeToDisplay" class="method"><i></i> SetTimeToDisplay(<em class="number">hour</em>,<em class="number">minute</em>)</dt>
-  <dd>Set the time to be shown in the Time Picker popup. Current time is shown by default.</dd>
-  <dt id="TimePicker.SetTimeToDisplayFromInstant" class="method"><i></i> SetTimeToDisplayFromInstant(<em class="InstantInTime">instant</em>)</dt>
-  <dd>Set the time from the instant to be shown in the Time Picker popup. Current time is shown by default.</dd>
-</dl>
+{:id="PasswordTextBox.LostFocus"} LostFocus()
+: Event raised when the PasswordTextBox is no longer selected for input, such
+ as if the user touches a different text box.
 
-<h2 id="WebViewer">WebViewer</h2>
+### Methods  {#PasswordTextBox-Methods}
 
-<h3 id="WebViewer-Properties">Properties</h3>
+{:.methods}
 
-<dl class="properties">
-  <dt id="WebViewer.CurrentPageTitle" class="text ro bo"><em>CurrentPageTitle</em></dt>
-  <dd>Title of the page currently viewed</dd>
-  <dt id="WebViewer.CurrentUrl" class="text ro bo"><em>CurrentUrl</em></dt>
-  <dd>URL of the page currently viewed.   This could be different from the Home URL if new pages were visited by following links.</dd>
-  <dt id="WebViewer.FollowLinks" class="boolean"><em>FollowLinks</em></dt>
-  <dd>Determines whether to follow links when they are tapped in the WebViewer.  If you follow links, you can use GoBack and GoForward to navigate the browser history.</dd>
-  <dt id="WebViewer.Height" class="number bo"><em>Height</em></dt>
-  <dd>Specifies the vertical height of the WebViewer, measured in pixels.</dd>
-  <dt id="WebViewer.HeightPercent" class="number wo bo"><em>HeightPercent</em></dt>
-  <dd>Specifies the vertical height of the WebViewer as a percentage of the height of the Screen.</dd>
-  <dt id="WebViewer.HomeUrl" class="text"><em>HomeUrl</em></dt>
-  <dd>URL of the page the WebViewer should initially open to.  Setting this will load the page.</dd>
-  <dt id="WebViewer.IgnoreSslErrors" class="boolean"><em>IgnoreSslErrors</em></dt>
-  <dd>Determine whether or not to ignore SSL errors. Set to true to ignore errors. Use this to accept self signed certificates from websites.</dd>
-  <dt id="WebViewer.PromptforPermission" class="boolean"><em>PromptforPermission</em></dt>
-  <dd>If True, then prompt the user of the WebView to give permission to access the geolocation API. If False, then assume permission is granted.</dd>
-  <dt id="WebViewer.UsesLocation" class="boolean wo do"><em>UsesLocation</em></dt>
-  <dd>Whether or not to give the application permission to use the Javascript geolocation API. This property is available only in the designer.</dd>
-  <dt id="WebViewer.Visible" class="boolean"><em>Visible</em></dt>
-  <dd>Returns true iff the WebViewer is visible.</dd>
-  <dt id="WebViewer.WebViewString" class="text bo"><em>WebViewString</em></dt>
-  <dd>Gets the WebView’s String, which is viewable through Javascript in the WebView as the window.AppInventor object</dd>
-  <dt id="WebViewer.Width" class="number bo"><em>Width</em></dt>
-  <dd>Specifies the horizontal width of the WebViewer, measured in pixels.</dd>
-  <dt id="WebViewer.WidthPercent" class="number wo bo"><em>WidthPercent</em></dt>
-  <dd>Specifies the horizontal width of the WebViewer as a percentage of the width of the Screen.</dd>
-</dl>
+{:id="PasswordTextBox.RequestFocus" class="method"} <i /> RequestFocus()
+: Request focus to current PasswordTextBox.
 
-<h3 id="WebViewer-Events">Events</h3>
+## Screen  {#Screen}
 
-<dl class="events">
-  <dt id="WebViewer.PageLoaded">PageLoaded(<em class="text">url</em>)</dt>
-  <dd>When a page is finished loading this event is run.</dd>
-  <dt id="WebViewer.WebViewStringChange">WebViewStringChange(<em class="text">value</em>)</dt>
-  <dd>When the JavaScript calls AppInventor.setWebViewString this event is run.</dd>
-</dl>
+Component underlying activities and UI apps, not directly accessible to Simple programmers.
 
-<h3 id="WebViewer-Methods">Methods</h3>
+ <p>This is the root container of any Android activity and also the
+ superclass for Simple/Android UI applications.
 
-<dl class="methods">
-  <dt id="WebViewer.CanGoBack" class="method returns boolean"><i></i> CanGoBack()</dt>
-  <dd>Returns true if the WebViewer can go back in the history list.</dd>
-  <dt id="WebViewer.CanGoForward" class="method returns boolean"><i></i> CanGoForward()</dt>
-  <dd>Returns true if the WebViewer can go forward in the history list.</dd>
-  <dt id="WebViewer.ClearCaches" class="method"><i></i> ClearCaches()</dt>
-  <dd>Clear WebView caches.</dd>
-  <dt id="WebViewer.ClearLocations" class="method"><i></i> ClearLocations()</dt>
-  <dd>Clear stored location permissions.</dd>
-  <dt id="WebViewer.GoBack" class="method"><i></i> GoBack()</dt>
-  <dd>Go back to the previous page in the history list.  Does nothing if there is no previous page.</dd>
-  <dt id="WebViewer.GoForward" class="method"><i></i> GoForward()</dt>
-  <dd>Go forward to the next page in the history list.   Does nothing if there is no next page.</dd>
-  <dt id="WebViewer.GoHome" class="method"><i></i> GoHome()</dt>
-  <dd>Loads the home URL page.  This happens automatically when the home URL is changed.</dd>
-  <dt id="WebViewer.GoToUrl" class="method"><i></i> GoToUrl(<em class="text">url</em>)</dt>
-  <dd>Load the page at the given URL.</dd>
-</dl>
+ The main form is always named "Screen1".
+
+ NOTE WELL: There are many places in the code where the name "Screen1" is
+ directly referenced. If we ever change App Inventor to support renaming
+ screens and Screen1 in particular, we need to make sure we find all those
+ places and make the appropriate code changes.
+
+
+
+### Properties  {#Screen-Properties}
+
+{:.properties}
+
+{:id="Screen.AboutScreen" .text} *AboutScreen*
+: AboutScreen property getter method.
+
+{:id="Screen.AccentColor" .color .do} *AccentColor*
+: This is the accent color used for highlights and other user interface accents.
+
+{:id="Screen.AlignHorizontal" .number} *AlignHorizontal*
+: Returns a number that encodes how contents of the screen are aligned horizontally.
+ The choices are: 1 = left aligned, 2 = horizontally centered, 3 = right aligned
+
+{:id="Screen.AlignVertical" .number} *AlignVertical*
+: Returns a number that encodes how contents of the arrangement are aligned vertically.
+ The choices are: 1 = top, 2 = vertically centered, 3 = aligned at the bottom.
+ Vertical alignment has no effect if the screen is scrollable.
+
+{:id="Screen.AppName" .text .wo .do} *AppName*
+: Specifies the App Name.
+
+{:id="Screen.BackgroundColor" .color} *BackgroundColor*
+: BackgroundColor property getter method.
+
+{:id="Screen.BackgroundImage" .text} *BackgroundImage*
+: Returns the path of the background image.
+
+{:id="Screen.BlocksToolkit" .text .wo .do} *BlocksToolkit*
+: A JSON string representing the subset for the screen
+
+{:id="Screen.CloseScreenAnimation" .text} *CloseScreenAnimation*
+: Returns the type of close screen animation (default, fade, zoom, slidehorizontal,
+ slidevertical and none).
+
+{:id="Screen.Height" .number .ro .bo} *Height*
+: Height property getter method.
+
+{:id="Screen.Icon" .text .wo .do} *Icon*
+: Specifies the name of the application icon.
+
+{:id="Screen.OpenScreenAnimation" .text} *OpenScreenAnimation*
+: Returns the type of open screen animation (default, fade, zoom, slidehorizontal,
+ slidevertical and none).
+
+{:id="Screen.PrimaryColor" .color .do} *PrimaryColor*
+: This is the primary color used for Material UI elements, such as the ActionBar.
+
+{:id="Screen.PrimaryColorDark" .color .do} *PrimaryColorDark*
+: This is the primary color used for darker elements in Material UI.
+
+{:id="Screen.ScreenOrientation" .text} *ScreenOrientation*
+: The requested screen orientation. Commonly used values are
+      unspecified (-1), landscape (0), portrait (1), sensor (4), and user (2).  " +
+      "See the Android developer documentation for ActivityInfo.Screen_Orientation for the " +
+      "complete list of possible settings.
+
+ ScreenOrientation property getter method.
+
+{:id="Screen.Scrollable" .boolean} *Scrollable*
+: Scrollable property getter method.
+
+{:id="Screen.ShowListsAsJson" .boolean .do} *ShowListsAsJson*
+: ShowListsAsJson Property Setter
+ This only appears in the designer for screen 1
+
+{:id="Screen.ShowStatusBar" .boolean} *ShowStatusBar*
+: ShowStatusBar property getter method.
+
+{:id="Screen.Sizing" .text .wo .do} *Sizing*
+: Sizing Property Setter
+
+{:id="Screen.Theme" .text .wo .do} *Theme*
+: Sets the theme used by the application.
+
+{:id="Screen.Title" .text} *Title*
+: Title property getter method.
+
+{:id="Screen.TitleVisible" .boolean} *TitleVisible*
+: TitleVisible property getter method.
+
+{:id="Screen.TutorialURL" .text .wo .do} *TutorialURL*
+: A URL to use to populate the Tutorial Sidebar while editing a project. Used as a teaching aid.
+
+{:id="Screen.VersionCode" .number .wo .do} *VersionCode*
+: Specifies the Version Code.
+
+{:id="Screen.VersionName" .text .wo .do} *VersionName*
+: Specifies the Version Name.
+
+{:id="Screen.Width" .number .ro .bo} *Width*
+: Width property getter method.
+
+### Events  {#Screen-Events}
+
+{:.events}
+
+{:id="Screen.BackPressed"} BackPressed()
+: Device back button pressed.
+
+{:id="Screen.ErrorOccurred"} ErrorOccurred(*component*{:.component},*functionName*{:.text},*errorNumber*{:.number},*message*{:.text})
+: ErrorOccurred event handler.
+
+{:id="Screen.Initialize"} Initialize()
+: Initialize event handler.
+
+{:id="Screen.OtherScreenClosed"} OtherScreenClosed(*otherScreenName*{:.text},*result*{:.any})
+: Event raised when another screen has closed and control has returned to this screen.
+
+{:id="Screen.PermissionDenied"} PermissionDenied(*component*{:.component},*functionName*{:.text},*permissionName*{:.text})
+: Event to handle when the app user has denied a needed permission.
+
+{:id="Screen.PermissionGranted"} PermissionGranted(*permissionName*{:.text})
+: Event to handle when the app user has granted a needed permission. This event is only run when permission is
+ granted in response to the AskForPermission method.
+
+{:id="Screen.ScreenOrientationChanged"} ScreenOrientationChanged()
+: Screen orientation changed
+
+### Methods  {#Screen-Methods}
+
+{:.methods}
+
+{:id="Screen.AskForPermission" class="method"} <i /> AskForPermission(*permissionName*{:.text})
+: Ask the user to grant access to a dangerous permission.
+
+{:id="Screen.HideKeyboard" class="method"} <i /> HideKeyboard()
+: Hide the soft keyboard
+
+## Slider  {#Slider}
+
+This class is used to display a Slider.
+ <p>The Slider is a progress bar that adds a draggable thumb. You can touch the thumb and drag
+ left or right to set the slider thumb position. As Slider thumb is dragged, it will trigger
+ PositionChanged event, reporting the position of the Slider thumb. The Slider uses the following
+ default values. However these values can be changed through designer or block editor
+ <ul>
+ <li>MinValue</li>
+ <li>MaxValue</li>
+ <li>ThumbPosition</li>
+ </ul></p>
+
+
+
+### Properties  {#Slider-Properties}
+
+{:.properties}
+
+{:id="Slider.ColorLeft" .color} *ColorLeft*
+: Returns the color of the slider bar to the left of the thumb, as an alpha-red-green-blue
+ integer, i.e., `0xAARRGGBB`.  An alpha of `00`
+ indicates fully transparent and `FF` means opaque.
+
+{:id="Slider.ColorRight" .color} *ColorRight*
+: Returns the color of the slider bar to the right of the thumb, as an alpha-red-green-blue
+ integer, i.e., `0xAARRGGBB`.  An alpha of `00`
+ indicates fully transparent and `FF` means opaque.
+
+{:id="Slider.HeightPercent" .number .wo .bo} *HeightPercent*
+: Specifies the vertical height of the Slider as a percentage of the height of the Screen.
+
+{:id="Slider.MaxValue" .number} *MaxValue*
+: Sets the maximum value of slider.  Changing the maximum value also resets Thumbposition to be halfway between the minimum and the (new) maximum. If the new maximum is less than the current minimum, then minimum and maximum will both be set to this value.  Setting MaxValue resets the thumb position to halfway between MinValue and MaxValue and signals the PositionChanged event.
+
+{:id="Slider.MinValue" .number} *MinValue*
+: Sets the minimum value of slider.  Changing the minimum value also resets Thumbposition to be halfway between the (new) minimum and the maximum. If the new minimum is greater than the current maximum, then minimum and maximum will both be set to this value.  Setting MinValue resets the thumb position to halfway between MinValue and MaxValue and signals the PositionChanged event.
+
+{:id="Slider.ThumbEnabled" .boolean} *ThumbEnabled*
+: Sets whether or not the slider thumb should be shown
+
+{:id="Slider.ThumbPosition" .number} *ThumbPosition*
+: Sets the slider thumb position.
+
+{:id="Slider.Visible" .boolean} *Visible*
+: Returns true iff the Slider is visible.
+
+{:id="Slider.Width" .number .bo} *Width*
+: Specifies the horizontal width of the Slider, measured in pixels.
+
+{:id="Slider.WidthPercent" .number .wo .bo} *WidthPercent*
+: Specifies the horizontal width of the Slider as a percentage of the width of the Screen.
+
+### Events  {#Slider-Events}
+
+{:.events}
+
+{:id="Slider.PositionChanged"} PositionChanged(*thumbPosition*{:.number})
+: Indicates that position of the slider thumb has changed.
+
+## Spinner  {#Spinner}
+
+Component for Spinner
+
+
+
+### Properties  {#Spinner-Properties}
+
+{:.properties}
+
+{:id="Spinner.Elements" .list .bo} *Elements*
+: Elements property getter method
+
+{:id="Spinner.ElementsFromString" .text .wo} *ElementsFromString*
+: ElementsFromString property setter method
+
+{:id="Spinner.Height" .number .bo} *Height*
+: Specifies the vertical height of the Spinner, measured in pixels.
+
+{:id="Spinner.HeightPercent" .number .wo .bo} *HeightPercent*
+: Specifies the vertical height of the Spinner as a percentage of the height of the Screen.
+
+{:id="Spinner.Prompt" .text} *Prompt*
+: Prompt property getter method
+
+{:id="Spinner.Selection" .text} *Selection*
+: Selection property getter method.
+
+{:id="Spinner.SelectionIndex" .number .bo} *SelectionIndex*
+: Selection index property getter method.
+
+{:id="Spinner.Visible" .boolean} *Visible*
+: Returns true iff the Spinner is visible.
+
+{:id="Spinner.Width" .number .bo} *Width*
+: Specifies the horizontal width of the Spinner, measured in pixels.
+
+{:id="Spinner.WidthPercent" .number .wo .bo} *WidthPercent*
+: Specifies the horizontal width of the Spinner as a percentage of the width of the Screen.
+
+### Events  {#Spinner-Events}
+
+{:.events}
+
+{:id="Spinner.AfterSelecting"} AfterSelecting(*selection*{:.text})
+: Indicates a user has selected an item
+
+### Methods  {#Spinner-Methods}
+
+{:.methods}
+
+{:id="Spinner.DisplayDropdown" class="method"} <i /> DisplayDropdown()
+: To display the dropdown list without the user having to click it
+
+## Switch  {#Switch}
+
+Toggle switch with the ability to detect initialization, focus
+ change (mousing on or off of it), and user clicks.
+
+
+
+### Properties  {#Switch-Properties}
+
+{:.properties}
+
+{:id="Switch.BackgroundColor" .color} *BackgroundColor*
+: Returns the background color of the Switch as an alpha-red-green-blue
+ integer.
+
+{:id="Switch.Enabled" .boolean} *Enabled*
+: Returns true if the Switch is active and clickable.
+
+{:id="Switch.FontBold" .boolean .do} *FontBold*
+: Returns true if the text of the Switch should be bold.
+ If bold has been requested, this property will return true, even if the
+ font does not support bold.
+
+{:id="Switch.FontItalic" .boolean .do} *FontItalic*
+: Returns true if the text of the Switch should be italic.
+ If italic has been requested, this property will return true, even if the
+ font does not support italic.
+
+{:id="Switch.FontSize" .number} *FontSize*
+: Returns the text font size of the Switch, measured in sp(scale-independent pixels).
+
+{:id="Switch.FontTypeface" .number .do} *FontTypeface*
+: Returns the text font face of the Switch as default, serif, sans
+ serif, or monospace.
+
+{:id="Switch.Height" .number .bo} *Height*
+: Specifies the vertical height of the Switch, measured in pixels.
+
+{:id="Switch.HeightPercent" .number .wo .bo} *HeightPercent*
+: Specifies the vertical height of the Switch as a percentage of the height of the Screen.
+
+{:id="Switch.On" .boolean} *On*
+: Returns true if the checkbox is checked.
+
+{:id="Switch.Text" .text} *Text*
+: Returns the text displayed by the Switch.
+
+{:id="Switch.TextColor" .color} *TextColor*
+: Returns the text color of the Switch as an alpha-red-green-blue
+ integer.
+
+{:id="Switch.ThumbColorActive" .color .do} *ThumbColorActive*
+: Returns the switch's thumb color (button that toggles back and forth)
+ when the switch is ON/Checked
+
+{:id="Switch.ThumbColorInactive" .color} *ThumbColorInactive*
+: Returns the switch's thumb color (button that toggles back and forth)
+ when the switch is Off/Unchecked
+
+{:id="Switch.TrackColorActive" .color} *TrackColorActive*
+: Returns the switch's track color
+
+{:id="Switch.TrackColorInactive" .color} *TrackColorInactive*
+: Property for TrackColorInactive
+
+{:id="Switch.Visible" .boolean} *Visible*
+: Returns true iff the Switch is visible.
+
+{:id="Switch.Width" .number .bo} *Width*
+: Specifies the horizontal width of the Switch, measured in pixels.
+
+{:id="Switch.WidthPercent" .number .wo .bo} *WidthPercent*
+: Specifies the horizontal width of the Switch as a percentage of the width of the Screen.
+
+### Events  {#Switch-Events}
+
+{:.events}
+
+{:id="Switch.Changed"} Changed()
+: Default Changed event handler.
+
+{:id="Switch.GotFocus"} GotFocus()
+: Default GotFocus event handler.
+
+{:id="Switch.LostFocus"} LostFocus()
+: Default LostFocus event handler.
+
+## TextBox  {#TextBox}
+
+A box in which the user can enter text.
+
+
+
+### Properties  {#TextBox-Properties}
+
+{:.properties}
+
+{:id="TextBox.BackgroundColor" .color} *BackgroundColor*
+: Returns the background color of the TextBox as an alpha-red-green-blue
+ integer.
+
+{:id="TextBox.Enabled" .boolean} *Enabled*
+: Returns true if the TextBox is active and useable.
+
+{:id="TextBox.FontBold" .boolean .do} *FontBold*
+: Returns true if the text of the TextBox should be bold.
+ If bold has been requested, this property will return true, even if the
+ font does not support bold.
+
+{:id="TextBox.FontItalic" .boolean .do} *FontItalic*
+: Returns true if the text of the TextBox should be italic.
+ If italic has been requested, this property will return true, even if the
+ font does not support italic.
+
+{:id="TextBox.FontSize" .number} *FontSize*
+: Returns the text font size of the TextBox, measured in sp(scale-independent pixels).
+
+{:id="TextBox.FontTypeface" .number .do} *FontTypeface*
+: Returns the text font face of the TextBox as default, serif, sans
+ serif, or monospace.
+
+{:id="TextBox.Height" .number .bo} *Height*
+: Specifies the vertical height of the TextBox, measured in pixels.
+
+{:id="TextBox.HeightPercent" .number .wo .bo} *HeightPercent*
+: Specifies the vertical height of the TextBox as a percentage of the height of the Screen.
+
+{:id="TextBox.Hint" .text} *Hint*
+: Hint property getter method.
+
+{:id="TextBox.MultiLine" .boolean} *MultiLine*
+: Multi line property getter method.
+
+{:id="TextBox.NumbersOnly" .boolean} *NumbersOnly*
+: NumbersOnly property getter method.
+
+{:id="TextBox.ReadOnly" .boolean} *ReadOnly*
+: Whether the TextBox is read-only. By default, this is true.
+
+{:id="TextBox.Text" .text} *Text*
+: Returns the textbox contents.
+
+{:id="TextBox.TextAlignment" .number .do} *TextAlignment*
+: Returns the alignment of the textbox's text: center, normal
+ (e.g., left-justified if text is written left to right), or
+ opposite (e.g., right-justified if text is written left to right).
+
+{:id="TextBox.TextColor" .color} *TextColor*
+: Returns the text color of the TextBox as an alpha-red-green-blue
+ integer.
+
+{:id="TextBox.Visible" .boolean} *Visible*
+: Returns true iff the TextBox is visible.
+
+{:id="TextBox.Width" .number .bo} *Width*
+: Specifies the horizontal width of the TextBox, measured in pixels.
+
+{:id="TextBox.WidthPercent" .number .wo .bo} *WidthPercent*
+: Specifies the horizontal width of the TextBox as a percentage of the width of the Screen.
+
+### Events  {#TextBox-Events}
+
+{:.events}
+
+{:id="TextBox.GotFocus"} GotFocus()
+: Event raised when the TextBox is selected for input, such as by
+ the user touching it.
+
+{:id="TextBox.LostFocus"} LostFocus()
+: Event raised when the TextBox is no longer selected for input, such
+ as if the user touches a different text box.
+
+### Methods  {#TextBox-Methods}
+
+{:.methods}
+
+{:id="TextBox.HideKeyboard" class="method"} <i /> HideKeyboard()
+: Hide the soft keyboard
+
+{:id="TextBox.RequestFocus" class="method"} <i /> RequestFocus()
+: Request focus to current TextBox.
+
+## TimePicker  {#TimePicker}
+
+A button allowing a user to launch the TimePickerDialog. This component is
+ is based off the ButtonBase class instead of the base Picker class because
+ unlike the other pickers, the TimePicker does not need to launch a new
+ activity and get a result. The TimePicker is launched as a dialog.
+
+
+
+### Properties  {#TimePicker-Properties}
+
+{:.properties}
+
+{:id="TimePicker.BackgroundColor" .color} *BackgroundColor*
+: Returns the button's background color as an alpha-red-green-blue
+ integer.
+
+{:id="TimePicker.Enabled" .boolean} *Enabled*
+: Returns true if the TimePicker is active and clickable.
+
+{:id="TimePicker.FontBold" .boolean} *FontBold*
+: Returns true if the text of the TimePicker should be bold.
+ If bold has been requested, this property will return true, even if the
+ font does not support bold.
+
+{:id="TimePicker.FontItalic" .boolean} *FontItalic*
+: Returns true if the text of the TimePicker should be italic.
+ If italic has been requested, this property will return true, even if the
+ font does not support italic.
+
+{:id="TimePicker.FontSize" .number} *FontSize*
+: Returns the text font size of the TimePicker, measured in sp(scale-independent pixels).
+
+{:id="TimePicker.FontTypeface" .number .do} *FontTypeface*
+: Returns the text font face of the TimePicker as default, serif, sans
+ serif, or monospace.
+
+{:id="TimePicker.Height" .number .bo} *Height*
+: Specifies the vertical height of the TimePicker, measured in pixels.
+
+{:id="TimePicker.HeightPercent" .number .wo .bo} *HeightPercent*
+: Specifies the vertical height of the TimePicker as a percentage of the height of the Screen.
+
+{:id="TimePicker.Hour" .number .ro .bo} *Hour*
+: Returns the hour of the time that was last picked using the timepicker.
+ The time returned is always in the 24hour format.
+
+{:id="TimePicker.Image" .text} *Image*
+: Returns the path of the button's image.
+
+{:id="TimePicker.Instant" .InstantInTime .ro .bo} *Instant*
+: Returns the instant in time that was last picked using the DatePicker.
+
+{:id="TimePicker.Minute" .number .ro .bo} *Minute*
+: Returns the hour of the time that was last picked using the timepicker.
+ The time returned is always in the 24hour format.
+
+{:id="TimePicker.Shape" .number .do} *Shape*
+: Returns the style of the button.
+
+{:id="TimePicker.ShowFeedback" .boolean} *ShowFeedback*
+: Specifies if a visual feedback should be shown when a TimePicker with an assigned image
+ is pressed.
+
+{:id="TimePicker.Text" .text} *Text*
+: Returns the text displayed by the TimePicker.
+
+{:id="TimePicker.TextAlignment" .number .do} *TextAlignment*
+: Returns the alignment of the button's text: center, normal
+ (e.g., left-justified if text is written left to right), or
+ opposite (e.g., right-justified if text is written left to right).
+
+{:id="TimePicker.TextColor" .color} *TextColor*
+: Returns the text color of the TimePicker as an alpha-red-green-blue
+ integer.
+
+{:id="TimePicker.Visible" .boolean} *Visible*
+: Returns true iff the TimePicker is visible.
+
+{:id="TimePicker.Width" .number .bo} *Width*
+: Specifies the horizontal width of the TimePicker, measured in pixels.
+
+{:id="TimePicker.WidthPercent" .number .wo .bo} *WidthPercent*
+: Specifies the horizontal width of the TimePicker as a percentage of the width of the Screen.
+
+### Events  {#TimePicker-Events}
+
+{:.events}
+
+{:id="TimePicker.AfterTimeSet"} AfterTimeSet()
+: Indicates the user has set the time.
+
+{:id="TimePicker.GotFocus"} GotFocus()
+: Indicates the cursor moved over the button so it is now possible
+ to click it.
+
+{:id="TimePicker.LostFocus"} LostFocus()
+: Indicates the cursor moved away from the button so it is now no
+ longer possible to click it.
+
+{:id="TimePicker.TouchDown"} TouchDown()
+: Indicates when a button is touch down
+
+{:id="TimePicker.TouchUp"} TouchUp()
+: Indicates when a button touch ends
+
+### Methods  {#TimePicker-Methods}
+
+{:.methods}
+
+{:id="TimePicker.LaunchPicker" class="method"} <i /> LaunchPicker()
+: Launches the TimePicker popup.
+
+{:id="TimePicker.SetTimeToDisplay" class="method"} <i /> SetTimeToDisplay(*hour*{:.number},*minute*{:.number})
+: Set the time to be shown in the Time Picker popup. Current time is shown by default.
+
+{:id="TimePicker.SetTimeToDisplayFromInstant" class="method"} <i /> SetTimeToDisplayFromInstant(*instant*{:.InstantInTime})
+: Set the time from the instant to be shown in the Time Picker popup. Current time is shown by default.
+
+## WebViewer  {#WebViewer}
+
+Component for displaying web pages
+ This is a very limited form of browser.  You can view web pages and
+ click on links. It also handles  Javascript. There are lots of things that could be added,
+ but this component is mostly for viewing individual pages.  It's not intended to take
+ the place of the browser.
+
+
+
+### Properties  {#WebViewer-Properties}
+
+{:.properties}
+
+{:id="WebViewer.CurrentPageTitle" .text .ro .bo} *CurrentPageTitle*
+: Returns the title of the page currently being viewed
+
+{:id="WebViewer.CurrentUrl" .text .ro .bo} *CurrentUrl*
+: Returns the URL currently being viewed
+
+{:id="WebViewer.FollowLinks" .boolean} *FollowLinks*
+: Indicates whether to follow links when they are tapped in the WebViewer
+
+{:id="WebViewer.Height" .number .bo} *Height*
+: Specifies the vertical height of the %type%, measured in pixels.
+
+{:id="WebViewer.HeightPercent" .number .wo .bo} *HeightPercent*
+: Specifies the vertical height of the WebViewer as a percentage of the height of the Screen.
+
+{:id="WebViewer.HomeUrl" .text} *HomeUrl*
+: Returns the URL of the page the WebVewier should load
+
+{:id="WebViewer.IgnoreSslErrors" .boolean} *IgnoreSslErrors*
+: Determines whether SSL Errors are ignored. Set to true to use self signed certificates
+
+{:id="WebViewer.PromptforPermission" .boolean} *PromptforPermission*
+: Determine if the user should be prompted for permission to use the geolocation API while in
+ the webviewer.
+
+{:id="WebViewer.UsesLocation" .boolean .wo .do} *UsesLocation*
+: Specifies whether or not this WebViewer can access the JavaScript
+ Location API.
+
+{:id="WebViewer.Visible" .boolean} *Visible*
+: Returns true iff the WebViewer is visible.
+
+{:id="WebViewer.WebViewString" .text .bo} *WebViewString*
+: Gets the web view string
+
+{:id="WebViewer.Width" .number .bo} *Width*
+: Specifies the horizontal width of the %type%, measured in pixels.
+
+{:id="WebViewer.WidthPercent" .number .wo .bo} *WidthPercent*
+: Specifies the horizontal width of the WebViewer as a percentage of the width of the Screen.
+
+### Events  {#WebViewer-Events}
+
+{:.events}
+
+{:id="WebViewer.PageLoaded"} PageLoaded(*url*{:.text})
+: When a page is finished loading this event is run.
+
+{:id="WebViewer.WebViewStringChange"} WebViewStringChange(*value*{:.text})
+: When the JavaScript calls AppInventor.setWebViewString this event is run.
+
+### Methods  {#WebViewer-Methods}
+
+{:.methods}
+
+{:id="WebViewer.CanGoBack" class="method returns boolean"} <i /> CanGoBack()
+: 
+
+{:id="WebViewer.CanGoForward" class="method returns boolean"} <i /> CanGoForward()
+: 
+
+{:id="WebViewer.ClearCaches" class="method"} <i /> ClearCaches()
+: Clear the webview cache, both ram and disk. This is useful
+ when using the webviewer to poll a page that may not be sending
+ appropriate cache control headers. This is particularly useful
+ when using the webviwer to look at a Fusion Table.
+
+{:id="WebViewer.ClearLocations" class="method"} <i /> ClearLocations()
+: Clear Stored Location permissions. When the geolocation API is used in
+ the WebViewer, the end user is prompted on a per URL basis for whether
+ or not permission should be granted to access their location. This
+ function clears this information for all locations.
+
+ As the permissions interface is not available on phones older then
+ Eclair, this function is a no-op on older phones.
+
+{:id="WebViewer.GoBack" class="method"} <i /> GoBack()
+: Go back to the previously viewed page.
+
+{:id="WebViewer.GoForward" class="method"} <i /> GoForward()
+: Go forward in the history list
+
+{:id="WebViewer.GoHome" class="method"} <i /> GoHome()
+: Loads the  page from the home URL.  This happens automatically when
+ home URL is changed.
+
+{:id="WebViewer.GoToUrl" class="method"} <i /> GoToUrl(*url*{:.text})
+: Load the given URL
+</p></li></li></li></li></li></li></li></li></li></li></ul>
 
 </article>
 <script>

@@ -142,6 +142,8 @@
 
 <h2 id="Circle">Circle</h2>
 
+<p>Component for Circle</p>
+
 <h3 id="Circle-Properties">Properties</h3>
 
 <dl class="properties">
@@ -172,7 +174,7 @@
   <dt id="Circle.Type" class="text ro bo"><em>Type</em></dt>
   <dd>The type of the feature. For Circles, this returns the text “Circle”.</dd>
   <dt id="Circle.Visible" class="boolean"><em>Visible</em></dt>
-  <dd>Specifies whether the Circle should be visible on the screen. Value is true if the component is showing and false if hidden.</dd>
+  <dd>Property for Visible</dd>
 </dl>
 
 <h3 id="Circle-Events">Events</h3>
@@ -207,11 +209,13 @@
 
 <h2 id="FeatureCollection">FeatureCollection</h2>
 
+<p>Component for FeatureCollection</p>
+
 <h3 id="FeatureCollection-Properties">Properties</h3>
 
 <dl class="properties">
   <dt id="FeatureCollection.Features" class="list bo"><em>Features</em></dt>
-  <dd>The list of features placed on this FeatureCollection. This list also includes any features created by calls to FeatureFromDescription</dd>
+  <dd></dd>
   <dt id="FeatureCollection.FeaturesFromGeoJSON" class="text wo"><em>FeaturesFromGeoJSON</em></dt>
   <dd>Loads a collection of features from the given string. If the string is not valid GeoJSON, the ErrorLoadingFeatureCollection error will be run with url = <string>.</string></dd>
   <dt id="FeatureCollection.Height" class="number bo"><em>Height</em></dt>
@@ -272,12 +276,16 @@
 
 <dl>
   <dt id="FeatureCollection.LoadFromURL" class="method"><i></i> LoadFromURL(<em class="text">url</em>)</dt>
-  <dd>
-    <p>Load a feature collection in <a href="https://en.wikipedia.org/wiki/GeoJSON">GeoJSON</a> format from the given url. On success, the event GotFeatures will be raised with the given url and a list of the features parsed from the GeoJSON as a list of (key, value) pairs. On failure, the LoadError event will be raised with any applicable HTTP response code and error message.</p>
-  </dd>
+  <dd>Load a feature collection in GeoJSON
+ format from the given url. On success, the event GotFeatures will be raised with the given url
+ and a list of features parsed from the GeoJSON as a list of (key, value) pairs. On failure,
+ the LoadError event will be raised with any applicable HTTP response code and error
+ message.</dd>
 </dl>
 
 <h2 id="LineString">LineString</h2>
+
+<p>Component for LineString</p>
 
 <h3 id="LineString-Properties">Properties</h3>
 
@@ -299,13 +307,13 @@
   <dt id="LineString.StrokeOpacity" class="number"><em>StrokeOpacity</em></dt>
   <dd>The opacity of the stroke used to outline the map feature.</dd>
   <dt id="LineString.StrokeWidth" class="number"><em>StrokeWidth</em></dt>
-  <dd>The width of the stroke used to outline the LineString.</dd>
+  <dd>The width of the stroke used to outline the %type%.</dd>
   <dt id="LineString.Title" class="text"><em>Title</em></dt>
   <dd>The title displayed in the info window that appears when the user clicks on the LineString.</dd>
   <dt id="LineString.Type" class="text ro bo"><em>Type</em></dt>
   <dd>The type of the map feature. For LineString, this returns the text “LineString”.</dd>
   <dt id="LineString.Visible" class="boolean"><em>Visible</em></dt>
-  <dd>Specifies whether the LineString should be visible on the screen. Value is true if the component is showing and false if hidden.</dd>
+  <dd>Property for Visible</dd>
 </dl>
 
 <h3 id="LineString-Events">Events</h3>
@@ -338,18 +346,36 @@
 
 <h2 id="Map">Map</h2>
 
+<p>A two-dimensional container that renders map tiles in the background and allows for multiple
+ Marker elements to identify points on the map. Map tiles are supplied by OpenStreetMap
+ contributors and the the United States Geological Survey.</p>
+<p>The Map component provides three utilities for manipulating its boundaries with App Inventor.
+ First, a locking mechanism is provided to allow the map to be moved relative to other components
+ on the Screen. Second, when unlocked, the user can pan the Map to any location. At this new
+ location, the &quot;Set Initial Boundary&quot; button can be pressed to save the current Map
+ coordinates to its properties. Lastly, if the Map is moved to a different location, for example
+ to add Markers off-screen, then the &quot;Reset Map to Initial Bounds&quot; button can be used
+ to re-center the Map at the starting location.</p>
+
 <h3 id="Map-Properties">Properties</h3>
 
 <dl class="properties">
   <dt id="Map.BoundingBox" class="list bo"><em>BoundingBox</em></dt>
-  <dd>Bounding box for the map stored as [[North, West], [South, East]].</dd>
+  <dd>Property for BoundingBox</dd>
   <dt id="Map.CenterFromString" class="text wo"><em>CenterFromString</em></dt>
   <dd>
-    <p>Set the initial center coordinate of the map. The value is specified as a comma-separated pair of decimal latitude and longitude coordinates, for example, <code>42.359144, -71.093612</code>.</p>
-    <p>In blocks code, it is recommended for performance reasons to use SetCenter with numerical latitude and longitude rather than convert to the string representation for use with this property.</p>
+    <p>Set the initial center coordinate of the map. The value is specified as a
+ comma-separated pair of decimal latitude and longitude coordinates, for example,
+ <code>42.359144, -71.093612</code>.</p>
   </dd>
+</dl>
+<p>In blocks code, it is recommended for performance reasons to use SetCenter with numerical
+ latitude and longitude rather than convert to the string representation for use with this
+ property.</p>
+
+<dl>
   <dt id="Map.EnablePan" class="boolean"><em>EnablePan</em></dt>
-  <dd>Enable two-finger panning of the Map</dd>
+  <dd>Property for EnablePan</dd>
   <dt id="Map.EnableRotation" class="boolean"><em>EnableRotation</em></dt>
   <dd>Enable rotating the map based on the user’s orientation.</dd>
   <dt id="Map.EnableZoom" class="boolean"><em>EnableZoom</em></dt>
@@ -357,17 +383,21 @@
  whether the user can zoom using the zoom controls provided by
  <a href="#Map.ShowZoom">ShowZoom</a>.</dd>
   <dt id="Map.Features" class="list bo"><em>Features</em></dt>
-  <dd>The list of features placed on this Map. This list also includes any features created by calls to FeatureFromDescription</dd>
+  <dd></dd>
   <dt id="Map.Height" class="number bo"><em>Height</em></dt>
   <dd>Specifies the vertical height of the Map, measured in pixels.</dd>
   <dt id="Map.HeightPercent" class="number wo bo"><em>HeightPercent</em></dt>
   <dd>Specifies the vertical height of the Map as a percentage of the height of the Screen.</dd>
   <dt id="Map.Latitude" class="number ro bo"><em>Latitude</em></dt>
-  <dd>The latitude of the center of the map.</dd>
+  <dd>
+    <p>The latitude of the center of the map.</p>
+  </dd>
   <dt id="Map.LocationSensor" class="component wo"><em>LocationSensor</em></dt>
   <dd>Uses the provided LocationSensor for user location data rather than the built-in location provider.</dd>
   <dt id="Map.Longitude" class="number ro bo"><em>Longitude</em></dt>
-  <dd>The longitude of the center of the map.</dd>
+  <dd>
+    <p>The longitude of the center of the map.</p>
+  </dd>
   <dt id="Map.MapType" class="number"><em>MapType</em></dt>
   <dd>Set the type of map tile used for the base tile layer.
  Valid values are:
@@ -379,14 +409,14 @@
     </ol>
   </dd>
   <dt id="Map.Rotation" class="number"><em>Rotation</em></dt>
-  <dd>Sets or gets the rotation of the map in decimal degrees if any</dd>
+  <dd>Property for Rotation</dd>
   <dt id="Map.ScaleUnits" class="number"><em>ScaleUnits</em></dt>
-  <dd></dd>
+  <dd>Property for ScaleUnits</dd>
   <dt id="Map.ShowCompass" class="boolean"><em>ShowCompass</em></dt>
   <dd>Show a compass on the map. If the device provides a digital compass, orientation changes will
  be used to rotate the compass icon.</dd>
   <dt id="Map.ShowScale" class="boolean"><em>ShowScale</em></dt>
-  <dd>Shows a scale reference on the map.</dd>
+  <dd>Property for ShowScale</dd>
   <dt id="Map.ShowUser" class="boolean"><em>ShowUser</em></dt>
   <dd>Show the user’s location on the map.</dd>
   <dt id="Map.ShowZoom" class="boolean"><em>ShowZoom</em></dt>
@@ -470,9 +500,11 @@
 
 <dl>
   <dt id="Map.LoadFromURL" class="method"><i></i> LoadFromURL(<em class="text">url</em>)</dt>
-  <dd>
-    <p>Load a feature collection in <a href="https://en.wikipedia.org/wiki/GeoJSON">GeoJSON</a> format from the given url. On success, the event GotFeatures will be raised with the given url and a list of the features parsed from the GeoJSON as a list of (key, value) pairs. On failure, the LoadError event will be raised with any applicable HTTP response code and error message.</p>
-  </dd>
+  <dd>Load a feature collection in GeoJSON
+ format from the given url. On success, the event GotFeatures will be raised with the given url
+ and a list of features parsed from the GeoJSON as a list of (key, value) pairs. On failure,
+ the LoadError event will be raised with any applicable HTTP response code and error
+ message.</dd>
   <dt id="Map.PanTo" class="method"><i></i> PanTo(<em class="number">latitude</em>,<em class="number">longitude</em>,<em class="number">zoom</em>)</dt>
   <dd>Pan the map center to the given latitude and longitude and adjust the zoom level to the specified zoom.</dd>
   <dt id="Map.Save" class="method"><i></i> Save(<em class="text">path</em>)</dt>
@@ -480,6 +512,8 @@
 </dl>
 
 <h2 id="Marker">Marker</h2>
+
+<p>Component for Marker</p>
 
 <h3 id="Marker-Properties">Properties</h3>
 
@@ -503,7 +537,7 @@
   <dt id="Marker.HeightPercent" class="number wo bo"><em>HeightPercent</em></dt>
   <dd>Sets the height of the marker image, as a percentage of the screen height.</dd>
   <dt id="Marker.ImageAsset" class="text"><em>ImageAsset</em></dt>
-  <dd>The ImageAsset property is used to provide an alternative image for the Marker.</dd>
+  <dd>Property for ImageAsset</dd>
   <dt id="Marker.Latitude" class="number"><em>Latitude</em></dt>
   <dd>The latitude of the marker, in decimal degrees, with positive values representing
  degrees north of the equator.</dd>
@@ -521,7 +555,7 @@
   <dt id="Marker.Type" class="text ro bo"><em>Type</em></dt>
   <dd>The type of the map feature. For Marker, this returns the text “Marker”.</dd>
   <dt id="Marker.Visible" class="boolean"><em>Visible</em></dt>
-  <dd>Specifies whether the Marker should be visible on the screen. Value is true if the component is showing and false if hidden.</dd>
+  <dd>Property for Visible</dd>
   <dt id="Marker.Width" class="number bo"><em>Width</em></dt>
   <dd>Sets the width of the marker image, in pixels.</dd>
   <dt id="Marker.WidthPercent" class="number wo bo"><em>WidthPercent</em></dt>
@@ -564,6 +598,8 @@
 
 <h2 id="Polygon">Polygon</h2>
 
+<p>Component for Polygon</p>
+
 <h3 id="Polygon-Properties">Properties</h3>
 
 <dl class="properties">
@@ -596,7 +632,7 @@
   <dt id="Polygon.Type" class="text ro bo"><em>Type</em></dt>
   <dd>The type of the feature. For polygons, this returns the text “Polygon”.</dd>
   <dt id="Polygon.Visible" class="boolean"><em>Visible</em></dt>
-  <dd>Specifies whether the Polygon should be visible on the screen. Value is true if the component is showing and false if hidden.</dd>
+  <dd>Property for Visible</dd>
 </dl>
 
 <h3 id="Polygon-Events">Events</h3>
@@ -631,6 +667,8 @@
 
 <h2 id="Rectangle">Rectangle</h2>
 
+<p>Component for Rectangle</p>
+
 <h3 id="Rectangle-Properties">Properties</h3>
 
 <dl class="properties">
@@ -661,7 +699,7 @@
   <dt id="Rectangle.Type" class="text ro bo"><em>Type</em></dt>
   <dd>The type of the feature. For rectangles, this returns the text “Rectangle”.</dd>
   <dt id="Rectangle.Visible" class="boolean"><em>Visible</em></dt>
-  <dd>Specifies whether the Rectangle should be visible on the screen. Value is true if the component is showing and false if hidden.</dd>
+  <dd>Property for Visible</dd>
   <dt id="Rectangle.WestLongitude" class="number"><em>WestLongitude</em></dt>
   <dd>The west edge of the rectangle, in decimal degrees east of the equator.</dd>
 </dl>

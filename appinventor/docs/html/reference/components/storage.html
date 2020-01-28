@@ -139,19 +139,25 @@
 
 <h2 id="CloudDB">CloudDB</h2>
 
+<p>The CloudDB component stores and retrieves information in the Cloud using Redis, an
+ open source library. The component has methods to store a value under a tag and to
+ retrieve the value associated with the tag. It also possesses a listener to fire events
+ when stored values are changed. It also posseses a sync capability which helps CloudDB
+ to sync with data collected offline.</p>
+
 <h3 id="CloudDB-Properties">Properties</h3>
 
 <dl class="properties">
   <dt id="CloudDB.DefaultRedisServer" class="text wo do"><em>DefaultRedisServer</em></dt>
   <dd>The Default Redis Server to use.</dd>
   <dt id="CloudDB.ProjectID" class="text ro"><em>ProjectID</em></dt>
-  <dd>Gets the ProjectID for this CloudDB project.</dd>
+  <dd>Getter for the ProjectID.</dd>
   <dt id="CloudDB.RedisPort" class="number ro"><em>RedisPort</em></dt>
   <dd>The Redis Server port to use. Defaults to 6381</dd>
   <dt id="CloudDB.RedisServer" class="text ro"><em>RedisServer</em></dt>
   <dd>The Redis Server to use to store data. A setting of “DEFAULT” means that the MIT server will be used.</dd>
   <dt id="CloudDB.Token" class="text ro do"><em>Token</em></dt>
-  <dd>This field contains the authentication token used to login to the backed Redis server. For the “DEFAULT” server, do not edit this value, the system will fill it in for you. A system administrator may also provide a special value to you which can be used to share data between multiple projects from multiple people. If using your own Redis server, set a password in the server’s config and enter it here.</dd>
+  <dd>Getter for the authTokenSignature.</dd>
   <dt id="CloudDB.UseSSL" class="boolean ro do"><em>UseSSL</em></dt>
   <dd>Set to true to use SSL to talk to CloudDB/Redis server. This should be set to True for the “DEFAULT” server.</dd>
 </dl>
@@ -160,7 +166,7 @@
 
 <dl class="events">
   <dt id="CloudDB.CloudDBError">CloudDBError(<em class="text">message</em>)</dt>
-  <dd>Indicates that an error occurred while communicating with the CloudDB Redis server.</dd>
+  <dd>Indicates that the communication with the CloudDB signaled an error.</dd>
   <dt id="CloudDB.DataChanged">DataChanged(<em class="text">tag</em>,<em class="any">value</em>)</dt>
   <dd>Indicates that the data in the CloudDB project has changed.
  Launches an event with the tag and value that have been updated.</dd>
@@ -169,7 +175,7 @@
   <dt id="CloudDB.GotValue">GotValue(<em class="text">tag</em>,<em class="any">value</em>)</dt>
   <dd>Indicates that a GetValue request has succeeded.</dd>
   <dt id="CloudDB.TagList">TagList(<em class="list">value</em>)</dt>
-  <dd>Event triggered when we have received the list of known tags. Used with the “GetTagList” Function.</dd>
+  <dd>Indicates that a GetTagList request has succeeded.</dd>
 </dl>
 
 <h3 id="CloudDB-Methods">Methods</h3>
@@ -178,46 +184,59 @@
   <dt id="CloudDB.AppendValueToList" class="method"><i></i> AppendValueToList(<em class="text">tag</em>,<em class="any">itemToAdd</em>)</dt>
   <dd>Append a value to the end of a list atomically. If two devices use this function simultaneously, both will be appended and no data lost.</dd>
   <dt id="CloudDB.ClearTag" class="method"><i></i> ClearTag(<em class="text">tag</em>)</dt>
-  <dd>Remove the tag from CloudDB</dd>
+  <dd>Asks CloudDB to forget (delete or set to “null”) a given tag.</dd>
   <dt id="CloudDB.CloudConnected" class="method returns boolean"><i></i> CloudConnected()</dt>
   <dd>returns True if we are on the network and will likely be able to connect to the CloudDB server.</dd>
   <dt id="CloudDB.GetTagList" class="method"><i></i> GetTagList()</dt>
-  <dd>Get the list of tags for this application. When complete a “TagList” event will be triggered with the list of known tags.</dd>
+  <dd>GetTagList asks CloudDB to retrieve all the tags belonging to this project.</dd>
+</dl>
+
+<p>The resulting list is returned in GotTagList</p>
+
+<dl>
   <dt id="CloudDB.GetValue" class="method"><i></i> GetValue(<em class="text">tag</em>,<em class="any">valueIfTagNotThere</em>)</dt>
-  <dd>Get the Value for a tag, doesn’t return the value but will cause a GotValue event to fire when the value is looked up.</dd>
+  <dd>GetValue asks CloudDB to get the value stored under the given tag.
+ It will pass valueIfTagNotThere to GotValue if there is no value stored
+ under the tag.</dd>
   <dt id="CloudDB.RemoveFirstFromList" class="method"><i></i> RemoveFirstFromList(<em class="text">tag</em>)</dt>
   <dd>Return the first element of a list and atomically remove it. If two devices use this function simultaneously, one will get the first element and the the other will get the second element, or an error if there is no available element. When the element is available, the “FirstRemoved” event will be triggered.</dd>
   <dt id="CloudDB.StoreValue" class="method"><i></i> StoreValue(<em class="text">tag</em>,<em class="any">valueToStore</em>)</dt>
-  <dd>Store a value at a tag.</dd>
+  <dd>Asks CloudDB to store the given value under the given tag.</dd>
 </dl>
 
 <h2 id="File">File</h2>
+
+<p>A Component for working with files and directories on the device.</p>
 
 <h3 id="File-Events">Events</h3>
 
 <dl class="events">
   <dt id="File.AfterFileSaved">AfterFileSaved(<em class="text">fileName</em>)</dt>
-  <dd>Event indicating that the contents of the file have been written.</dd>
+  <dd>Event indicating that a request has finished.</dd>
   <dt id="File.GotText">GotText(<em class="text">text</em>)</dt>
-  <dd>Event indicating that the contents from the file have been read.</dd>
+  <dd>Event indicating that a request has finished.</dd>
 </dl>
 
 <h3 id="File-Methods">Methods</h3>
 
 <dl class="methods">
   <dt id="File.AppendToFile" class="method"><i></i> AppendToFile(<em class="text">text</em>,<em class="text">fileName</em>)</dt>
-  <dd>Appends text to the end of a file storage, creating the file if it does not exist. See the help text under SaveFile for information about where files are written.</dd>
+  <dd>Appends text to a specified file on the phone.
+ Calls the Write function to write to the file asynchronously to prevent
+ the UI from hanging when there is a large write.</dd>
   <dt id="File.Delete" class="method"><i></i> Delete(<em class="text">fileName</em>)</dt>
-  <dd>Deletes a file from storage. Prefix the filename with / to delete a specific file in the SD card, for instance /myFile.txt. will delete the file /sdcard/myFile.txt. If the file does not begin with a /, then the file located in the programs private storage will be deleted. Starting the file with // is an error because assets files cannot be deleted.</dd>
+  <dd>Delete the specified file.</dd>
   <dt id="File.ReadFrom" class="method"><i></i> ReadFrom(<em class="text">fileName</em>)</dt>
-  <dd>Reads text from a file in storage. Prefix the filename with / to read from a specific file on the SD card. for instance /myFile.txt will read the file /sdcard/myFile.txt. To read assets packaged with an application (also works for the Companion) start the filename with // (two slashes). If a filename does not start with a slash, it will be read from the applications private storage (for packaged apps) and from /sdcard/AppInventor/data for the Companion.</dd>
+  <dd>Retrieve the text stored in a specified file.</dd>
   <dt id="File.SaveFile" class="method"><i></i> SaveFile(<em class="text">text</em>,<em class="text">fileName</em>)</dt>
-  <dd>Saves text to a file. If the filename begins with a slash (/) the file is written to the sdcard. For example writing to /myFile.txt will write the file to /sdcard/myFile.txt. If the filename does not start with a slash, it will be written in the programs private data directory where it will not be accessible to other programs on the phone. There is a special exception for the AI Companion where these files are written to /sdcard/AppInventor/data to facilitate debugging. Note that this block will overwrite a file if it already exists.</dd>
+  <dd>Stores the text to a specified file on the phone.
+ Calls the Write function to write to the file asynchronously to prevent
+ the UI from hanging when there is a large write.</dd>
 </dl>
 
-<p>If you want to add content to a file use the append block.</p>
-
 <h2 id="TinyDB">TinyDB</h2>
+
+<p>Persistently store YAIL values on the phone using tags to store and retrieve.</p>
 
 <h3 id="TinyDB-Properties">Properties</h3>
 
@@ -243,6 +262,18 @@
 </dl>
 
 <h2 id="TinyWebDB">TinyWebDB</h2>
+
+<p>The TinyWebDB component communicates with a Web service to store
+ and retrieve information.  Although this component is usable, it is
+ very limited and meant primarily as a demonstration for people who
+ would like to create their own components that talk to the Web.
+ The accompanying Web service is at
+ (http://tinywebdb.appinventor.mit.edu).  The component has methods to
+ store a value under a tag and to retrieve the value associated with
+ the tag.  The interpretation of what “store” and “retrieve” means
+ is up to the Web service.  In this implementation, all tags and
+ values are strings (text).  This restriction may be relaxed in
+ future versions.</p>
 
 <h3 id="TinyWebDB-Properties">Properties</h3>
 

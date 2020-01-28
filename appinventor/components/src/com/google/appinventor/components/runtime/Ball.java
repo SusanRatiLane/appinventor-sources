@@ -22,8 +22,18 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 
 /**
- * Simple ball, based on Sprite implementation.
+ * A round 'sprite' that can be placed on a `Canvas`, where it can react to touches and drags,
+ * interact with other sprites (`ImageSprite`s and other `Ball`s) and the edge of the `Canvas`, and
+ * move according to its property values.
  *
+ * For example, to have a `Ball` move 4 pixels toward the top of a `Canvas` every 500 milliseconds
+ * (half second), you would set the Speed property to 4 [pixels], the `Interval` property to 500
+ * [milliseconds], the `Heading` property to 90 [degrees], and the `Enabled` property to `True`.
+ * These and its other properties can be changed at any time.
+ *
+ * The difference between a `Ball` and an `ImageSprite` is that the latter can get its appearance
+ * from an image file, while a `Ball`'s appearance can only be changed by varying its `PaintColor`
+ * and `Radius` properties.
  */
 @DesignerComponent(version = YaVersion.BALL_COMPONENT_VERSION,
     description = "<p>A round 'sprite' that can be placed on a " +
@@ -127,13 +137,16 @@ public final class Ball extends Sprite {
     registerChange();
   }
 
+  /**
+   * The distance from the edge of the `Ball` to its center.
+   */
   @SimpleProperty
   public int Radius() {
     return radius;
   }
 
   /**
-   * PaintColor property getter method.
+   * The color of the Ball.
    *
    * @return  paint RGB color with alpha
    */
