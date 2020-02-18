@@ -1341,7 +1341,7 @@ public class YaVersion {
 
   public static final String ACCEPTABLE_COMPANION_PACKAGE = "edu.mit.appinventor.aicompanion3";
 
-  public static final String PREFERRED_COMPANION = "2.57a";
+  public static final String PREFERRED_COMPANION = "2.57b";
   public static final String COMPANION_UPDATE_URL = "/companions/MITAI2Companion.asc";
   public static final String COMPANION_UPDATE_URL1 = "/companions/MITAI2Companion.apk";
   public static final String COMPANION_UPDATE_EMULATOR_URL = "/companions/CompanionUpgradeHelper.asc";
@@ -1351,7 +1351,8 @@ public class YaVersion {
                                                           "2.55", "2.55u",
                                                           "2.56", "2.56u",
                                                           "2.57", "2.57u",
-                                                          "2.57a", "2.57au" };
+                                                          "2.57a", "2.57au",
+                                                          "2.57b", "2.57bu" };
 
   // Splash Screen Values
   public static final int SPLASH_SURVEY = 1;
