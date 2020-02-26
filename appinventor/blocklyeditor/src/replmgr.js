@@ -80,7 +80,7 @@ Blockly.ReplStateObj.prototype = {
     'count' : 0,                        // Count of number of reads from rendezvous server
     'didversioncheck' : false,
     'isUSB' : false,            // True if using a USB connection
-    'rendezvous2' : 'http://rendezvous.appinventor.mit.edu/rendezvous2/',
+    'rendezvous2' : 'https://rendezvous.appinventor.mit.edu/rendezvous2/',
     'iceservers' : { 'iceServers' : [ { 'urls' : ['turn:turn.appinventor.mit.edu:3478'],
                                         'username' : 'oh',
                                         'credential' : 'boy' }]}
@@ -1424,7 +1424,7 @@ Blockly.ReplMgr.getFromRendezvous = function() {
     var poller = function() {                                     // So "this" is correct when called
         context.rendPoll.call(context);                           // from setTimeout
     };
-    xmlhttp.open('GET', 'http://' + top.rendezvousServer + '/rendezvous/' + rs.rendezvouscode, true);
+    xmlhttp.open('GET', 'https://' + top.rendezvousServer + '/rendezvous/' + rs.rendezvouscode, true);
     xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState == 4 && this.status == 200) {
             try {
@@ -1607,7 +1607,12 @@ Blockly.ReplMgr.makeDialogMessage = function(code) {
         qr.make();
     }
     var img = qr.createImgTag(6);
-    var retval = '<table><tr><td>' + img + '</td><td><font size="+1">' + Blockly.Msg.REPL_YOUR_CODE_IS + ':<br /><br /><font size="+1"><b>' + code + '</b></font></font></td></tr></table>';
+    var retval = '<table><tr><td>' + img + '</td><td><font size="+1">' + Blockly.Msg.REPL_YOUR_CODE_IS + ':<br /><br /><font size="+1"><b>' + code + '</b></font></font></td></tr>';
+    if (window.location.protocol === 'https:') { // Are we on a secure connection?
+        retval += '<tr><td colspan=2><b>Note: You are on a secure connection, legacy mode on the Companion will not work' +
+            ' <a href="https://appinventor.mit.edu/ai2/aboutsecurity" target="_blank">More Information</a>.</td></tr>';
+    }
+    retval += '</table>';
     return retval;
 };
 
