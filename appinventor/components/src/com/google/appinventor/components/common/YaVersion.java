@@ -585,8 +585,10 @@ public class YaVersion {
   // - The for-each-in-dictionary block was added.
   // For BLOCKS_LANGUAGE_VERSION 30:
   // - The Reverse Text block was added
+  // For BLOCKS_LANGUAGE_VERSION 31
+  // - The replace-all-mappings block was added.
 
-  public static final int BLOCKS_LANGUAGE_VERSION = 30;
+  public static final int BLOCKS_LANGUAGE_VERSION = 31;
 
   // ................................. Target SDK Version Number ..................................
 
