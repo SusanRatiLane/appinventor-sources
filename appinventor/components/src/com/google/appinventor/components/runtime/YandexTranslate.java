@@ -7,23 +7,31 @@
 package com.google.appinventor.components.runtime;
 
 import android.app.Activity;
-import com.google.appinventor.components.annotations.UsesPermissions;
-import org.json.JSONException;
-import org.json.JSONObject;
+
 import com.google.appinventor.components.annotations.DesignerComponent;
+import com.google.appinventor.components.annotations.DesignerProperty;
 import com.google.appinventor.components.annotations.SimpleEvent;
 import com.google.appinventor.components.annotations.SimpleFunction;
 import com.google.appinventor.components.annotations.SimpleObject;
+import com.google.appinventor.components.annotations.SimpleProperty;
+import com.google.appinventor.components.annotations.UsesPermissions;
+
 import com.google.appinventor.components.common.ComponentCategory;
+import com.google.appinventor.components.common.PropertyTypeConstants;
 import com.google.appinventor.components.common.YaVersion;
+
 import com.google.appinventor.components.runtime.util.AsynchUtil;
 import com.google.appinventor.components.runtime.util.ErrorMessages;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Use this component to translate words and sentences between different languages. This component
@@ -66,6 +74,7 @@ public final class YandexTranslate extends AndroidNonvisibleComponent {
   public static final String YANDEX_TRANSLATE_SERVICE_URL =
       "https://translate.yandex.net/api/v1.5/tr.json/translate?key=";
   private final String yandexKey;
+  private String userYandexKey = "DEFAULT";
   private final Activity activity;
 
   /**
@@ -105,7 +114,7 @@ public final class YandexTranslate extends AndroidNonvisibleComponent {
   public void RequestTranslation(final String languageToTranslateTo,
                                  final String textToTranslate) {
 
-    if (yandexKey.equals("")){
+    if ((userYandexKey.equals("") || userYandexKey.equals("DEFAULT")) && yandexKey.equals("")){
       form.dispatchErrorOccurredEvent(YandexTranslate.this, "RequestTranslation",
           ErrorMessages.ERROR_TRANSLATE_NO_KEY_FOUND);
       return;
@@ -139,7 +148,7 @@ public final class YandexTranslate extends AndroidNonvisibleComponent {
       throws IOException, JSONException {
 
     final String finalURL = YANDEX_TRANSLATE_SERVICE_URL +
-        this.yandexKey +
+      ((this.userYandexKey.equals("DEFAULT"))?this.yandexKey:this.userYandexKey) +
         "&lang=" + languageToTranslateTo +
         "&text=" + URLEncoder.encode(textToTranslate, "UTF-8");
 
@@ -212,6 +221,23 @@ public final class YandexTranslate extends AndroidNonvisibleComponent {
       "not be available.")
   public void GotTranslation(String responseCode, String translation) {
     EventDispatcher.dispatchEvent(this, "GotTranslation", responseCode, translation);
+  }
+
+  /**
+   * The Yandex API Key to use. If set to DEFAULT the platform default key (if any)
+   * will be used. Otherwise should be set to a valid API key which can be obtained
+   * from https://tech.yandex.com/translate/. If the platform doesn't have a default
+   * key and one isn't provided here, an error will be raised.
+   */
+
+  @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_STRING,
+      defaultValue = "DEFAULT")
+  @SimpleProperty(description = "Set the API Key to use with Yandex. " +
+      "You do not need to set this if you are using the MIT system because " +
+      "MIT has its own key builtin. If set, the key provided here will be " +
+      "used instead")
+  public void ApiKey(String apiKey) {
+    this.userYandexKey = apiKey;
   }
 
 }
