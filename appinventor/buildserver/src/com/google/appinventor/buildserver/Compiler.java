@@ -164,7 +164,15 @@ public final class Compiler {
       new ConcurrentHashMap<String, Set<String>>();
   private final ConcurrentMap<String, Set<String>> activitiesNeeded =
       new ConcurrentHashMap<String, Set<String>>();
+  private final ConcurrentMap<String, Set<String>> metadataNeeded =
+      new ConcurrentHashMap<String, Set<String>>();
+  private final ConcurrentMap<String, Set<String>> activityMetadataNeeded =
+      new ConcurrentHashMap<String, Set<String>>();
   private final ConcurrentMap<String, Set<String>> broadcastReceiversNeeded =
+      new ConcurrentHashMap<String, Set<String>>();
+  private final ConcurrentMap<String, Set<String>> servicesNeeded =
+      new ConcurrentHashMap<String, Set<String>>();
+  private final ConcurrentMap<String, Set<String>> contentProvidersNeeded =
       new ConcurrentHashMap<String, Set<String>>();
   private final ConcurrentMap<String, Set<String>> libsNeeded =
       new ConcurrentHashMap<String, Set<String>>();
@@ -418,6 +426,18 @@ public final class Compiler {
 
   // Just used for testing
   @VisibleForTesting
+  Map<String, Set<String>> getServices() {
+    return servicesNeeded;
+  }
+
+  // Just used for testing
+  @VisibleForTesting
+  Map<String, Set<String>> getContentProviders() {
+    return contentProvidersNeeded;
+  }
+
+  // Just used for testing
+  @VisibleForTesting
   Map<String, Set<String>> getActivities() {
     return activitiesNeeded;
   }
@@ -525,6 +545,56 @@ public final class Compiler {
     System.out.println("Component activities needed, n = " + n);
   }
 
+  /**
+   * Generate a set of conditionally included metadata needed by this project.
+   */
+  @VisibleForTesting
+  void generateMetadata() {
+    try {
+      loadJsonInfo(metadataNeeded, ComponentDescriptorConstants.METADATA_TARGET);
+    } catch (IOException e) {
+      // This is fatal.
+      e.printStackTrace();
+      userErrors.print(String.format(ERROR_IN_STAGE, "Metadata"));
+    } catch (JSONException e) {
+      // This is fatal, but shouldn't actually ever happen.
+      e.printStackTrace();
+      userErrors.print(String.format(ERROR_IN_STAGE, "Metadata"));
+    }
+
+    int n = 0;
+    for (String type : metadataNeeded.keySet()) {
+      n += metadataNeeded.get(type).size();
+    }
+
+    System.out.println("Component metadata needed, n = " + n);
+  }
+
+  /**
+   * Generate a set of conditionally included activity metadata needed by this project.
+   */
+  @VisibleForTesting
+  void generateActivityMetadata() {
+    try {
+      loadJsonInfo(activityMetadataNeeded, ComponentDescriptorConstants.ACTIVITY_METADATA_TARGET);
+    } catch (IOException e) {
+      // This is fatal.
+      e.printStackTrace();
+      userErrors.print(String.format(ERROR_IN_STAGE, "Activity Metadata"));
+    } catch (JSONException e) {
+      // This is fatal, but shouldn't actually ever happen.
+      e.printStackTrace();
+      userErrors.print(String.format(ERROR_IN_STAGE, "Activity Metadata"));
+    }
+
+    int n = 0;
+    for (String type : activityMetadataNeeded.keySet()) {
+      n += activityMetadataNeeded.get(type).size();
+    }
+
+    System.out.println("Component metadata needed, n = " + n);
+  }
+
   /*
    * Generate a set of conditionally included broadcast receivers needed by this project.
    */
@@ -544,6 +614,46 @@ public final class Compiler {
     }
 
     mergeConditionals(conditionals.get(ComponentDescriptorConstants.BROADCAST_RECEIVERS_TARGET), broadcastReceiversNeeded);
+  }
+
+  /*
+   * Generate a set of conditionally included services needed by this project.
+   */
+  @VisibleForTesting
+  void generateServices() {
+    try {
+      loadJsonInfo(servicesNeeded, ComponentDescriptorConstants.SERVICES_TARGET);
+    } catch (IOException e) {
+      // This is fatal.
+      e.printStackTrace();
+      userErrors.print(String.format(ERROR_IN_STAGE, "Services"));
+    } catch (JSONException e) {
+      // This is fatal, but shouldn't actually ever happen.
+      e.printStackTrace();
+      userErrors.print(String.format(ERROR_IN_STAGE, "Services"));
+    }
+
+    mergeConditionals(conditionals.get(ComponentDescriptorConstants.SERVICES_TARGET), servicesNeeded);
+  }
+
+  /*
+   * Generate a set of conditionally included content providers needed by this project.
+   */
+  @VisibleForTesting
+  void generateContentProviders() {
+    try {
+      loadJsonInfo(contentProvidersNeeded, ComponentDescriptorConstants.CONTENT_PROVIDERS_TARGET);
+    } catch (IOException e) {
+      // This is fatal.
+      e.printStackTrace();
+      userErrors.print(String.format(ERROR_IN_STAGE, "Content Providers"));
+    } catch (JSONException e) {
+      // This is fatal, but shouldn't actually ever happen.
+      e.printStackTrace();
+      userErrors.print(String.format(ERROR_IN_STAGE, "Content Providers"));
+    }
+
+    mergeConditionals(conditionals.get(ComponentDescriptorConstants.CONTENT_PROVIDERS_TARGET), contentProvidersNeeded);
   }
 
   /*
@@ -1034,6 +1144,20 @@ public final class Compiler {
           out.write("        <data android:mimeType=\"text/plain\" />\n");
           out.write("      </intent-filter>\n");
         }
+
+        Set<Map.Entry<String, Set<String>>> metadataElements = activityMetadataNeeded.entrySet();
+
+        // If any component needs to register additional activity metadata,
+        // insert them into the manifest here.
+        if (!metadataElements.isEmpty()) {
+          for (Map.Entry<String, Set<String>> metadataElementSetPair : metadataElements) {
+            Set<String> metadataElementSet = metadataElementSetPair.getValue();
+            for (String metadataElement : metadataElementSet) {
+              out.write(metadataElement);
+            }
+          }
+        }
+
         out.write("    </activity>\n");
 
         // Companion display a splash screen... define it's activity here
@@ -1049,11 +1173,15 @@ public final class Compiler {
       // Collect any additional <application> subelements into a single set.
       Set<Map.Entry<String, Set<String>>> subelements = Sets.newHashSet();
       subelements.addAll(activitiesNeeded.entrySet());
+      subelements.addAll(metadataNeeded.entrySet());
       subelements.addAll(broadcastReceiversNeeded.entrySet());
+      subelements.addAll(servicesNeeded.entrySet());
+      subelements.addAll(contentProvidersNeeded.entrySet());
 
 
-      // If any component needs to register additional activities or
-      // broadcast receivers, insert them into the manifest here.
+      // If any component needs to register additional activities, 
+      // broadcast receivers, services or content providers, insert 
+      // them into the manifest here.
       if (!subelements.isEmpty()) {
         for (Map.Entry<String, Set<String>> componentSubElSetPair : subelements) {
           Set<String> subelementSet = componentSubElSetPair.getValue();
@@ -1162,7 +1290,11 @@ public final class Compiler {
 
     compiler.generateAssets();
     compiler.generateActivities();
+    compiler.generateMetadata();
+    compiler.generateActivityMetadata();
     compiler.generateBroadcastReceivers();
+    compiler.generateServices();
+    compiler.generateContentProviders();
     compiler.generateLibNames();
     compiler.generateNativeLibNames();
     compiler.generatePermissions();
@@ -2443,7 +2575,8 @@ public final class Compiler {
    * @param type The name of the type being processed
    * @param targetInfo Name of the annotation target being processed (e.g.,
    *                   permissions). Any of: PERMISSIONS_TARGET,
-   *                   BROADCAST_RECEIVERS_TARGET
+   *                   BROADCAST_RECEIVERS_TARGET, SERVICES_TARGET,
+   *                   CONTENT_PROVIDERS_TARGET
    */
   private void processConditionalInfo(JSONObject compJson, String type, String targetInfo) {
     // Strip off the package name since SCM and BKY use unqualified names
