@@ -59,7 +59,7 @@ public class ProjectToolbar extends Toolbar {
         new DeleteForeverProjectAction()));
     addButton(new ToolbarItem(WIDGET_NAME_LOGINTONEWGALLERY, MESSAGES.loginToNewGallery(),
         new LoginToNewGalleryAction()));
-    addButton(new ToolbarItem(WIDGET_NAME_SENDTONG, MESSAGES.sendToNewGallery(),
+    addButton(new ToolbarItem(WIDGET_NAME_SENDTONG, MESSAGES.publishToGalleryButton(),
         new SendToNewGalleryAction()));
 
     setTrashTabButtonsVisible(false);
