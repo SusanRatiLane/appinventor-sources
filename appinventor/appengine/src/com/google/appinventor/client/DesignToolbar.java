@@ -10,8 +10,6 @@ import com.google.appinventor.client.editor.FileEditor;
 import com.google.appinventor.client.editor.ProjectEditor;
 import com.google.appinventor.client.editor.youngandroid.BlocklyPanel;
 import com.google.appinventor.client.editor.youngandroid.YaBlocksEditor;
-import com.google.appinventor.client.editor.youngandroid.YaFormEditor;
-import com.google.appinventor.client.editor.youngandroid.YaProjectEditor;
 
 import com.google.appinventor.client.explorer.commands.AddFormCommand;
 import com.google.appinventor.client.explorer.commands.ChainableCommand;
@@ -27,13 +25,13 @@ import com.google.appinventor.client.widgets.Toolbar;
 
 import com.google.appinventor.common.version.AppInventorFeatures;
 
+import com.google.appinventor.shared.rpc.RpcResult;
 import com.google.appinventor.shared.rpc.project.ProjectRootNode;
 import com.google.appinventor.shared.rpc.project.youngandroid.YoungAndroidSourceNode;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.Scheduler;
 
 import com.google.gwt.user.client.Command;
@@ -82,9 +80,11 @@ public class DesignToolbar extends Toolbar {
     public final String name;
     public final Map<String, Screen> screens; // screen name -> Screen
     public String currentScreen; // name of currently displayed screen
+    private long projectId;
 
     public DesignProject(String name, long projectId) {
       this.name = name;
+      this.projectId = projectId;
       screens = Maps.newHashMap();
       // Screen1 is initial screen by default
       currentScreen = YoungAndroidSourceNode.SCREEN1_FORM_NAME;
@@ -109,6 +109,11 @@ public class DesignToolbar extends Toolbar {
     public void setCurrentScreen(String name) {
       currentScreen = name;
     }
+
+    public long getProjectId() {
+      return projectId;
+    }
+
   }
 
   private static final String WIDGET_NAME_TUTORIAL_TOGGLE = "TutorialToggle";
@@ -117,6 +122,7 @@ public class DesignToolbar extends Toolbar {
   private static final String WIDGET_NAME_SCREENS_DROPDOWN = "ScreensDropdown";
   private static final String WIDGET_NAME_SWITCH_TO_BLOCKS_EDITOR = "SwitchToBlocksEditor";
   private static final String WIDGET_NAME_SWITCH_TO_FORM_EDITOR = "SwitchToFormEditor";
+  private static final String WIDGET_NAME_SENDTONG = "SendToNewGallery";
 
   // Switch language
   private static final String WIDGET_NAME_SWITCH_LANGUAGE = "Language";
@@ -181,6 +187,8 @@ public class DesignToolbar extends Toolbar {
       addButton(new ToolbarItem(WIDGET_NAME_REMOVEFORM, MESSAGES.removeFormButton(),
           new RemoveFormAction()));
     }
+    addButton(new ToolbarItem(WIDGET_NAME_SENDTONG,
+        MESSAGES.publishToGalleryButton(), new SendToNewGalleryAction()));
 
     addButton(new ToolbarItem(WIDGET_NAME_SWITCH_TO_FORM_EDITOR,
         MESSAGES.switchToFormEditorButton(), new SwitchToFormEditorAction()), true);
@@ -359,6 +367,29 @@ public class DesignToolbar extends Toolbar {
         toggleEditor(true);       // Gray out the blocks button and enable the designer button
         Ode.getInstance().getTopToolbar().updateFileMenuButtons(1);
       }
+    }
+  }
+
+  private class SendToNewGalleryAction implements Command {
+    @Override
+    public void execute() {
+      if (currentProject == null) {
+        OdeLog.wlog("DesignToolbar.currentProject is null. "
+            + "Ignoring SendToNewGalleryAction.execute().");
+        return;
+      }
+      Ode.getInstance().getProjectService().sendToNewGallery(currentProject.getProjectId(),
+        new OdeAsyncCallback<RpcResult>(
+          "Error sending project to the Gallery") {
+          @Override
+          public void onSuccess(RpcResult result) {
+            if (result.getResult() == RpcResult.SUCCESS) {
+              Window.open(result.getOutput(), "_blank", "");
+            } else {
+              ErrorReporter.reportInfo(result.getError());
+            }
+          }
+        });
     }
   }
 

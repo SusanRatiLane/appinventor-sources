@@ -221,7 +221,7 @@ public class ProjectToolbar extends Toolbar {
         Project project = selectedProjects.get(0);
         Ode.getInstance().getProjectService().sendToNewGallery(project.getProjectId(),
           new OdeAsyncCallback<RpcResult>(
-            "Barf") {
+            "Error sending project to the Gallery") {
             @Override
             public void onSuccess(RpcResult result) {
               if (result.getResult() == RpcResult.SUCCESS) {
