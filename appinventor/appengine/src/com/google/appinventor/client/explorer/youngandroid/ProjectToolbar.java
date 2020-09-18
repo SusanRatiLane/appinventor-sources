@@ -202,7 +202,7 @@ public class ProjectToolbar extends Toolbar {
             if (result.getResult() == RpcResult.SUCCESS) {
               Window.open(result.getOutput(), "_blank", "");
             } else {
-              ErrorReporter.reportInfo(result.getError());
+              ErrorReporter.reportError(result.getError());
             }
           }
         });
@@ -227,7 +227,7 @@ public class ProjectToolbar extends Toolbar {
               if (result.getResult() == RpcResult.SUCCESS) {
                 Window.open(result.getOutput(), "_blank", "");
               } else {
-                ErrorReporter.reportInfo(result.getError());
+                ErrorReporter.reportError(result.getError());
               }
             }
           });

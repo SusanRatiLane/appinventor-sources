@@ -386,7 +386,7 @@ public class DesignToolbar extends Toolbar {
             if (result.getResult() == RpcResult.SUCCESS) {
               Window.open(result.getOutput(), "_blank", "");
             } else {
-              ErrorReporter.reportInfo(result.getError());
+              ErrorReporter.reportError(result.getError());
             }
           }
         });

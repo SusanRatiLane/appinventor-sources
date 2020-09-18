@@ -140,6 +140,7 @@ public final class YoungAndroidProjectService extends CommonProjectService {
   private static final boolean DEBUG = Flag.createFlag("appinventor.debugging", false).get();
 
   private static final String newGalleryLocation = Flag.createFlag("newgallery.location", "http://localhost:9001").get();
+  private static final String newGalleryId = Flag.createFlag("newgallery.id", "").get();
 
   public YoungAndroidProjectService(StorageIo storageIo) {
     super(YoungAndroidProjectNode.YOUNG_ANDROID_PROJECT_TYPE, storageIo);
@@ -817,7 +818,11 @@ public final class YoungAndroidProjectService extends CommonProjectService {
 
   public RpcResult loginToNewGallery(String userId) {
     String token = GalleryToken.makeToken(userId, 0, "");
-    return new RpcResult(0, newGalleryLocation + "/loginfromappinventor?token=" + token, "");
+    if (newGalleryId.isEmpty()) {
+      return new RpcResult(-1, "", "Gallery Not Properly Configured");
+    } else {
+      return new RpcResult(0, newGalleryLocation + "/loginfromappinventor?token=" + token + "&id=" + newGalleryId, "");
+    }
   }
 
   /*
@@ -830,6 +835,9 @@ public final class YoungAndroidProjectService extends CommonProjectService {
   @Override
   public RpcResult sendToNewGallery(String userId, long projectId) {
     LOG.info("sendToNewGallery userId = " + userId + " projectId = " + projectId);
+    if (newGalleryId.isEmpty()) {
+      return new RpcResult(-1, "", "Gallery Not Properly Configured");
+    }
     String projectName = storageIo.getProjectName(userId, projectId);
     URL newGalleryUrl = null;
     ProjectSourceZip zipFile = null;
@@ -839,7 +847,7 @@ public final class YoungAndroidProjectService extends CommonProjectService {
         false, projectName + ".aia", false, false, true, true);
       String token = GalleryToken.makeToken(userId, projectId, projectName);
       newGalleryUrl = new URL(newGalleryLocation + "/fromappinventor?token=" +
-        token);
+        token + "&id=" + newGalleryId);
       HttpURLConnection connection = (HttpURLConnection) newGalleryUrl.openConnection();
       connection.setDoOutput(true);
       connection.setRequestMethod("POST");
