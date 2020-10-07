@@ -37,12 +37,15 @@ public class ProjectToolbar extends Toolbar {
 
   private boolean isReadOnly;
 
+  private boolean galleryEnabled = false; // Is the new gallery enabled
+
   /**
    * Initializes and assembles all commands into buttons in the toolbar.
    */
   public ProjectToolbar() {
     super();
     isReadOnly = Ode.getInstance().isReadOnly();
+    galleryEnabled = Ode.getInstance().getSystemConfig().getGalleryEnabled();
 
     addButton(new ToolbarItem(WIDGET_NAME_NEW, MESSAGES.newProjectMenuItem(),
         new NewAction(this)));
@@ -57,10 +60,12 @@ public class ProjectToolbar extends Toolbar {
         new RestoreProjectAction()));
     addButton(new ToolbarItem(WIDGET_NAME_DELETE_FROM_TRASH,MESSAGES.deleteFromTrashButton(),
         new DeleteForeverProjectAction()));
-    addButton(new ToolbarItem(WIDGET_NAME_LOGINTONEWGALLERY, MESSAGES.loginToNewGallery(),
-        new LoginToNewGalleryAction()));
-    addButton(new ToolbarItem(WIDGET_NAME_SENDTONG, MESSAGES.publishToGalleryButton(),
-        new SendToNewGalleryAction()));
+    if (galleryEnabled) {
+      addButton(new ToolbarItem(WIDGET_NAME_LOGINTONEWGALLERY, MESSAGES.loginToNewGallery(),
+          new LoginToNewGalleryAction()));
+      addButton(new ToolbarItem(WIDGET_NAME_SENDTONG, MESSAGES.publishToGalleryButton(),
+          new SendToNewGalleryAction()));
+    }
 
     setTrashTabButtonsVisible(false);
     updateButtons();

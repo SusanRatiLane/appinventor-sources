@@ -38,7 +38,7 @@ public class Config implements IsSerializable, Serializable {
   private boolean secondBuildserver; // Whether or not we have a second
                                      // buildserver (used for a different
                                      // target SDK).
-
+  private boolean galleryEnabled;
   public Config() {
   }
 
@@ -192,6 +192,14 @@ public class Config implements IsSerializable, Serializable {
 
   public void setSecondBuildserver(boolean value) {
     secondBuildserver = value;
+  }
+
+  public boolean getGalleryEnabled() {
+    return galleryEnabled;
+  }
+
+  public void setGalleryEnabled(boolean value) {
+    galleryEnabled = value;
   }
 
 }

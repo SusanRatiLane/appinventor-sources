@@ -158,6 +158,9 @@ public class DesignToolbar extends Toolbar {
   // on the device.
   public static LinkedList<String> pushedScreens = Lists.newLinkedList();
 
+  // Is the Gallery Enabled (new gallery)?
+  private boolean galleryEnabled = false;
+
   /**
    * Initializes and assembles all commands into buttons in the toolbar.
    */
@@ -165,7 +168,7 @@ public class DesignToolbar extends Toolbar {
     super();
 
     isReadOnly = Ode.getInstance().isReadOnly();
-
+    galleryEnabled = Ode.getInstance().getSystemConfig().getGalleryEnabled();
     projectNameLabel = new Label();
     projectNameLabel.setStyleName("ya-ProjectName");
     HorizontalPanel toolbar = (HorizontalPanel) getWidget();
@@ -187,8 +190,10 @@ public class DesignToolbar extends Toolbar {
       addButton(new ToolbarItem(WIDGET_NAME_REMOVEFORM, MESSAGES.removeFormButton(),
           new RemoveFormAction()));
     }
-    addButton(new ToolbarItem(WIDGET_NAME_SENDTONG,
-        MESSAGES.publishToGalleryButton(), new SendToNewGalleryAction()));
+    if (galleryEnabled) {
+      addButton(new ToolbarItem(WIDGET_NAME_SENDTONG,
+          MESSAGES.publishToGalleryButton(), new SendToNewGalleryAction()));
+    }
 
     addButton(new ToolbarItem(WIDGET_NAME_SWITCH_TO_FORM_EDITOR,
         MESSAGES.switchToFormEditorButton(), new SwitchToFormEditorAction()), true);

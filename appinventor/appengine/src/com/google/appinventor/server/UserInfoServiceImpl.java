@@ -63,6 +63,7 @@ public class UserInfoServiceImpl extends OdeRemoteServiceServlet implements User
     config.setFirebaseURL(Flag.createFlag("firebase.url", "").get());
     config.setDefaultCloudDBserver(Flag.createFlag("clouddb.server", "").get());
     config.setNoop(Flag.createFlag("session.noop", 0).get());
+    config.setGalleryEnabled(Flag.createFlag("gallery.enabled", false).get());
 
     if (!Flag.createFlag("build2.server.host", "").get().isEmpty()) {
       config.setSecondBuildserver(true);
