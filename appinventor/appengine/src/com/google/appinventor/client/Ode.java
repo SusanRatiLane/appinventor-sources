@@ -674,6 +674,19 @@ public class Ode implements EntryPoint {
         user = result.getUser();
         isReadOnly = user.isReadOnly();
 
+        // Arrange to redirect to the new gallery, which is run as a
+        // separate server when we are started with a galleryId flag
+        // We process this as soon as we have the system config
+        // because we need the system config to tell us where the
+        // gallery is located!
+
+        String galleryId = Window.Location.getParameter("galleryId");
+        if (galleryId != null) {
+          // This will replace us with the gallery server, displaying the app in question
+          Window.open(config.getGalleryLocation() + "?galleryid=" + galleryId, "_self", null);
+          // Never get here...(?)
+        }
+
         // load the user's backpack if we are not using a shared
         // backpack
 
