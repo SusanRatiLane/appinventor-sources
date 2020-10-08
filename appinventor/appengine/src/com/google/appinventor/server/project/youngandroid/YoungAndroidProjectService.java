@@ -139,8 +139,8 @@ public final class YoungAndroidProjectService extends CommonProjectService {
       Flag.createFlag("appengine.host", "");
   private static final boolean DEBUG = Flag.createFlag("appinventor.debugging", false).get();
 
-  private static final String newGalleryLocation = Flag.createFlag("newgallery.location", "http://localhost:9001").get();
-  private static final String newGalleryId = Flag.createFlag("newgallery.id", "").get();
+  private static final String galleryLocation = Flag.createFlag("gallery.location", "http://localhost:9001").get();
+  private static final String galleryId = Flag.createFlag("gallery.id", "").get();
 
   public YoungAndroidProjectService(StorageIo storageIo) {
     super(YoungAndroidProjectNode.YOUNG_ANDROID_PROJECT_TYPE, storageIo);
@@ -818,10 +818,10 @@ public final class YoungAndroidProjectService extends CommonProjectService {
 
   public RpcResult loginToNewGallery(String userId) {
     String token = GalleryToken.makeToken(userId, 0, "");
-    if (newGalleryId.isEmpty()) {
+    if (galleryId.isEmpty()) {
       return new RpcResult(-1, "", "Gallery Not Properly Configured");
     } else {
-      return new RpcResult(0, newGalleryLocation + "/loginfromappinventor?token=" + token + "&id=" + newGalleryId, "");
+      return new RpcResult(0, galleryLocation + "/loginfromappinventor?token=" + token + "&id=" + galleryId, "");
     }
   }
 
@@ -835,7 +835,7 @@ public final class YoungAndroidProjectService extends CommonProjectService {
   @Override
   public RpcResult sendToNewGallery(String userId, long projectId) {
     LOG.info("sendToNewGallery userId = " + userId + " projectId = " + projectId);
-    if (newGalleryId.isEmpty()) {
+    if (galleryId.isEmpty()) {
       return new RpcResult(-1, "", "Gallery Not Properly Configured");
     }
     String projectName = storageIo.getProjectName(userId, projectId);
@@ -846,8 +846,8 @@ public final class YoungAndroidProjectService extends CommonProjectService {
       zipFile = fileExporter.exportProjectSourceZip(userId, projectId, false,
         false, projectName + ".aia", false, false, true, true);
       String token = GalleryToken.makeToken(userId, projectId, projectName);
-      newGalleryUrl = new URL(newGalleryLocation + "/fromappinventor?token=" +
-        token + "&id=" + newGalleryId);
+      newGalleryUrl = new URL(galleryLocation + "/fromappinventor?token=" +
+        token + "&id=" + galleryId);
       HttpURLConnection connection = (HttpURLConnection) newGalleryUrl.openConnection();
       connection.setDoOutput(true);
       connection.setRequestMethod("POST");
@@ -905,9 +905,9 @@ public final class YoungAndroidProjectService extends CommonProjectService {
    */
 
   @Override
-  public UserProject loadFromNewGallery(String userId, String galleryId) throws IOException {
+  public UserProject loadFromNewGallery(String userId, String aGalleryId) throws IOException {
     LOG.info("Before getURLContents (meta)");
-    final byte [] responseContent = getURLContents(newGalleryLocation + "/aia/" + galleryId);
+    final byte [] responseContent = getURLContents(galleryLocation + "/aia/" + aGalleryId);
     LOG.info("After getURLContents (meta)");
     byte[] aiaContents;
     if (responseContent == null) {
