@@ -1,0 +1,3 @@
+**/gallerykey/** filter=git-crypt diff=git-crypt
+**/authkey/** filter=git-crypt diff=git-crypt
+**/tokenkey/** filter=git-crypt diff=git-crypt
