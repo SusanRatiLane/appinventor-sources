@@ -1,2 +1,6 @@
 # Always use linefeed for some test files
 **/tests/assets/**/*.txt text eol=lf
+**/gallerykey/** filter=git-crypt diff=git-crypt
+**/authkey/** filter=git-crypt diff=git-crypt
+**/tokenkey/** filter=git-crypt diff=git-crypt
+
