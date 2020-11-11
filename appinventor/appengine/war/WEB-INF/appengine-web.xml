@@ -149,6 +149,11 @@
     <property name="session.renew" value="30" />
     <property name="session.noop" value="0" />
 
+    <!-- New Gallery Support -->
+    <property name="gallery.enabled" value="true" />
+    <property name="gallery.location" value="https://gallery.appinventor.mit.edu" />
+    <property name="gallery.id" value="20" />
+
     <!-- Set this to true to enable the use of Wifi connections from the blocks editor to
          the phone. The phone must have an up-to-date copy of the MIT AICompanion App to
          use this feature. -->
