@@ -190,9 +190,8 @@ public class Ev3GyroSensor extends LegoMindstormsEv3Sensor implements Deleteable
   }
 
   private void setMode(GyroSensorMode newMode) {
-    // TODO (#2291): I imagine this function should reset the previousValue, similar to how the
-    //   ColorSensor works. But I don't have an Ev3 so I can't test.
-    mode = newMode;
+    if (mode != newMode)
+      previousValue = -1;
   }
 
   // Deleteable implementation
