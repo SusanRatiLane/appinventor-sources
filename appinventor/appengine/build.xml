@@ -528,7 +528,7 @@
         <pathelement location="${lib.dir}/gwt_dragdrop/gwt-dnd-3.2.3.jar" />
         <pathelement location="${lib.dir}/gwt_incubator/gwt-incubator-20101117-r1766.jar" />
         <pathelement location="${lib.dir}/gwt_query/gwtquery-1.5-beta1.jar" />
-        <!-- gwt libs -->
+              <!-- gwt libs -->
         <pathelement location="${gwt.sdk}/gwt-user.jar"/>
         <pathelement location="${gwt.sdk}/gwt-dev.jar"/>
         <pathelement location="${lib.dir}/json/json.jar" />
