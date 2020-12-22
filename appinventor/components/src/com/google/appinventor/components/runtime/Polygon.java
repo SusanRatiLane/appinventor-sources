@@ -12,12 +12,14 @@ import androidx.annotation.VisibleForTesting;
 
 import com.google.appinventor.components.annotations.DesignerComponent;
 import com.google.appinventor.components.annotations.DesignerProperty;
+import com.google.appinventor.components.annotations.Options;
 import com.google.appinventor.components.annotations.PropertyCategory;
 import com.google.appinventor.components.annotations.SimpleFunction;
 import com.google.appinventor.components.annotations.SimpleObject;
 import com.google.appinventor.components.annotations.SimpleProperty;
 
 import com.google.appinventor.components.common.ComponentCategory;
+import com.google.appinventor.components.common.MapFeature;
 import com.google.appinventor.components.common.PropertyTypeConstants;
 import com.google.appinventor.components.common.YaVersion;
 
@@ -122,10 +124,17 @@ public class Polygon extends PolygonBase implements MapPolygon {
 
   @Override
   @SimpleProperty(category = PropertyCategory.BEHAVIOR,
-      description = "Returns the type of the feature. For polygons, this returns the text "
-          + "\"Polygon\".")
-  public String Type() {
-    return MapFactory.MapFeatureType.TYPE_POLYGON;
+      description = "Returns the type of the feature. For polygons, this returns "
+          + "MapFeature.Polygon (\"Polygon\").")
+  public @Options(MapFeature.class) String Type() {
+    return TypeAbstract().toUnderlyingValue();
+  }
+
+  /**
+   * @return the abstract MapFeature type of this feature. In this case MapFeature.Polygon.
+   */
+  public MapFeature TypeAbstract() {
+    return MapFeature.Polygon;
   }
 
   @Override

@@ -311,6 +311,7 @@ Blockly.ReplMgr.putYail = (function() {
     var webrtcpeer;
     var webrtcisopen = false;
     var webrtcforcestop = false;
+    var sentMacros = false;
     var webrtcdata;
     var seennonce = {};
     var engine = {
@@ -332,6 +333,19 @@ Blockly.ReplMgr.putYail = (function() {
                 console.log('putYail: phone not connected');
                 return;
             }
+
+            if (!sentMacros) {
+                // Add the protect-enum macro (used by dropdown blocks).
+                code = "(define-syntax protect-enum " +
+                  "  (lambda (x) " +
+                  "    (syntax-case x () " +
+                  "      ((_ enum-value number-value) " +
+                  "        (if (< com.google.appinventor.components.common.YaVersion:BLOCKS_LANGUAGE_VERSION 33) " +
+                  "          #'number-value " +
+                  "          #'enum-value)))))" + code;
+                sentMacros = true;
+            }
+
             if (!rs.phoneState.phoneQueue) {
                 rs.phoneState.phoneQueue = [];
             }
@@ -799,6 +813,7 @@ Blockly.ReplMgr.putYail = (function() {
             rxhr.send("IGNORED=STUFF");
         },
         "reset" : function() {
+            sentMacros = false;
             if (top.usewebrtc) {
                 if (webrtcdata) {
                     webrtcdata.close();
