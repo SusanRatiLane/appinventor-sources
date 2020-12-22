@@ -234,7 +234,13 @@ Blockly.ReplMgr.buildYail = function(workspace, opt_force) {
         if (block.type == 'component_event') {
             willEmitEvent(block);
         }
-        var tempyail = Blockly.Yail.blockToCode(block);
+        var tempyail;
+        try {
+            Blockly.Yail.forRepl = true;
+            tempyail = Blockly.Yail.blockToCode(block);
+        } finally {
+            Blockly.Yail.forRepl = false;
+        }
         if (phoneState.blockYail[block.id] != tempyail) { // Only send changed yail
             this.putYail(tempyail, block, success, failure);
             phoneState.blockYail[block.id] = tempyail;
@@ -287,6 +293,28 @@ Blockly.ReplMgr.resetYail = function(partial) {
     }
 };
 
+Blockly.ReplMgr.maybeSendMacros = function() {
+    if (!top.ReplState || !top.ReplState.phoneState) {
+        return;
+    }
+    if (!top.ReplState.phoneState.sentMacros) {
+        if (!top.ReplState.phoneState.phoneQueue) {
+            top.ReplState.phoneState.phoneQueue = [];
+        }
+        top.ReplState.phoneState.phoneQueue.unshift({
+            'code': "(define-syntax protect-enum " +
+              "  (lambda (x) " +
+              "    (syntax-case x () " +
+              "      ((_ enum-value number-value) " +
+              "        (if (< com.google.appinventor.components.common.YaVersion:BLOCKS_LANGUAGE_VERSION 34) " +
+              "          #'number-value " +
+              "          #'enum-value)))))",
+            'block': '-1'
+        });
+        top.ReplState.phoneState.sentMacros = true;
+    }
+}
+
 // Theory of Operation
 //
 // This blocks of code implements communication to the phone. Yail Forms
@@ -311,7 +339,6 @@ Blockly.ReplMgr.putYail = (function() {
     var webrtcpeer;
     var webrtcisopen = false;
     var webrtcforcestop = false;
-    var sentMacros = false;
     var webrtcdata;
     var seennonce = {};
     var engine = {
@@ -332,18 +359,6 @@ Blockly.ReplMgr.putYail = (function() {
                 rs.state != Blockly.ReplMgr.rsState.EXTENSIONS) {
                 console.log('putYail: phone not connected');
                 return;
-            }
-
-            if (!sentMacros) {
-                // Add the protect-enum macro (used by dropdown blocks).
-                code = "(define-syntax protect-enum " +
-                  "  (lambda (x) " +
-                  "    (syntax-case x () " +
-                  "      ((_ enum-value number-value) " +
-                  "        (if (< com.google.appinventor.components.common.YaVersion:BLOCKS_LANGUAGE_VERSION 33) " +
-                  "          #'number-value " +
-                  "          #'enum-value)))))" + code;
-                sentMacros = true;
             }
 
             if (!rs.phoneState.phoneQueue) {
@@ -597,6 +612,7 @@ Blockly.ReplMgr.putYail = (function() {
                 if (!rs.phoneState.phoneQueue) {
                     rs.phoneState.phoneQueue = [];
                 }
+                Blockly.ReplMgr.maybeSendMacros();
                 // OK, let's send with webrtc!
                 // First let's drain the queue of pending asset updates
                 while ((work = rs.phoneState.assetQueue.shift())) {
@@ -643,6 +659,7 @@ Blockly.ReplMgr.putYail = (function() {
                 return;
             }
             // We only get here if we are not using webrtc
+            Blockly.ReplMgr.maybeSendMacros();
             if (top.loadAll) {
                 var chunk;
                 var allcode = "";
@@ -813,7 +830,6 @@ Blockly.ReplMgr.putYail = (function() {
             rxhr.send("IGNORED=STUFF");
         },
         "reset" : function() {
-            sentMacros = false;
             if (top.usewebrtc) {
                 if (webrtcdata) {
                     webrtcdata.close();
