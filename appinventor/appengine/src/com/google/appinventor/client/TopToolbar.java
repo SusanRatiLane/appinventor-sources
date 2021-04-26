@@ -36,7 +36,6 @@ import com.google.appinventor.common.version.GitBuildId;
 import com.google.appinventor.components.common.YaVersion;
 import com.google.appinventor.shared.rpc.ServerLayout;
 import com.google.appinventor.shared.rpc.project.ProjectRootNode;
-import com.google.appinventor.shared.rpc.project.UserProject;
 import com.google.appinventor.shared.rpc.project.youngandroid.YoungAndroidProjectNode;
 import com.google.appinventor.shared.rpc.user.Config;
 import com.google.appinventor.shared.storage.StorageUtil;
@@ -655,7 +654,7 @@ public class TopToolbar extends Composite {
               ProjectListBox.getProjectListBox().getProjectList().getSelectedFolders();
           if (selectedProjects.size() > 0 || selectedFolders.size() > 0) {
             // Show one confirmation window for selected projects.
-            if (deleteConfirmation(selectedProjects, selectedFolders)) {
+            if (trashConfirmation(selectedProjects, selectedFolders)) {
               for (Project project : selectedProjects) {
                 project.moveToTrash();
                 ProjectListBox.getProjectListBox().getProjectList().getSelectedProjects().remove(project);
@@ -675,7 +674,7 @@ public class TopToolbar extends Composite {
       });
     }
 
-    private boolean deleteConfirmation(List<Project> projects, List<String> folders) {
+    private boolean trashConfirmation(List<Project> projects, List<String> folders) {
       String projectMessage, folderMessage;
       if (projects.size() == 0) {
         projectMessage = null;
@@ -1211,11 +1210,15 @@ public class TopToolbar extends Composite {
         @Override
         public void execute() {
           List<Project> deletedProjects = ProjectListBox.getProjectListBox().getProjectList().getSelectedProjects();
-          if (deletedProjects.size() > 0) {
+          List<String> deletedFolders = ProjectListBox.getProjectListBox().getProjectList().getSelectedFolders();
+          if (deletedProjects.size() > 0 || deletedFolders.size() > 0) {
             // Show one confirmation window for selected projects.
-            if (deleteConfirmation(deletedProjects)) {
+            if (deleteConfirmation(deletedProjects, deletedFolders)) {
               for (Project project : deletedProjects) {
                 project.deleteFromTrash();
+              }
+              for (String folder : deletedFolders) {
+                ProjectListBox.getProjectListBox().getProjectList().deleteFolderForever(folder);
               }
             }
             Ode.getInstance().switchToTrash();
@@ -1228,8 +1231,9 @@ public class TopToolbar extends Composite {
       });
     }
 
-    private boolean deleteConfirmation(List<Project> projects) {
-      String message;
+    private boolean deleteConfirmation(List<Project> projects, List<String> folders) {
+      String message = "";
+      String folderMessage = "";
       if (projects.size() == 1) {
         message = MESSAGES.confirmDeleteSingleProject(projects.get(0).getProjectName());
       } else {
@@ -1242,7 +1246,22 @@ public class TopToolbar extends Composite {
         String projectNames = sb.toString();
         message = MESSAGES.confirmDeleteManyProjects(projectNames);
       }
-      return Window.confirm(message);
+
+      if (folders.size() == 0) {
+        folderMessage = "";
+      } else if (folders.size() == 1) {
+        folderMessage = MESSAGES.confirmDeleteSingleFolder(folders.get(0));
+      } else{
+        StringBuilder sb = new StringBuilder();
+        String separator = "";
+        for (String folder : folders) {
+          sb.append(separator).append(folder);
+          separator = ", ";
+        }
+        String folderNames = sb.toString();
+        folderMessage = MESSAGES.confirmDeleteMultipleFolders(folderNames);
+      }
+      return Window.confirm(message + "\n" + folderMessage);
     }
   }
 

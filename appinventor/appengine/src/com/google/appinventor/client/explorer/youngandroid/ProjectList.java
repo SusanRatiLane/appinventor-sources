@@ -17,7 +17,6 @@ import com.google.appinventor.client.ErrorReporter;
 import com.google.appinventor.client.Ode;
 import static com.google.appinventor.client.Ode.MESSAGES;
 import static com.google.appinventor.client.Ode.getImageBundle;
-
 import com.google.appinventor.client.OdeAsyncCallback;
 import com.google.appinventor.shared.rpc.project.UserProject;
 import com.google.common.collect.Ordering;
@@ -258,12 +257,14 @@ public class ProjectList extends Composite implements ProjectManagerEventListene
     final Label nameLabel;
     final Label dateCreatedLabel = new Label();
     final Label dateModifiedLabel = new Label();
+    boolean isInTrash = false;
 
     /**
      * Constructor for standard folder links- the displayed folder name is relative its parent
      */
     private FolderWidgets(final String folderName) {
       this.checkBox = new CheckBox();
+      isInTrash = false;
       this.checkBox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
         @Override
         public void onValueChange(ValueChangeEvent<Boolean> event) {
@@ -309,6 +310,7 @@ public class ProjectList extends Composite implements ProjectManagerEventListene
     private FolderWidgets() {
       this.checkBox = new CheckBox();
       this.checkBox.setEnabled(false);
+      isInTrash = false;
 
       ClickHandler folderClick = new ClickHandler() {
         @Override
@@ -678,12 +680,23 @@ public class ProjectList extends Composite implements ProjectManagerEventListene
 
   @Override
   public void onFolderAddition(String folder) {
-    if (!projectsByFolder.containsKey(folder)) {
-      projectsByFolder.put(folder, new ArrayList<Project>());
+    String foldername = "";
+    Boolean isInTrash = false;
+    if (folder.startsWith("TrashFolders/")) {
+      foldername = folder.substring("TrashProjects/".length());
+      isInTrash = true;
+    } else {
+      foldername = folder;
     }
-    if (!folderWidgets.containsKey(folder)) {
-      this.folderWidgets.put(folder, new FolderWidgets(folder));
+    if (!projectsByFolder.containsKey(foldername)) {
+      projectsByFolder.put(foldername, new ArrayList<Project>());
     }
+    if (!folderWidgets.containsKey(foldername)) {
+      FolderWidgets newFolder = new FolderWidgets(foldername);
+      newFolder.isInTrash = isInTrash;
+      this.folderWidgets.put(foldername, newFolder);
+    }
+    updateCurrentSubFolders();
     if (!projectListLoading) {
       refreshTable(true);
     }
@@ -773,6 +786,12 @@ public class ProjectList extends Composite implements ProjectManagerEventListene
   }
 
   public void trashFolder(String folder) {
+    folderWidgets.get(folder).isInTrash = true;
+    for (String subfolder : folderWidgets.keySet()) {
+      if (subfolder.startsWith(folder)) {
+        folderWidgets.get(subfolder).isInTrash = true;
+      }
+    }
     for (String f : projectsByFolder.keySet()) {
       // Projects from this folder and all subfolders must be trashed.
       // Deleting the single folder should handle subfolders (?)
@@ -783,11 +802,21 @@ public class ProjectList extends Composite implements ProjectManagerEventListene
           }
         }
       }
+
     }
     currentSubFolders.remove(folder);
   }
 
+
+
+
   public void restoreFolder(String folder) {
+    folderWidgets.get(folder).isInTrash = false;
+    for (String subfolder : folderWidgets.keySet()) {
+      if (subfolder != null && subfolder.startsWith(folder)) {
+        folderWidgets.get(subfolder).isInTrash = false;
+      }
+    }
     for (String f : projectsByFolder.keySet()) {
       // Projects from this folder and all subfolders must be trashed.
       // Deleting the single folder should handle subfolders (?)
@@ -800,6 +829,32 @@ public class ProjectList extends Composite implements ProjectManagerEventListene
       }
     }
     currentSubFolders.remove(folder);
+  }
+
+  public void deleteFolderForever(String folder) {
+    if (folderWidgets.get(folder).isInTrash) {
+      for (String f : projectsByFolder.keySet()) {
+        // Projects from this folder and all subfolders must be trashed.
+        // Deleting the single folder should handle subfolders (?)
+        if (f != null && f.startsWith(folder)) {
+          for (Project p : projectsByFolder.get(f)) {
+            if (p.isInTrash()) {
+              p.deleteFromTrash();
+              projectsByFolder.remove(f, p);
+            }
+          }
+        }
+      }
+      for (String subfolder : folderWidgets.keySet()) {
+        if (subfolder.startsWith(folder) && subfolder.length() > folder.length()) {
+           if (folderWidgets.get(subfolder).isInTrash) {
+             doDeleteFolder(subfolder);
+           }
+        }
+      }
+      currentSubFolders.remove(folder);
+      doDeleteFolder(folder);
+    }
   }
 
   private void doDeleteFolder(final String folderName) {
@@ -827,23 +882,13 @@ public class ProjectList extends Composite implements ProjectManagerEventListene
         }
 
         if (!currentSubFolders.contains(subFolder)) {
-          if (!isInTrash && projectsByFolder.get(folder).size() <= 0) {
+          if (folderWidgets.get(subFolder).isInTrash == isInTrash) {
             currentSubFolders.add(subFolder);
-          } else {
-            for (Project p : projectsByFolder.get(folder)) {
-              if (p.isInTrash() == isInTrash) {
-                currentSubFolders.add(subFolder);
-                break;
-              }
-            }
           }
         }
       }
     }
   }
-
-
-
 
   /**
    * Handles the moving projects and folders that are dragged (serialized in data) and dropped into the

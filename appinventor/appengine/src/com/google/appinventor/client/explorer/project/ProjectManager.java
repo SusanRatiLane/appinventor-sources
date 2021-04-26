@@ -11,6 +11,9 @@ import static com.google.appinventor.client.Ode.MESSAGES;
 import com.google.appinventor.client.OdeAsyncCallback;
 import com.google.appinventor.shared.rpc.project.ProjectNode;
 import com.google.appinventor.shared.rpc.project.UserProject;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,6 +56,17 @@ public final class ProjectManager {
           fireProjectsLoaded();
         }
       });
+    Ode.getInstance().getUserInfoService().getUserFolders(new OdeAsyncCallback<String>(
+        MESSAGES.projectInformationRetrievalError()) {
+      @Override
+      public void onSuccess(String s) {
+        JSONArray folders = JSONParser.parseStrict(s).isArray();
+        for (int i= 0; i < folders.size(); i++) {
+          addFolder(folders.get(i).isString().stringValue());
+        }
+
+      }
+    });
   }
 
   /**
