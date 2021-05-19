@@ -57,16 +57,6 @@ public interface ProjectManagerEventListener {
   void onProjectsLoaded();
 
   /**
-   * Invoked when a folder is added
-   */
-  void onFolderAddition(String folder);
-
-  /**
-   * Invoked when a folder is added
-   */
-  void onFolderDeletion(String folder);
-
-  /**
    * Invoked when a project has been moved to a new folder
    */
   void onProjectMovedToFolder(Project project);

@@ -119,6 +119,16 @@ public class LocalUser implements UserInfoProvider {
   }
 
   @Override
+  public void setUserFolders(String folders) {
+    try {
+      user.get().setUserFolders(folders);
+    } catch (NullPointerException e) {
+      // This should never happen, but just in case...
+      throw new UnsupportedOperationException("User field should have been initialized.");
+    }
+  }
+
+  @Override
   public void setSessionId(String sessionId) {
     try {
       user.get().setSessionId(sessionId);

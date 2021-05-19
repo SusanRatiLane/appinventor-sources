@@ -663,6 +663,9 @@ public class TopToolbar extends Composite {
                 ProjectListBox.getProjectListBox().getProjectList().trashFolder(folder);
                 ProjectListBox.getProjectListBox().getProjectList().getSelectedFolders().remove(folder);
               }
+              if (selectedFolders.size() > 0) {
+                Ode.getInstance().getProjectManager().saveUserFolders();
+              }
             }
             ProjectListBox.getProjectListBox().getProjectList().refreshTable(false);
           } else {

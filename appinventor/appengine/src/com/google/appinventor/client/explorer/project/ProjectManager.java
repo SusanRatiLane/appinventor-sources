@@ -9,18 +9,16 @@ package com.google.appinventor.client.explorer.project;
 import com.google.appinventor.client.Ode;
 import static com.google.appinventor.client.Ode.MESSAGES;
 import com.google.appinventor.client.OdeAsyncCallback;
+import com.google.appinventor.client.boxes.ProjectListBox;
 import com.google.appinventor.shared.rpc.project.ProjectNode;
 import com.google.appinventor.shared.rpc.project.UserProject;
 import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * This class manages projects and project folders.
@@ -62,9 +60,9 @@ public final class ProjectManager {
       public void onSuccess(String s) {
         JSONArray folders = JSONParser.parseStrict(s).isArray();
         for (int i= 0; i < folders.size(); i++) {
-          addFolder(folders.get(i).isString().stringValue());
+          ProjectListBox.getProjectListBox().getProjectList()
+              .addFolder(folders.get(i).isString().stringValue());
         }
-
       }
     });
   }
@@ -165,25 +163,26 @@ public final class ProjectManager {
     Project project = projectsMap.get(projectId);
     fireProjectTrashed(project);
   }
+
   /**
    * Adds a new folder.
    *
    * @param folderName the new folder name
    */
-  public void addFolder(String folderName){
-
-    fireOnFolderAddition(folderName);
+  public void createFolder(String folderName) {
+    ProjectListBox.getProjectListBox().getProjectList().addFolder(folderName);
+    saveUserFolders();
   }
 
-  /**
-   * Deletes the specified folder
-   *
-   * @param folderName the new folder name
-   */
-  public void deleteFolder(String folderName){
-    fireOnFolderDeletion(folderName);
+  public void saveUserFolders() {
+    String folderJSON = ProjectListBox.getProjectListBox().getProjectList().getAllFoldersJSON();
+    Ode.getInstance().getUserInfoService().setUserFolders(folderJSON, new OdeAsyncCallback<String>(
+        MESSAGES.projectInformationRetrievalError()) {
+      @Override
+      public void onSuccess(String s) {
+      }
+    });
   }
-
 
   /**
    * Adds a {@link ProjectManagerEventListener} to the listener list.
@@ -238,24 +237,6 @@ public final class ProjectManager {
   private void fireProjectDeleted(Project project) {
     for (ProjectManagerEventListener listener : copyProjectManagerEventListeners()) {
       listener.onProjectDeleted(project);
-    }
-  }
-
-  /*
-   * Triggers a 'folder added' event to be sent to the listener on the listener list.
-   */
-  private void fireOnFolderAddition(String folder) {
-    for (ProjectManagerEventListener listener : copyProjectManagerEventListeners()) {
-      listener.onFolderAddition(folder);
-    }
-  }
-
-  /*
-   * Triggers a 'folder added' event to be sent to the listener on the listener list.
-   */
-  private void fireOnFolderDeletion(String folder) {
-    for (ProjectManagerEventListener listener : copyProjectManagerEventListeners()) {
-      listener.onFolderDeletion(folder);
     }
   }
 

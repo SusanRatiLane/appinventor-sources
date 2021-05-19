@@ -36,16 +36,6 @@ public class ProjectManagerEventAdapter implements ProjectManagerEventListener {
   public void onProjectsLoaded() { }
 
   @Override
-  public void onFolderAddition(String folder) {
-
-  }
-
-  @Override
-  public void onFolderDeletion(String folder) {
-
-  }
-
-  @Override
   public void onProjectMovedToFolder(Project project) {
 
   }

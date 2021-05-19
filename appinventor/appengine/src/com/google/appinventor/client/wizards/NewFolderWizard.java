@@ -88,11 +88,10 @@ public class NewFolderWizard extends Wizard {
             : currentFolder + "/" + relativeName;
 
         if (TextValidators.checkNewFolderName(relativeName, folderName)) {
-          ode.getProjectManager().addFolder(folderName);
+          ode.getProjectManager().createFolder(folderName);
         } else {
           show();
           center();
-          return;
         }
       }
     });

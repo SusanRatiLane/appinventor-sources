@@ -57,6 +57,8 @@ public interface UserInfoProvider {
    */
   String getUserFolders();
 
+  void setUserFolders(String folders);
+
   void setReadOnly(boolean value);
 
   boolean isReadOnly();

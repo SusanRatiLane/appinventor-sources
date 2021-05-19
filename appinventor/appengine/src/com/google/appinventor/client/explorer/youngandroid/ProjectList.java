@@ -14,10 +14,10 @@ import com.google.appinventor.shared.rpc.ServerLayout;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.appinventor.client.ErrorReporter;
-import com.google.appinventor.client.Ode;
+
 import static com.google.appinventor.client.Ode.MESSAGES;
 import static com.google.appinventor.client.Ode.getImageBundle;
-import com.google.appinventor.client.OdeAsyncCallback;
+
 import com.google.appinventor.shared.rpc.project.UserProject;
 import com.google.common.collect.Ordering;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -27,6 +27,8 @@ import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
@@ -617,6 +619,22 @@ public class ProjectList extends Composite implements ProjectManagerEventListene
     return this.currentFolder;
   }
 
+  public String getAllFoldersJSON() {
+    JSONArray allFolders = new JSONArray();
+    int i = 0;
+    for (String folderPath:folderWidgets.keySet()) {
+      FolderWidgets fw = folderWidgets.get(folderPath);
+      if (fw.isInTrash) {
+        allFolders.set(i, new JSONString("TrashFolders/" + folderPath) );
+      } else {
+        allFolders.set(i, new JSONString(folderPath));
+      }
+      i++;
+    }
+    return allFolders.toString();
+  }
+
+
   // ProjectManagerEventListener implementation
 
   @Override
@@ -678,12 +696,11 @@ public class ProjectList extends Composite implements ProjectManagerEventListene
   }-*/
   ;
 
-  @Override
-  public void onFolderAddition(String folder) {
+  public void addFolder(String folder) {
     String foldername = "";
     Boolean isInTrash = false;
     if (folder.startsWith("TrashFolders/")) {
-      foldername = folder.substring("TrashProjects/".length());
+      foldername = folder.substring("TrashFolders/".length());
       isInTrash = true;
     } else {
       foldername = folder;
@@ -702,8 +719,7 @@ public class ProjectList extends Composite implements ProjectManagerEventListene
     }
   }
 
-  @Override
-  public void onFolderDeletion(String deletionFolder) {
+  public void removeFolder(String deletionFolder) {
     final Set<String> folders = new HashSet<String>(projectsByFolder.keySet());
     for (String folder : folders) {
       if (isParentOrSameFolder(deletionFolder, folder)) {
@@ -802,7 +818,6 @@ public class ProjectList extends Composite implements ProjectManagerEventListene
           }
         }
       }
-
     }
     currentSubFolders.remove(folder);
   }
@@ -858,7 +873,8 @@ public class ProjectList extends Composite implements ProjectManagerEventListene
   }
 
   private void doDeleteFolder(final String folderName) {
-    Ode.getInstance().getProjectManager().deleteFolder(folderName);// TODO() Need to call RPC to delete folder
+    removeFolder(folderName);
+    Ode.getInstance().getProjectManager().saveUserFolders();
   }
 
   /**
@@ -870,25 +886,27 @@ public class ProjectList extends Composite implements ProjectManagerEventListene
     boolean isInTrash = Ode.getInstance().getCurrentView() == Ode.TRASHCAN;
     this.currentSubFolders = new ArrayList<>();
     for (String folder : folderWidgets.keySet()) {
-      if (currentFolder == null || (folder.startsWith(currentFolder) && !folder.equals(currentFolder))) {
-        String subFolder = "";
-        int pathIndex = folder.indexOf(FOLDER_DIVIDER,
-            Objects.toString(currentFolder).length() + 1);
-        if (pathIndex > 0) {
-          subFolder = folder.substring(0, folder.indexOf(FOLDER_DIVIDER,
-              Objects.toString(currentFolder).length() + 1));
-        } else {
+      String subFolder = "";
+      if (currentFolder == null) {
+        int pathIndex = folder.indexOf(FOLDER_DIVIDER);
+        if (pathIndex == -1) {
           subFolder = folder;
         }
-
-        if (!currentSubFolders.contains(subFolder)) {
-          if (folderWidgets.get(subFolder).isInTrash == isInTrash) {
-            currentSubFolders.add(subFolder);
-          }
+      } else if (folder.startsWith(currentFolder + FOLDER_DIVIDER) ) {
+        int pathIndex = folder.indexOf(FOLDER_DIVIDER,
+            currentFolder.length() + 1);
+        if (pathIndex == -1) {
+          subFolder = folder;
+        }
+      }
+      if (subFolder != "" && !currentSubFolders.contains(subFolder)) {
+        if (folderWidgets.get(subFolder).isInTrash == isInTrash) {
+          currentSubFolders.add(subFolder);
         }
       }
     }
   }
+
 
   /**
    * Handles the moving projects and folders that are dragged (serialized in data) and dropped into the
@@ -942,58 +960,63 @@ public class ProjectList extends Composite implements ProjectManagerEventListene
    * Handles the movement of the folder movingFolder (and all subfolders & projects within) to
    * targetFolder.
    */
-  public void handleFolderMove(final String movingFolder, final String targetFolder){
-      if (movingFolder.equals(targetFolder)) return;
-      final List<Project> projects = getProjectsInFolder(movingFolder);
-      final List<Long> projectIds = new ArrayList<Long>();
-      final List<String> newParents = new ArrayList<String>();
+  public void handleFolderMove(final String movingFolder, final String targetFolder) {
+    if (movingFolder.equals(targetFolder)) return;
+    final List<Project> projects = getProjectsInFolder(movingFolder);
+    final List<Long> projectIds = new ArrayList<Long>();
+    final List<String> newParents = new ArrayList<String>();
 
-      final String movingFolderNewName = getNewParentFolderName(movingFolder, targetFolder);
-      if (projectsByFolder.keySet().contains(movingFolderNewName)) {
-        ErrorReporter.reportError(MESSAGES.duplicateFolderNameError(movingFolderNewName));
-        return;
-      }
-
-      for (Project project : projects) {
-        projectIds.add(project.getProjectId());
-        newParents.add(getNewParentFolderName(project.getParentFolder(), targetFolder));
-      }
-
-      Ode.getInstance().getProjectService().moveProjectsToFolder(projectIds, newParents,
-          new AsyncCallback<List<UserProject>>() {
-            @Override
-            public void onFailure(Throwable throwable) {
-              ErrorReporter.reportError(MESSAGES.couldNotChangeProjectFolder());
-            }
-
-            @Override
-            public void onSuccess(List<UserProject> userProjects) {
-              for (int x = 0; x < projects.size(); x++) { // Project Movement
-                final Project project = projects.get(x);
-                final UserProject userProject = userProjects.get(x);
-                project.setParentFolder(userProject.getParentFolder());
-                onProjectMovedToFolder(project);
-              }
-
-              final Set<String> folders = new HashSet<String>(projectsByFolder.keySet());
-              for (String folder : folders) { // Folder Movement
-                if (isParentOrSameFolder(movingFolder, folder)) {
-                  final String newFolder = getNewParentFolderName(folder, targetFolder);
-                  if (!projectsByFolder.containsKey(newFolder)) {
-                    projectsByFolder.put(newFolder, new ArrayList<Project>());
-                    folderWidgets.put(newFolder, new FolderWidgets(newFolder));
-                  }
-                  projectsByFolder.remove(folder);
-                  folderWidgets.remove(folder);
-                }
-              }
-
-              selectedFolders.remove(targetFolder);
-              updateCurrentSubFolders();
-              refreshTable(false);
-            }
-          });
+    final String movingFolderNewName = getNewParentFolderName(movingFolder, targetFolder);
+    if (projectsByFolder.keySet().contains(movingFolderNewName)) {
+      ErrorReporter.reportError(MESSAGES.duplicateFolderNameError(movingFolderNewName));
+      return;
     }
+
+    for (Project project : projects) {
+      projectIds.add(project.getProjectId());
+      newParents.add(getNewParentFolderName(project.getParentFolder(), targetFolder));
+    }
+
+    Ode.getInstance().getProjectService().moveProjectsToFolder(projectIds, newParents,
+        new AsyncCallback<List<UserProject>>() {
+          @Override
+          public void onFailure(Throwable throwable) {
+            ErrorReporter.reportError(MESSAGES.couldNotChangeProjectFolder());
+          }
+
+          @Override
+          public void onSuccess(List<UserProject> userProjects) {
+            final Set<String> folders = new HashSet<>(folderWidgets.keySet());
+            for (String fredFolder : folders) { // Folder Movement
+              if (isParentOrSameFolder(movingFolder, fredFolder)) {
+                final String newFolder = getNewParentFolderName(fredFolder, targetFolder);
+                if (!projectsByFolder.containsKey(newFolder)) {
+                  projectsByFolder.put(newFolder, new ArrayList<Project>());
+                  folderWidgets.put(newFolder, new FolderWidgets(newFolder));
+                }
+                folderWidgets.remove(fredFolder);
+              }
+            }
+
+            Ode.getInstance().getProjectManager().saveUserFolders();
+            for (int x = 0; x < projects.size(); x++) { // Project Movement
+              final Project project = projects.get(x);
+              projectsByFolder.get(project.getParentFolder()).remove(project);
+              if (projectsByFolder.get(project.getParentFolder()).size() == 0) {
+                projectsByFolder.remove(project.getParentFolder());
+              }
+              final UserProject userProject = userProjects.get(x);
+              project.setParentFolder(userProject.getParentFolder());
+              projectsByFolder.get(userProject.getParentFolder()).add(project);
+            }
+
+            projectsByFolder.remove(movingFolder);
+            selectedFolders.clear();
+            updateCurrentSubFolders();
+            refreshTable(false);
+          }
+        });
+  }
 
   /**
    * Returns all projects that are contained in parentFolder as well as parentFolder's children
