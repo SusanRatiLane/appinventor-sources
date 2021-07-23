@@ -5,6 +5,7 @@
 
 package com.google.appinventor.components.runtime.repltest;
 
+import com.google.appinventor.components.common.FileScope;
 import com.google.appinventor.components.runtime.File;
 import com.google.appinventor.components.runtime.FileTest;
 import com.google.appinventor.components.runtime.ReplFormTest;
@@ -21,6 +22,7 @@ public class FileReplTest extends FileTest {
   public void setUp() {
     setUpAsRepl();
     file = new File(getForm());
+    file.DefaultScope(FileScope.Legacy);
     ReplFormTest.copyAssetToReplAssets(getForm(), TARGET_FILE, TARGET_FILE);
   }
 }

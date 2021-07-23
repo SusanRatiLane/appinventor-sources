@@ -6,7 +6,12 @@
 
 package com.google.appinventor.components.runtime;
 
-import android.Manifest;
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
+import android.annotation.SuppressLint;
+
+import android.content.res.AssetManager;
 import android.util.Log;
 
 import com.google.appinventor.components.annotations.DesignerComponent;
@@ -16,49 +21,133 @@ import com.google.appinventor.components.annotations.SimpleEvent;
 import com.google.appinventor.components.annotations.SimpleFunction;
 import com.google.appinventor.components.annotations.SimpleObject;
 import com.google.appinventor.components.annotations.SimpleProperty;
-import com.google.appinventor.components.annotations.UsesLibraries;
 import com.google.appinventor.components.annotations.UsesPermissions;
+
 import com.google.appinventor.components.common.ComponentCategory;
+import com.google.appinventor.components.common.FileScope;
 import com.google.appinventor.components.common.PropertyTypeConstants;
 import com.google.appinventor.components.common.YaVersion;
-import com.google.appinventor.components.runtime.errors.PermissionException;
-import com.google.appinventor.components.runtime.util.AsynchUtil;
+
+import com.google.appinventor.components.runtime.errors.YailRuntimeError;
+
+import com.google.appinventor.components.runtime.util.Continuation;
 import com.google.appinventor.components.runtime.util.ErrorMessages;
+import com.google.appinventor.components.runtime.util.FileAccessMode;
+import com.google.appinventor.components.runtime.util.FileOperation;
+import com.google.appinventor.components.runtime.util.FileStreamReadOperation;
+import com.google.appinventor.components.runtime.util.FileStreamWriteOperation;
 import com.google.appinventor.components.runtime.util.FileUtil;
-import com.google.appinventor.components.runtime.util.MediaUtil;
-import com.google.appinventor.components.runtime.util.QUtil;
+import com.google.appinventor.components.runtime.util.FileWriteOperation;
+import com.google.appinventor.components.runtime.util.IOUtils;
+import com.google.appinventor.components.runtime.util.ScopedFile;
+import com.google.appinventor.components.runtime.util.SingleFileOperation;
+import com.google.appinventor.components.runtime.util.Synchronizer;
 
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.StringWriter;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Non-visible component for storing and retrieving files. Use this component to write or read files
- * on the device. The default behavior is to write files to the private data directory associated
- * with the app. The Companion writes files to `/sdcard/AppInventor/data` for easy debugging. If
- * the file path starts with a slash (`/`), then the file is created relative to `/sdcard`.
- * For example, writing a file to `/myFile.txt` will write the file in `/sdcard/myFile.txt`.
+ * on the device. File names can take one of three forms:
+ *
+ * - Private files have no leading `/` and are written to app private storage (e.g., "file.txt")
+ * - External files have a single leading `/` and are written to public storage (e.g., "/file.txt")
+ * - Bundled app assets have two leading `//` and can only be read (e.g., "//file.txt")
+ *
+ * The exact location where external files are placed is a function of the value of the
+ * [`AccessMode`](#AccessMode) property, whether the app is running in the Companion or compiled,
+ * and which version of Android the app is running on. The following table shows the different
+ * combinations where files may be placed:
+ *
+ * <style>
+ *   table.file-doc { margin: auto; font-size: 10pt; }
+ *   table.file-doc th,
+ *   table.file-doc td { border: 1px solid black; white-space: nowrap; padding: 4pt; }
+ *   table.file-doc th { background-color: lightblue; }
+ *   table.file-doc th[colspan] { background-color: lightgray; }
+ * </style>
+ * <table class="file-doc">
+ *   <tr>
+ *     <th style="text-align: center;">AccessMode</th>
+ *     <th style="text-align: center;">Companion</th>
+ *     <th style="text-align: center;">Compiled</th>
+ *   </tr>
+ *   <tr>
+ *     <th colspan="3" style="text-align: center;">Prior to Android 10</th>
+ *   </tr>
+ *   <tr>
+ *     <td>Default</td>
+ *     <td>/sdcard/<i>filename</i></td>
+ *     <td>/sdcard/<i>filename</i></td>
+ *   </tr>
+ *   <tr>
+ *     <td>Legacy [Note&nbsp;2]</td>
+ *     <td>/sdcard/<i>filename</i></td>
+ *     <td>/sdcard/<i>filename</i></td>
+ *   </tr>
+ *   <tr>
+ *     <td>Private [Note&nbsp;3]</td>
+ *     <td>/sdcard/Android/data/edu.mit.appinventor.aicompanion3/<i>filename</i></td>
+ *     <td>/sdcard/Android/data/<i>app package</i>/<i>filename</i></td>
+ *   </tr>
+ *   <tr>
+ *     <th colspan="3" style="text-align: center;">Android 10 and Later</th>
+ *   </tr>
+ *   <tr>
+ *     <td>Default</td>
+ *     <td>/sdcard/Android/data/edu.mit.appinventor.aicompanion3/<i>filename</i></td>
+ *     <td>/sdcard/Android/data/<i>app package</i>/<i>filename</i></td>
+ *   </tr>
+ *   <tr>
+ *     <td>Legacy</td>
+ *     <td>/sdcard/<i>filename</i></td>
+ *     <td>/sdcard/<i>filename</i></td>
+ *   </tr>
+ *   <tr>
+ *     <td>Private</td>
+ *     <td>/sdcard/Android/data/edu.mit.appinventor.aicompanion3/<i>filename</i></td>
+ *     <td>/sdcard/Android/data/<i>app package</i>/<i>filename</i></td>
+ *   </tr>
+ * </table>
+ *
+ * **Notes**
+ *
+ * Note 1: The exact location of the external storage depends on the particular device. We use
+ * `/sdcard` above as a placeholder for the device-specific location.
+ *
+ * Note 2: Legacy mode only takes effect on Android 10 and later. On earlier versions of Android,
+ * legacy mode is the same as Default mode. On Android 11 and later, Legacy mode may result in
+ * errors due to changes in how Android manages file access.
+ *
+ * Note 3: Private mode only takes effect on Android 2.2 Froyo and later. On earlier versions of
+ * Android private mode is the same as Default mode.
+ *
+ * Because newer versions of Android will require files to be stored in app-specific directories
+ * on external storage, you may want to set `AccessMode` to `Private` wherever it makes sense in
+ * your existing apps. Future versions of App Inventor may switch to using `Private` by default.
  */
 @DesignerComponent(version = YaVersion.FILE_COMPONENT_VERSION,
-    description = "Non-visible component for storing and retrieving files. Use this component to " +
-    "write or read files on your device. The default behaviour is to write files to the " +
-    "private data directory associated with your App. The Companion is special cased to write " +
-    "files to /sdcard/AppInventor/data to facilitate debugging. " +
-    "If the file path starts with a slash (/), then the file is created relative to /sdcard. " +
-    "For example writing a file to /myFile.txt will write the file in /sdcard/myFile.txt.",
+    description = "Non-visible component for storing and retrieving files. Use this component to "
+    + "write or read files on your device. The default behaviour is to write files to the "
+    + "private data directory associated with your App. The Companion is special cased to write "
+    + "files to /sdcard/AppInventor/data to facilitate debugging. "
+    + "If the file path starts with a slash (/), then the file is created relative to /sdcard. "
+    + "For example writing a file to /myFile.txt will write the file in /sdcard/myFile.txt.",
     category = ComponentCategory.STORAGE,
     nonVisible = true,
     iconName = "images/file.png")
 @SimpleObject
-@UsesPermissions(permissionNames = "android.permission.WRITE_EXTERNAL_STORAGE, android.permission.READ_EXTERNAL_STORAGE")
+@SuppressLint({"InlinedApi", "SdCardPath"})
 public class File extends AndroidNonvisibleComponent implements Component {
-  private static final int BUFFER_LENGTH = 4096;
   private static final String LOG_TAG = "FileComponent";
-  private boolean legacy = false;
+  private FileScope scope = FileScope.App;
 
   /**
    * Creates a new File component.
@@ -66,14 +155,26 @@ public class File extends AndroidNonvisibleComponent implements Component {
    */
   public File(ComponentContainer container) {
     super(container.$form());
-    LegacyMode(false);
   }
 
-  @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_BOOLEAN,
-      defaultValue = "False")
-  @SimpleProperty(category = PropertyCategory.BEHAVIOR)
+  /**
+   * Specifies the default scope for files accessed using the File component. The App scope should
+   * work for most apps. Legacy mode can be used for apps that predate the newer constraints in
+   * Android on app file access.
+   *
+   * @param scope the default file access scope
+   */
+  @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_FILESCOPE,
+      defaultValue = "App")
+  @SimpleProperty(userVisible = false)
+  public void DefaultScope(FileScope scope) {
+    this.scope = scope;
+  }
+
+  @SimpleProperty(category = PropertyCategory.BEHAVIOR, userVisible = false)
+  @Deprecated
   public void LegacyMode(boolean legacy) {
-    this.legacy = legacy;
+    this.scope = legacy ? FileScope.Legacy : FileScope.App;
   }
 
   /**
@@ -88,8 +189,346 @@ public class File extends AndroidNonvisibleComponent implements Component {
    */
   @SimpleProperty(description = "Allows app to access files from the root of the external storage "
       + "directory (legacy mode).")
+  @Deprecated
   public boolean LegacyMode() {
-    return legacy;
+    return scope == FileScope.Legacy;
+  }
+
+  /**
+   * A designer-only property that can be used to enable read access to file storage outside of the
+   * app-specific directories.
+   *
+   * @param required true if the permission is required
+   */
+  @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_BOOLEAN,
+      defaultValue = "False")
+  @SimpleProperty(userVisible = false)
+  @UsesPermissions(READ_EXTERNAL_STORAGE)
+  public void ReadPermission(boolean required) {
+    // not used programmatically
+  }
+
+  /**
+   * Indicates the current scope for operations such as ReadFrom and SaveFile.
+   *
+   * @param scope the target scope
+   */
+  @SimpleProperty
+  public void Scope(FileScope scope) {
+    this.scope = scope;
+  }
+
+  @SimpleProperty
+  public FileScope Scope() {
+    return scope;
+  }
+
+  /**
+   * A designer-only property that can be used to enable write access to file storage outside of the
+   * app-specific directories.
+   *
+   * @param required true if the permission is required
+   */
+  @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_BOOLEAN,
+      defaultValue = "False")
+  @SimpleProperty(userVisible = false)
+  @UsesPermissions(WRITE_EXTERNAL_STORAGE)
+  public void WritePermission(boolean required) {
+    // not used programmatically
+  }
+
+  /**
+   * Create a new directory for storing files. The semantics of this method are such that it will
+   * return true if the directory exists at its completion. This can mean that the directory already
+   * existed prior to the call.
+   *
+   * @param scope the scope in which to create the directory
+   * @param directoryName the name of the directory to create
+   * @param continuation the code to run after making the directory
+   */
+  @SimpleFunction
+  public void MakeDirectory(FileScope scope, String directoryName,
+      final Continuation<Boolean> continuation) {
+    if (scope == FileScope.Asset) {
+      form.dispatchErrorOccurredEvent(this, "MakeDirectory",
+          ErrorMessages.ERROR_CANNOT_MAKE_DIRECTORY, directoryName);
+      return;
+    }
+    run(new SingleFileOperation(form, this, "MakeDirectory", directoryName, scope,
+        FileAccessMode.WRITE, false) {
+      @Override
+      public void processFile(ScopedFile scopedFile) {
+        java.io.File file = scopedFile.resolve(form);
+        if (file.exists()) {
+          if (file.isDirectory()) {
+            onSuccess();
+          } else {
+            // cannot make a directory if there's a regular file there
+            reportError(ErrorMessages.ERROR_FILE_EXISTS_AT_PATH, file.getAbsolutePath());
+          }
+        } else {
+          if (file.mkdirs()) {
+            onSuccess();
+          } else {
+            // cannot make directory, probably because an ancestor is read-only
+            reportError(ErrorMessages.ERROR_CANNOT_MAKE_DIRECTORY, file.getAbsolutePath());
+          }
+        }
+      }
+
+      public void onSuccess() {
+        form.runOnUiThread(new Runnable() {
+          @Override
+          public void run() {
+            continuation.call(true);
+          }
+        });
+      }
+    });
+  }
+
+  /**
+   * Remove a directory from the file system. If recursive is true, then everything is removed. If
+   * recursive is false, only the directory is removed and only if it is empty.
+   *
+   * @param scope the scope in which to find the directory
+   * @param directoryName the name of the directory to remove
+   * @param recursive true if the directory should be removed recursively
+   * @param continuation the continuation to run after the operation completes
+   */
+  @SimpleFunction
+  public void RemoveDirectory(FileScope scope, String directoryName, final boolean recursive,
+      final Continuation<Boolean> continuation) {
+    if (scope == FileScope.Asset) {
+      form.dispatchErrorOccurredEvent(this, "RemoveDirectory",
+          ErrorMessages.ERROR_CANNOT_REMOVE_DIRECTORY, directoryName);
+      return;
+    }
+    // TODO(ewpatton): Restructure this when we have full continuation passing style.
+    final Synchronizer<Boolean> result = new Synchronizer<>();
+    run(new FileOperation.Builder(form, this, "RemoveDirectory")
+        .addFile(scope, directoryName, FileAccessMode.WRITE)
+        .addCommand(new FileOperation.FileInvocation() {
+          @Override
+          public void call(ScopedFile[] files) {
+            try {
+              ScopedFile file = files[0];
+              result.wakeup(FileUtil.removeDirectory(file.resolve(form), recursive));
+            } catch (Exception e) {
+              result.caught(e);
+            }
+          }
+        }).build()
+    );
+    finish(result, continuation);
+  }
+
+  /**
+   * Get a list of files and directories in the given directory.
+   *
+   * @param scope the scope to find the directory in
+   * @param directoryName the name of the directory to list
+   * @param continuation the continuation to run after the operation completes
+   */
+  @SimpleFunction
+  public void ListDirectory(FileScope scope, final String directoryName,
+      final Continuation<List<String>> continuation) {
+    if (scope == FileScope.Asset && !form.isRepl()) {
+      // Assets are a special case since they are part of the APK, not on disk as individual files
+      // ...except in the REPL, where they are stored in the app-specific directory.
+      AssetManager manager = form.getAssets();
+      try {
+        String[] files = manager.list(directoryName);
+        continuation.call(Arrays.asList(files));
+      } catch (IOException e) {
+        // test
+        form.dispatchErrorOccurredEvent(this, "ListDirectory",
+            ErrorMessages.ERROR_CANNOT_LIST_DIRECTORY, directoryName);
+      }
+      return;
+    }
+    final Synchronizer<List<String>> result = new Synchronizer<>();
+    run(new SingleFileOperation(form, this, "ListDirectory", directoryName, scope,
+        FileAccessMode.READ) {
+      @Override
+      protected void processFile(ScopedFile scopedFile) {
+        java.io.File file = scopedFile.resolve(form);
+        if (!file.isDirectory()) {
+          result.wakeup(Collections.<String>emptyList());
+          return;
+        }
+        String[] files = file.list();
+        if (files == null) {
+          result.wakeup(Collections.<String>emptyList());
+          return;
+        }
+        result.wakeup(Arrays.asList(files));
+      }
+    });
+    finish(result, continuation);
+  }
+
+  /**
+   * Tests whether the path named in the given scope is a directory.
+   *
+   * @param scope the scope to find the path within
+   * @param path the path to test to see if it is a directory
+   * @param continuation the continuation to run after the operation completes
+   */
+  @SimpleFunction
+  public void IsDirectory(FileScope scope, String path, final Continuation<Boolean> continuation) {
+    if (scope == FileScope.Asset && !form.isRepl()) {
+      AssetManager manager = form.getAssets();
+      try {
+        String[] files = manager.list(path);
+        Log.d(LOG_TAG, "contents of " + path + " = " + Arrays.toString(files));
+        continuation.call(files != null && files.length > 0);
+      } catch (IOException e) {
+        form.dispatchErrorOccurredEvent(this, "IsDirectory",
+            ErrorMessages.ERROR_DIRECTORY_DOES_NOT_EXIST, path);
+      }
+      return;
+    }
+    // TODO(ewpatton): Restructure this when we have full continuation passing style.
+    final Synchronizer<Boolean> result = new Synchronizer<>();
+    run(new FileOperation.Builder(form, this, "IsDirectory")
+        .addFile(scope, path, FileAccessMode.READ)
+        .addCommand(new FileOperation.FileInvocation() {
+          @Override
+          public void call(ScopedFile[] files) {
+            Log.d(LOG_TAG, "IsDirectory " + files[0]);
+            result.wakeup(files[0].resolve(form).isDirectory());
+          }
+        }).build()
+    );
+    finish(result, continuation);
+  }
+
+  /**
+   * Copy the contents from the first file to the second file.
+   *
+   * @param fromScope the scope of the original file
+   * @param fromFileName the name of the source file
+   * @param toScope the scope for the target file
+   * @param toFileName the name of the target file
+   * @param continuation the continuation to run after the operation completes
+   */
+  @SimpleFunction
+  public void CopyFile(FileScope fromScope, String fromFileName, final FileScope toScope,
+      final String toFileName, final Continuation<Boolean> continuation) {
+    // TODO(ewpatton): Restructure this when we have full continuation passing style.
+    final Synchronizer<Boolean> result = new Synchronizer<>();
+    run(new FileOperation.Builder(form, this, "CopyFile")
+        .addFile(fromScope, fromFileName, FileAccessMode.READ)
+        .addFile(toScope, toFileName, FileAccessMode.WRITE)
+        .addCommand(new FileOperation.FileInvocation() {
+          @Override
+          public void call(ScopedFile[] files) {
+            InputStream in = null;
+            OutputStream out = null;
+            java.io.File parent = files[1].resolve(form).getParentFile();
+            if (!parent.exists() && !parent.mkdirs()) {
+              form.dispatchErrorOccurredEvent(File.this, "CopyFile",
+                  ErrorMessages.ERROR_CANNOT_MAKE_DIRECTORY, parent.getAbsolutePath());
+              result.caught(new IOException());
+              return;
+            }
+            try {
+              in = FileUtil.openForReading(form, files[0]);
+              out = FileUtil.openForWriting(form, files[1]);
+              FileUtil.copy(in, out);
+            } catch (IOException e) {
+              form.dispatchErrorOccurredEvent(File.this, "CopyFile",
+                  ErrorMessages.ERROR_CANNOT_COPY_MEDIA, files[0].getFileName());
+              result.caught(new IOException());
+              return;
+            } finally {
+              IOUtils.closeQuietly(LOG_TAG, in);
+              IOUtils.closeQuietly(LOG_TAG, out);
+            }
+            result.wakeup(true);
+          }
+        }).build()
+    );
+    finish(result, continuation);
+  }
+
+  /**
+   * Move a file from one location to another.
+   *
+   * @internaldoc The move will use the Java NIO interface to perform a file-system level move on
+   *     Android O and higher. On earlier versions, the file will be copied and then the old file
+   *     removed.
+   *
+   * @param fromScope The scope containing the file to be moved
+   * @param fromFileName The name of the file to be moved
+   * @param toScope The new scope to move the file into
+   * @param toFileName The new name for the file
+   * @param continuation A continuation to execute when the operation completes
+   */
+  @SimpleFunction
+  public void MoveFile(final FileScope fromScope, final String fromFileName,
+      final FileScope toScope, final String toFileName, final Continuation<Boolean> continuation) {
+    // TODO(ewpatton): Restructure this when we have full continuation passing style.
+    final Synchronizer<Boolean> result = new Synchronizer<>();
+    run(new FileOperation.Builder(form, this, "MoveFile")
+        .addFile(fromScope, fromFileName, FileAccessMode.READ)
+        .addFile(toScope, toFileName, FileAccessMode.WRITE)
+        .addCommand(new FileOperation.FileInvocation() {
+          @Override
+          public void call(ScopedFile[] files) throws IOException {
+            result.wakeup(FileUtil.moveFile(files[0].resolve(form), files[1].resolve(form)));
+          }
+        }).build()
+    );
+    finish(result, continuation);
+  }
+
+  // TODO(ewpatton): Only for testing the component processor. Remove before merging
+  @SuppressWarnings("CheckStyle")
+  @SimpleFunction(userVisible = false)
+  public void TestMethod(final Continuation<Void> continuation) {
+    form.runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        continuation.call(null);
+      }
+    });
+  }
+
+  /**
+   * Tests whether the path exists in the given scope.
+   *
+   * @param scope the scope in which to look for the path
+   * @param path the path (such as a file or directory) to look for
+   * @param continuation the continuation to pass the result
+   */
+  @SimpleFunction
+  public void Exists(FileScope scope, String path, final Continuation<Boolean> continuation) {
+    // TODO(ewpatton): Restructure this when we have full continuation passing style.
+    final Synchronizer<Boolean> result = new Synchronizer<>();
+    run(new FileOperation.Builder(form, this, "Exists")
+        .addFile(scope, path, FileAccessMode.READ)
+        .addCommand(new FileOperation.FileInvocation() {
+          @Override
+          public void call(ScopedFile[] files) {
+            Log.d(LOG_TAG, "Exists " + files[0]);
+            result.wakeup(files[0].resolve(form).exists());
+          }
+        }).build());
+    finish(result, continuation);
+  }
+
+  /**
+   * Converts the scope and path into a single string for other components.
+   *
+   * @param scope the scope in which to look for the file
+   * @param path the path (such as a file or directory) to look for
+   * @return a path that uniquely identifies a file in the file system
+   */
+  @SimpleFunction
+  public String MakeFullPath(FileScope scope, String path) {
+    return FileUtil.resolveFileName(form, path, scope);
   }
 
   /**
@@ -110,19 +549,16 @@ public class File extends AndroidNonvisibleComponent implements Component {
    * @param text the text to be stored
    * @param fileName the file to which the text will be stored
    */
-  @SimpleFunction(description = "Saves text to a file. If the filename " +
-      "begins with a slash (/) the file is written to the sdcard. For example writing to " +
-      "/myFile.txt will write the file to /sdcard/myFile.txt. If the filename does not start " +
-      "with a slash, it will be written in the programs private data directory where it will " +
-      "not be accessible to other programs on the phone. There is a special exception for the " +
-      "AI Companion where these files are written to /sdcard/AppInventor/data to facilitate " +
-      "debugging. Note that this block will overwrite a file if it already exists." +
-      "\n\nIf you want to add content to a file use the append block.")
+  @SimpleFunction(description = "Saves text to a file. If the filename "
+      + "begins with a slash (/) the file is written to the sdcard. For example writing to "
+      + "/myFile.txt will write the file to /sdcard/myFile.txt. If the filename does not start "
+      + "with a slash, it will be written in the programs private data directory where it will "
+      + "not be accessible to other programs on the phone. There is a special exception for the "
+      + "AI Companion where these files are written to /sdcard/AppInventor/data to facilitate "
+      + "debugging. Note that this block will overwrite a file if it already exists."
+      + "\n\nIf you want to add content to a file use the append block.")
   public void SaveFile(String text, String fileName) {
-    if (fileName.startsWith("/")) {
-      FileUtil.checkExternalStorageWriteable(); // Only check if writing to sdcard
-    }
-    Write(fileName, text, false);
+    write(fileName, "SaveFile", text, false);
   }
 
   /**
@@ -137,13 +573,10 @@ public class File extends AndroidNonvisibleComponent implements Component {
    * @param text the text to be stored
    * @param fileName the file to which the text will be stored
    */
-  @SimpleFunction(description = "Appends text to the end of a file storage, creating the file if it does not exist. " +
-      "See the help text under SaveFile for information about where files are written.")
+  @SimpleFunction(description = "Appends text to the end of a file storage, creating the file if it does not exist. "
+      + "See the help text under SaveFile for information about where files are written.")
   public void AppendToFile(String text, String fileName) {
-    if (fileName.startsWith("/")) {
-      FileUtil.checkExternalStorageWriteable(); // Only check if writing to sdcard
-    }
-    Write(fileName, text, true);
+    write(fileName, "AppendToFile", text, true);
   }
 
   /**
@@ -156,52 +589,40 @@ public class File extends AndroidNonvisibleComponent implements Component {
    *
    * @param fileName the file from which the text is read
    */
-  @SimpleFunction(description = "Reads text from a file in storage. " +
-      "Prefix the filename with / to read from a specific file on the SD card. " +
-      "for instance /myFile.txt will read the file /sdcard/myFile.txt. To read " +
-      "assets packaged with an application (also works for the Companion) start " +
-      "the filename with // (two slashes). If a filename does not start with a " +
-      "slash, it will be read from the applications private storage (for packaged " +
-      "apps) and from /sdcard/AppInventor/data for the Companion.")
+  @SimpleFunction(description = "Reads text from a file in storage. "
+      + "Prefix the filename with / to read from a specific file on the SD card. "
+      + "for instance /myFile.txt will read the file /sdcard/myFile.txt. To read "
+      + "assets packaged with an application (also works for the Companion) start "
+      + "the filename with // (two slashes). If a filename does not start with a "
+      + "slash, it will be read from the applications private storage (for packaged "
+      + "apps) and from /sdcard/AppInventor/data for the Companion.")
   public void ReadFrom(final String fileName) {
-    final boolean legacy = this.legacy;
-    form.askPermission(Manifest.permission.READ_EXTERNAL_STORAGE, new PermissionResultHandler() {
+    new FileStreamReadOperation(form, this, "ReadFrom", fileName, scope, true) {
       @Override
-      public void HandlePermissionResponse(String permission, boolean granted) {
-        if (granted) {
-          try {
-            InputStream inputStream;
-            if (fileName.startsWith("//")) {
-              inputStream = form.openAsset(fileName.substring(2));
-            } else {
-              String filepath = AbsoluteFileName(fileName, legacy);
-              Log.d(LOG_TAG, "filepath = " + filepath);
-              inputStream = FileUtil.openFile(form, filepath);
-            }
-
-            final InputStream asyncInputStream = inputStream;
-            AsynchUtil.runAsynchronously(new Runnable() {
-              @Override
-              public void run() {
-                AsyncRead(asyncInputStream, fileName);
-              }
-            });
-          } catch (PermissionException e) {
-            form.dispatchPermissionDeniedEvent(File.this, "ReadFrom", e);
-          } catch (FileNotFoundException e) {
-            Log.e(LOG_TAG, "FileNotFoundException", e);
-            form.dispatchErrorOccurredEvent(File.this, "ReadFrom",
-                ErrorMessages.ERROR_CANNOT_FIND_FILE, fileName);
-          } catch (IOException e) {
-            Log.e(LOG_TAG, "IOException", e);
-            form.dispatchErrorOccurredEvent(File.this, "ReadFrom",
-                ErrorMessages.ERROR_CANNOT_FIND_FILE, fileName);
+      public boolean process(String contents) {
+        final String text = IOUtils.normalizeNewLines(contents);
+        form.runOnUiThread(new Runnable() {
+          @Override
+          public void run() {
+            GotText(text);
           }
+        });
+        return true;
+      }
+
+      @Override
+      public void onError(IOException e) {
+        if (e instanceof FileNotFoundException) {
+          Log.e(LOG_TAG, "FileNotFoundException", e);
+          form.dispatchErrorOccurredEvent(File.this, "ReadFrom",
+              ErrorMessages.ERROR_CANNOT_FIND_FILE, fileName);
         } else {
-          form.dispatchPermissionDeniedEvent(File.this, "ReadFrom", permission);
+          Log.e(LOG_TAG, "IOException", e);
+          form.dispatchErrorOccurredEvent(File.this, "ReadFrom",
+              ErrorMessages.ERROR_CANNOT_READ_FILE, fileName);
         }
       }
-    });
+    }.run();
   }
 
 
@@ -214,33 +635,26 @@ public class File extends AndroidNonvisibleComponent implements Component {
    *
    * @param fileName the file to be deleted
    */
-  @SimpleFunction(description = "Deletes a file from storage. " +
-      "Prefix the filename with / to delete a specific file in the SD card, for instance /myFile.txt. " +
-      "will delete the file /sdcard/myFile.txt. If the file does not begin with a /, then the file " +
-      "located in the programs private storage will be deleted. Starting the file with // is an error " +
-      "because assets files cannot be deleted.")
+  @SimpleFunction(description = "Deletes a file from storage. Prefix the filename with / to "
+      + "delete a specific file in the SD card, for instance /myFile.txt. will delete the file "
+      + "/sdcard/myFile.txt. If the file does not begin with a /, then the file located in the "
+      + "programs private storage will be deleted. Starting the file with // is an error "
+      + "because assets files cannot be deleted.")
   public void Delete(final String fileName) {
-    final boolean legacy = this.legacy;
-    form.askPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, new PermissionResultHandler() {
+    if (fileName.startsWith("//")) {
+      form.dispatchErrorOccurredEvent(this, "Delete",
+          ErrorMessages.ERROR_CANNOT_DELETE_ASSET, fileName);
+      return;
+    }
+    run(new FileWriteOperation(form, this, "Delete", fileName, scope, false, true) {
       @Override
-      public void HandlePermissionResponse(String permission, boolean granted) {
-        if (granted) {
-          if (fileName.startsWith("//")) {
-            form.dispatchErrorOccurredEvent(File.this, "DeleteFile",
-                ErrorMessages.ERROR_CANNOT_DELETE_ASSET, fileName);
-            return;
-          }
-          String filepath = AbsoluteFileName(fileName, legacy);
-          if (MediaUtil.isExternalFile(form, fileName)) {
-            if (form.isDeniedPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-              form.dispatchPermissionDeniedEvent(File.this, "Delete",
-                  new PermissionException(Manifest.permission.WRITE_EXTERNAL_STORAGE));
-            }
-          }
-          java.io.File file = new java.io.File(filepath);
-          file.delete();
-        } else {
-          form.dispatchPermissionDeniedEvent(File.this, "Delete", permission);
+      public void processFile(ScopedFile scopedFile) {
+        java.io.File file = scopedFile.resolve(form);
+        // Invariant: After deleting, the file should not exist. If the file already
+        // doesn't exist, mission accomplished!
+        if (file.exists() && !file.delete()) {
+          form.dispatchErrorOccurredEvent(File.this, "Delete",
+              ErrorMessages.ERROR_CANNOT_DELETE_FILE, fileName);
         }
       }
     });
@@ -251,147 +665,59 @@ public class File extends AndroidNonvisibleComponent implements Component {
    * @param filename the file to write
    * @param text to write to the file
    * @param append determines whether text should be appended to the file,
-   * or overwrite the file
+   *     or overwrite the file
    */
-  private void Write(final String filename, final String text, final boolean append) {
+  private void write(final String filename, final String method, final String text,
+      final boolean append) {
     if (filename.startsWith("//")) {
-      if (append) {
-        form.dispatchErrorOccurredEvent(File.this, "AppendTo",
-            ErrorMessages.ERROR_CANNOT_WRITE_ASSET, filename);
-      } else {
-        form.dispatchErrorOccurredEvent(File.this, "SaveFile",
-            ErrorMessages.ERROR_CANNOT_WRITE_ASSET, filename);
-      }
+      form.dispatchErrorOccurredEvent(this, method, ErrorMessages.ERROR_CANNOT_WRITE_ASSET,
+          filename);
       return;
     }
-    final boolean legacy = this.legacy;
-    final Runnable operation = new Runnable() {
+    if (filename.startsWith("/")) {
+      FileUtil.checkExternalStorageWriteable(); // Only check if writing to sdcard
+    }
+    run(new FileStreamWriteOperation(form, this, method, filename, scope, append, true) {
       @Override
-      public void run() {
-        final String filepath = AbsoluteFileName(filename, legacy);
-        if (MediaUtil.isExternalFile(form, filepath)) {
-          form.assertPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        }
-        final java.io.File file = new java.io.File(filepath);
-
-        if(!file.exists()){
+      public void processFile(ScopedFile scopedFile) {
+        java.io.File file = scopedFile.resolve(form);
+        if (!file.exists()) {
+          boolean success = false;
           try {
-            file.createNewFile();
+            IOUtils.mkdirs(file);
+            success = file.createNewFile();
           } catch (IOException e) {
-            if (append) {
-              form.dispatchErrorOccurredEvent(File.this, "AppendTo",
-                  ErrorMessages.ERROR_CANNOT_CREATE_FILE, filepath);
-            } else {
-              form.dispatchErrorOccurredEvent(File.this, "SaveFile",
-                  ErrorMessages.ERROR_CANNOT_CREATE_FILE, filepath);
-            }
+            Log.e(LOG_TAG, "Unable to create file " + file.getAbsolutePath());
+          }
+          if (!success) {
+            form.dispatchErrorOccurredEvent(File.this, method,
+                ErrorMessages.ERROR_CANNOT_CREATE_FILE, file.getAbsolutePath());
             return;
           }
         }
-        try {
-          FileOutputStream fileWriter = new FileOutputStream(file, append);
-          OutputStreamWriter out = new OutputStreamWriter(fileWriter);
-          out.write(text);
-          out.flush();
-          out.close();
-          fileWriter.close();
-
-          form.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-              AfterFileSaved(filename);
-            }
-          });
-        } catch (IOException e) {
-          if (append) {
-            form.dispatchErrorOccurredEvent(File.this, "AppendTo",
-                ErrorMessages.ERROR_CANNOT_WRITE_TO_FILE, filepath);
-          } else {
-            form.dispatchErrorOccurredEvent(File.this, "SaveFile",
-                ErrorMessages.ERROR_CANNOT_WRITE_TO_FILE, filepath);
-          }
-        }
+        super.processFile(scopedFile);
       }
-    };
-    form.askPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, new PermissionResultHandler() {
+
       @Override
-      public void HandlePermissionResponse(String permission, boolean granted) {
-        if (granted) {
-          AsynchUtil.runAsynchronously(operation);
-        } else {
-          form.dispatchPermissionDeniedEvent(File.this, append ? "AppendTo" : "SaveFile",
-              permission);
-        }
+      public boolean process(OutputStreamWriter out) throws IOException {
+        out.write(text);
+        out.flush();
+        form.runOnUiThread(new Runnable() {
+          @Override
+          public void run() {
+            AfterFileSaved(filename);
+          }
+        });
+        return true;
+      }
+
+      @Override
+      public void onError(IOException e) {
+        super.onError(e);
+        form.dispatchErrorOccurredEvent(File.this, method, ErrorMessages.ERROR_CANNOT_WRITE_TO_FILE,
+            getFile().getAbsolutePath());
       }
     });
-  }
-
-  /**
-   * Replace Windows-style CRLF with Unix LF as String. This allows
-   * end-user to treat Windows text files same as Unix or Mac. In
-   * future, allowing user to choose to normalize new lines might also
-   * be nice - in case someone really wants to detect Windows-style
-   * line separators, or save a file which was read (and expect no
-   * changes in size or checksum).
-   * @param s to convert
-   */
-
-  private String normalizeNewLines(String s) {
-    return s.replaceAll("\r\n", "\n");
-  }
-
-
-  /**
-   * Asynchronously reads from the given file. Calls the main event thread
-   * when the function has completed reading from the file.
-   * @param fileInput the stream to read from
-   * @param fileName the file to read
-   * @throws FileNotFoundException
-   * @throws IOException when the system cannot read the file
-   */
-  private void AsyncRead(InputStream fileInput, final String fileName) {
-    InputStreamReader input = null;
-    try {
-      input = new InputStreamReader(fileInput);
-      StringWriter output = new StringWriter();
-      char [] buffer = new char[BUFFER_LENGTH];
-      int offset = 0;
-      int length = 0;
-      while ((length = input.read(buffer, offset, BUFFER_LENGTH)) > 0) {
-        output.write(buffer, 0, length);
-      }
-
-      // Now that we have the file as a String,
-      // normalize any line separators to avoid compatibility between Windows and Mac
-      // text files. Users can expect \n to mean a line separator regardless of how
-      // file was created. Currently only doing this for files opened locally - not files we pull
-      // from other places like URLs.
-
-      final String text = normalizeNewLines(output.toString());
-
-      form.runOnUiThread(new Runnable() {
-        @Override
-        public void run() {
-          GotText(text);
-        }
-      });
-    } catch (FileNotFoundException e) {
-      Log.e(LOG_TAG, "FileNotFoundException", e);
-      form.dispatchErrorOccurredEvent(File.this, "ReadFrom",
-          ErrorMessages.ERROR_CANNOT_FIND_FILE, fileName);
-    } catch (IOException e) {
-      Log.e(LOG_TAG, "IOException", e);
-      form.dispatchErrorOccurredEvent(File.this, "ReadFrom",
-          ErrorMessages.ERROR_CANNOT_READ_FILE, fileName);
-    } finally {
-      if (input != null) {
-        try {
-          input.close();
-        } catch (IOException e) {
-          // do nothing...
-        }
-      }
-    }
   }
 
   /**
@@ -416,26 +742,23 @@ public class File extends AndroidNonvisibleComponent implements Component {
     EventDispatcher.dispatchEvent(this, "AfterFileSaved", fileName);
   }
 
-  /**
-   * Returns absolute file path.
-   *
-   * @param filename the file used to construct the file path
-   */
-  private String AbsoluteFileName(String filename, boolean legacy) {
-    if (filename.startsWith("/")) {
-      return QUtil.getExternalStoragePath(form, false, legacy) + filename;
-    } else {
-      java.io.File dirPath;
-      if (form.isRepl()) {
-        dirPath = new java.io.File(QUtil.getReplDataPath(form, false));
-      } else {
-        dirPath = form.getFilesDir();
-      }
-      if (!dirPath.exists()) {
-        dirPath.mkdirs();           // Make sure it exists
-      }
-      return dirPath.getPath() + "/" + filename;
-    }
+  private void run(FileOperation... operations) {
+    FileUtil.runFileOperations(operations);
   }
 
+  private <T> void finish(Synchronizer<T> result, Continuation<T> continuation) {
+    result.waitfor();
+
+    // Handle result
+    if (result.getThrowable() == null) {
+      continuation.call(result.getResult());
+    } else {
+      Throwable e = result.getThrowable();
+      if (e instanceof RuntimeException) {
+        throw (RuntimeException) e;
+      } else {
+        throw new YailRuntimeError(e.getMessage(), e.getClass().getSimpleName());
+      }
+    }
+  }
 }

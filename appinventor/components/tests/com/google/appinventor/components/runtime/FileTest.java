@@ -6,19 +6,25 @@
 package com.google.appinventor.components.runtime;
 
 import android.Manifest;
+
+import com.google.appinventor.components.common.FileScope;
 import com.google.appinventor.components.runtime.shadows.ShadowActivityCompat;
 import com.google.appinventor.components.runtime.shadows.ShadowAsynchUtil;
 import com.google.appinventor.components.runtime.shadows.ShadowEventDispatcher;
+
 import com.google.appinventor.components.runtime.util.IOUtils;
 import com.google.appinventor.components.runtime.util.QUtil;
-import org.junit.Before;
-import org.junit.Test;
-import org.robolectric.Shadows;
-import org.robolectric.annotation.Config;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
+
+import java.nio.charset.StandardCharsets;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import org.robolectric.Shadows;
+import org.robolectric.annotation.Config;
 
 /**
  * Tests for the File component.
@@ -37,6 +43,7 @@ public class FileTest extends RobolectricTestBase {
   public void setUp() {
     super.setUp();
     file = new File(getForm());
+    file.DefaultScope(FileScope.Legacy);
   }
 
   /**
@@ -85,6 +92,7 @@ public class FileTest extends RobolectricTestBase {
    */
   @Test
   public void testFilePermissionDenied() {
+    getForm().DefaultFileScope(FileScope.Legacy);
     denyFilePermissions();
     file.ReadFrom("/" + TARGET_FILE);
     ShadowActivityCompat.denyLastRequestedPermissions();
@@ -140,7 +148,7 @@ public class FileTest extends RobolectricTestBase {
         }
       }
       out = new FileOutputStream(target);
-      out.write(content.getBytes(Charset.forName("UTF-8")));
+      out.write(content.getBytes(StandardCharsets.UTF_8));
       return targetFile.getAbsolutePath();
     } catch (IOException e) {
       throw new IllegalStateException("Unable to prepare test", e);

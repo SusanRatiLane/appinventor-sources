@@ -7,6 +7,7 @@
 package com.google.appinventor.components.runtime.util;
 
 import android.os.Handler;
+import android.os.Looper;
 
 /**
  * Utilities for handling asynchronous calls.
@@ -48,5 +49,9 @@ public class AsynchUtil {
     };
     Thread thread = new Thread(runnable);
     thread.start();
+  }
+
+  public static boolean isUiThread() {
+    return Looper.getMainLooper().equals(Looper.myLooper());
   }
 }

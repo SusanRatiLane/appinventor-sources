@@ -107,10 +107,83 @@ The `CloudDB` component is a Non-visible component that allows you to store data
 ## File  {#File}
 
 Non-visible component for storing and retrieving files. Use this component to write or read files
- on the device. The default behavior is to write files to the private data directory associated
- with the app. The Companion writes files to `/sdcard/AppInventor/data` for easy debugging. If
- the file path starts with a slash (`/`), then the file is created relative to `/sdcard`.
- For example, writing a file to `/myFile.txt` will write the file in `/sdcard/myFile.txt`.
+ on the device. File names can take one of three forms:
+
+ - Private files have no leading `/` and are written to app private storage (e.g., "file.txt")
+ - External files have a single leading `/` and are written to public storage (e.g., "/file.txt")
+ - Bundled app assets have two leading `//` and can only be read (e.g., "//file.txt")
+
+ The exact location where external files are placed is a function of the value of the
+ [`AccessMode`](#AccessMode) property, whether the app is running in the Companion or compiled,
+ and which version of Android the app is running on. The following table shows the different
+ combinations where files may be placed:
+
+ <style>
+   table.file-doc { margin: auto; font-size: 10pt; }
+   table.file-doc th,
+   table.file-doc td { border: 1px solid black; white-space: nowrap; padding: 4pt; }
+   table.file-doc th { background-color: lightblue; }
+   table.file-doc th[colspan] { background-color: lightgray; }
+ </style>
+ <table class="file-doc">
+   <tr>
+     <th style="text-align: center;">AccessMode</th>
+     <th style="text-align: center;">Companion</th>
+     <th style="text-align: center;">Compiled</th>
+   </tr>
+   <tr>
+     <th colspan="3" style="text-align: center;">Prior to Android 10</th>
+   </tr>
+   <tr>
+     <td>Default</td>
+     <td>/sdcard/<i>filename</i></td>
+     <td>/sdcard/<i>filename</i></td>
+   </tr>
+   <tr>
+     <td>Legacy [Note&nbsp;2]</td>
+     <td>/sdcard/<i>filename</i></td>
+     <td>/sdcard/<i>filename</i></td>
+   </tr>
+   <tr>
+     <td>Private [Note&nbsp;3]</td>
+     <td>/sdcard/Android/data/edu.mit.appinventor.aicompanion3/<i>filename</i></td>
+     <td>/sdcard/Android/data/<i>app package</i>/<i>filename</i></td>
+   </tr>
+   <tr>
+     <th colspan="3" style="text-align: center;">Android 10 and Later</th>
+   </tr>
+   <tr>
+     <td>Default</td>
+     <td>/sdcard/Android/data/edu.mit.appinventor.aicompanion3/<i>filename</i></td>
+     <td>/sdcard/Android/data/<i>app package</i>/<i>filename</i></td>
+   </tr>
+   <tr>
+     <td>Legacy</td>
+     <td>/sdcard/<i>filename</i></td>
+     <td>/sdcard/<i>filename</i></td>
+   </tr>
+   <tr>
+     <td>Private</td>
+     <td>/sdcard/Android/data/edu.mit.appinventor.aicompanion3/<i>filename</i></td>
+     <td>/sdcard/Android/data/<i>app package</i>/<i>filename</i></td>
+   </tr>
+ </table>
+
+ **Notes**
+
+ Note 1: The exact location of the external storage depends on the particular device. We use
+ `/sdcard` above as a placeholder for the device-specific location.
+
+ Note 2: Legacy mode only takes effect on Android 10 and later. On earlier versions of Android,
+ legacy mode is the same as Default mode. On Android 11 and later, Legacy mode may result in
+ errors due to changes in how Android manages file access.
+
+ Note 3: Private mode only takes effect on Android 2.2 Froyo and later. On earlier versions of
+ Android private mode is the same as Default mode.
+
+ Because newer versions of Android will require files to be stored in app-specific directories
+ on external storage, you may want to set `AccessMode` to `Private` wherever it makes sense in
+ your existing apps. Future versions of App Inventor may switch to using `Private` by default.
 
 
 
@@ -118,15 +191,21 @@ Non-visible component for storing and retrieving files. Use this component to wr
 
 {:.properties}
 
-{:id="File.LegacyMode" .boolean} *LegacyMode*
-: Allows app to access files from the root of the external storage directory (legacy mode).
- Starting with Android 11, this will no longer be allowed and the behavior is strongly
- discouraged on Android 10. Starting with Android 10, App Inventor by default will attempt to
- store files relative to the app-specific private directory on external storage in accordance
- with this security change.
+{:id="File.DefaultScope" .com.google.appinventor.components.common.FileScopeEnum .wo .do} *DefaultScope*
+: Specifies the default scope for files accessed using the File component. The App scope should
+ work for most apps. Legacy mode can be used for apps that predate the newer constraints in
+ Android on app file access.
 
-   **Note:** Apps that enable this property will likely stop working after upgrading to
- Android 11, which strongly enforces that apps only write to app-private directories.
+{:id="File.ReadPermission" .boolean .wo .do} *ReadPermission*
+: A designer-only property that can be used to enable read access to file storage outside of the
+ app-specific directories.
+
+{:id="File.Scope" .com.google.appinventor.components.common.FileScopeEnum .bo} *Scope*
+: Indicates the current scope for operations such as ReadFrom and SaveFile.
+
+{:id="File.WritePermission" .boolean .wo .do} *WritePermission*
+: A designer-only property that can be used to enable write access to file storage outside of the
+ app-specific directories.
 
 ### Events  {#File-Events}
 
@@ -147,12 +226,35 @@ Non-visible component for storing and retrieving files. Use this component to wr
  text under [`SaveFile`](#File.SaveFile) for information about where files are written.
  On success, the [`AfterFileSaved`](#File.AfterFileSaved) event will run.
 
+{:id="File.CopyFile" class="method returns boolean"} <i/> CopyFile(*fromScope*{:.com.google.appinventor.components.common.FileScopeEnum},*fromFileName*{:.text},*toScope*{:.com.google.appinventor.components.common.FileScopeEnum},*toFileName*{:.text})
+: Copy the contents from the first file to the second file.
+
 {:id="File.Delete" class="method"} <i/> Delete(*fileName*{:.text})
 : Deletes a file from storage. Prefix the `fileName`{:.text.block} with `/` to delete a specific
  file in the SD card (for example, `/myFile.txt` will delete the file `/sdcard/myFile.txt`).
  If the `fileName`{:.text.block} does not begin with a `/`, then the file located in the
  program's private storage will be deleted. Starting the `fileName`{:.text.block} with `//` is
  an error because asset files cannot be deleted.
+
+{:id="File.Exists" class="method returns boolean"} <i/> Exists(*scope*{:.com.google.appinventor.components.common.FileScopeEnum},*path*{:.text})
+: Tests whether the path exists in the given scope.
+
+{:id="File.IsDirectory" class="method returns boolean"} <i/> IsDirectory(*scope*{:.com.google.appinventor.components.common.FileScopeEnum},*path*{:.text})
+: Tests whether the path named in the given scope is a directory.
+
+{:id="File.ListDirectory" class="method returns list"} <i/> ListDirectory(*scope*{:.com.google.appinventor.components.common.FileScopeEnum},*directoryName*{:.text})
+: Get a list of files and directories in the given directory.
+
+{:id="File.MakeDirectory" class="method returns boolean"} <i/> MakeDirectory(*scope*{:.com.google.appinventor.components.common.FileScopeEnum},*directoryName*{:.text})
+: Create a new directory for storing files. The semantics of this method are such that it will
+ return true if the directory exists at its completion. This can mean that the directory already
+ existed prior to the call.
+
+{:id="File.MakeFullPath" class="method returns text"} <i/> MakeFullPath(*scope*{:.com.google.appinventor.components.common.FileScopeEnum},*path*{:.text})
+: Converts the scope and path into a single string for other components.
+
+{:id="File.MoveFile" class="method returns boolean"} <i/> MoveFile(*fromScope*{:.com.google.appinventor.components.common.FileScopeEnum},*fromFileName*{:.text},*toScope*{:.com.google.appinventor.components.common.FileScopeEnum},*toFileName*{:.text})
+: Move a file from one location to another.
 
 {:id="File.ReadFrom" class="method"} <i/> ReadFrom(*fileName*{:.text})
 : Reads text from a file in storage. Prefix the `fileName`{:.text.block} with `/` to read from a
@@ -161,6 +263,10 @@ Non-visible component for storing and retrieving files. Use this component to wr
  Companion) start the `fileName`{:.text.block} with `//` (two slashes). If a
  `fileName`{:.text.block} does not start with a slash, it will be read from the application's
  private storage (for packaged apps) and from `/sdcard/AppInventor/data` for the Companion.
+
+{:id="File.RemoveDirectory" class="method returns boolean"} <i/> RemoveDirectory(*scope*{:.com.google.appinventor.components.common.FileScopeEnum},*directoryName*{:.text},*recursive*{:.boolean})
+: Remove a directory from the file system. If recursive is true, then everything is removed. If
+ recursive is false, only the directory is removed and only if it is empty.
 
 {:id="File.SaveFile" class="method"} <i/> SaveFile(*text*{:.text},*fileName*{:.text})
 : Saves text to a file. If the `fileName`{:.text.block} begins with a slash (`/`) the file is
