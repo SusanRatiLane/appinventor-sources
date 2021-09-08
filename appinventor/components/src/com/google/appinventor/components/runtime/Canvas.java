@@ -71,6 +71,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -186,7 +187,7 @@ public final class Canvas extends AndroidViewComponent implements ComponentConta
 
   private final Set<ExtensionGestureDetector> extensionGestureDetectors = Sets.newHashSet();
 
-  private Form form = $form();
+  private final Form form = $form();
 
   // Do we have storage permission?
   private boolean havePermission = false;
@@ -195,6 +196,7 @@ public final class Canvas extends AndroidViewComponent implements ComponentConta
   public interface ExtensionGestureDetector {
     boolean onTouchEvent(MotionEvent event);
   };
+
 
   /**
    * Parser for Android {@link android.view.MotionEvent} sequences, which calls
@@ -620,7 +622,7 @@ public final class Canvas extends AndroidViewComponent implements ComponentConta
       if (!TextUtils.isEmpty(backgroundImagePath)) {
         byte[] decodedString = Base64.decode(backgroundImagePath, Base64.DEFAULT);
         android.graphics.Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-        backgroundDrawable = new BitmapDrawable(decodedByte);
+        backgroundDrawable = new BitmapDrawable(context.getResources(), decodedByte);
       }
 
       setBackground();
@@ -628,8 +630,8 @@ public final class Canvas extends AndroidViewComponent implements ComponentConta
     }
 
     private void setBackground() {
-      Drawable setDraw = backgroundDrawable;
-      if (backgroundImagePath != "" && backgroundDrawable != null) {
+      Drawable setDraw;
+      if (!Objects.equals(backgroundImagePath, "") && backgroundDrawable != null) {
         setDraw = backgroundDrawable.getConstantState().newDrawable();
         setDraw.setColorFilter((backgroundColor != Component.COLOR_DEFAULT) ? backgroundColor : Component.COLOR_WHITE,
             PorterDuff.Mode.DST_OVER);
@@ -704,7 +706,7 @@ public final class Canvas extends AndroidViewComponent implements ComponentConta
       } catch (IllegalArgumentException e) {
         // This should never occur, since we have checked bounds.
         Log.e(LOG_TAG,
-            String.format("Returning COLOR_NONE (exception) from getBackgroundPixelColor."));
+                "Returning COLOR_NONE (exception) from getBackgroundPixelColor.");
         return Component.COLOR_NONE;
       }
     }
@@ -744,7 +746,7 @@ public final class Canvas extends AndroidViewComponent implements ComponentConta
       } catch (IllegalArgumentException e) {
         // This should never occur, since we have checked bounds.
         Log.e(LOG_TAG,
-            String.format("Returning COLOR_NONE (exception) from getPixelColor."));
+                "Returning COLOR_NONE (exception) from getPixelColor.");
         return Component.COLOR_NONE;
       }
     }
@@ -795,6 +797,13 @@ public final class Canvas extends AndroidViewComponent implements ComponentConta
   @Override
   public View getView() {
     return view;
+  }
+
+  // For extension components to
+  // access the bitmap of the canvas
+
+  public Bitmap getBitmap() {
+    return view.buildCache();
   }
 
   public Activity getContext() {
@@ -1701,15 +1710,13 @@ public final class Canvas extends AndroidViewComponent implements ComponentConta
   private String saveFile(File file, Bitmap.CompressFormat format, String method) {
     try {
       boolean success = false;
-      FileOutputStream fos = new FileOutputStream(file);
-      // Don't cache, in order to save memory.  It seems unlikely to be used again soon.
-      Bitmap bitmap = (view.completeCache == null ? view.buildCache() : view.completeCache);
-      try {
+      // Don't cache, in order to save memory.
+      // It seems unlikely to be used again soon.
+      try (FileOutputStream fos = new FileOutputStream(file)) {
+        Bitmap bitmap = (view.completeCache == null ? view.buildCache() : view.completeCache);
         success = bitmap.compress(format,
-            100,  // quality: ignored for png
-            fos);
-      } finally {
-        fos.close();
+                100,  // quality: ignored for png
+                fos);
       }
       if (success) {
         return file.getAbsolutePath();
