@@ -133,8 +133,8 @@ public final class ListView extends AndroidViewComponent implements AdapterView.
     layout = ComponentConstants.LISTVIEW_LAYOUT_SINGLE_TEXT;
 
     recyclerView = new RecyclerView(container.$context());
-    LayoutParams paramms = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
-    recyclerView.setLayoutParams(paramms);
+    LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+    recyclerView.setLayoutParams(params);
     // initialize selectionIndex which also sets selection
     SelectionIndex(0);
 
@@ -346,44 +346,27 @@ public final class ListView extends AndroidViewComponent implements AdapterView.
       // if the data is available in AddData property
       listAdapterWithRecyclerView = new ListAdapterWithRecyclerView(container, dictItems, textColor, detailTextColor, fontSizeMain, fontSizeDetail, fontTypeface, fontTypeDetail, layout, backgroundColor, selectionColor, imageWidth, imageHeight, false);
 
-      listAdapterWithRecyclerView.setOnItemClickListener(new ListAdapterWithRecyclerView.ClickListener() {
-        @Override
-        public void onItemClick(int position, View v) {
-          listAdapterWithRecyclerView.toggleSelection(position);
-          SelectionIndex(position + 1);
-          AfterPicking();
-        }
-      });
-      GridLayoutManager gridlayoutManager;
-
       if (orientation == ComponentConstants.LAYOUT_ORIENTATION_HORIZONTAL) {
         layoutManager = new LinearLayoutManager(container.$context(), LinearLayoutManager.HORIZONTAL, false);
-        recyclerView.setLayoutManager(layoutManager);
       } else { // if (orientation == ComponentConstants.LAYOUT_ORIENTATION_VERTICAL) {
         layoutManager = new LinearLayoutManager(container.$context(), LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(layoutManager);
-      } //else {
-//        gridlayoutManager = new GridLayoutManager(container.$context(), gridCount, GridLayoutManager.VERTICAL, false);
-//        recyclerView.setLayoutManager(gridlayoutManager);
-      // TODO: Grid Layout
-      //     }
-      recyclerView.setAdapter(listAdapterWithRecyclerView);
+      }
     } else {
       // Legacy Support: if the data is not available in AddData property but is available in ElementsFromString property
       listAdapterWithRecyclerView = new ListAdapterWithRecyclerView(container, stringItems, textColor, fontSizeMain, fontTypeface, backgroundColor, selectionColor);
 
-      listAdapterWithRecyclerView.setOnItemClickListener(new ListAdapterWithRecyclerView.ClickListener() {
-        @Override
-        public void onItemClick(int position, View v) {
-          listAdapterWithRecyclerView.toggleSelection(position);
-          SelectionIndex(position + 1);
-          AfterPicking();
-        }
-      });
       layoutManager = new LinearLayoutManager(container.$context(), LinearLayoutManager.VERTICAL, false);
-      recyclerView.setLayoutManager(layoutManager);
-      recyclerView.setAdapter(listAdapterWithRecyclerView);
     }
+    listAdapterWithRecyclerView.setOnItemClickListener(new ListAdapterWithRecyclerView.ClickListener() {
+      @Override
+      public void onItemClick(int position, View v) {
+        listAdapterWithRecyclerView.toggleSelection(position);
+        SelectionIndex(position + 1);
+        AfterPicking();
+      }
+    });
+    recyclerView.setLayoutManager(layoutManager);
+    recyclerView.setAdapter(listAdapterWithRecyclerView);
   }
 
   /**
