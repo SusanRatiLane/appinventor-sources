@@ -28,7 +28,6 @@
 
     <!-- These are not cached on purpose -->
     <include path="/ode/**.nocache.*" expiration="10s" />
-    <include path="/index.html" expiration="10s" />
 
     <include path="/ode/**.cache.*" expiration="365d" />
     <exclude path="/ode/**.gwt.rpc" />
