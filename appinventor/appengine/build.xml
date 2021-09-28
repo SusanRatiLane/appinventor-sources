@@ -136,7 +136,7 @@
         <include name="companions/*"/>
       </fileset>
       <fileset dir="${docs.dir}/html">
-        <include name="index.html"/>
+        <include name="index.jsp"/>
         <include name="reference/**/*"/>
         <exclude name="static/*"/>
         <exclude name="assets/*"/>
