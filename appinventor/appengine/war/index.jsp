@@ -1,3 +1,7 @@
+<%
+  response.setHeader("Origin-Trial", "AqvieOfFiUqBkdpDE6fKwTiERJ1TU/K50M7HGLJqUsUZKIIxcuxN5fAG14OjG+Ygf+TEOhh8ciGriq6BGbDWbQoAAACKeyJvcmlnaW4iOiJodHRwOi8vYXBwaW52ZW50b3IubWl0LmVkdTo4MCIsImZlYXR1cmUiOiJQcml2YXRlTmV0d29ya0FjY2Vzc05vblNlY3VyZUNvbnRleHRzQWxsb3dlZCIsImV4cGlyeSI6MTY1Mjc3NDQwMCwiaXNTdWJkb21haW4iOnRydWV9");
+  response.setHeader("Cache-Control", "public,max-age=10,must-revalidate");
+%>
 <!-- Copyright 2007-2009 Google Inc. All Rights Reserved. -->
 <!-- Copyright 2011-2020 Massachusetts Institute of Technology. All Rights Reserved. -->
 <!DOCTYPE html>
