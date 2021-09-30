@@ -6,6 +6,7 @@
 package com.google.appinventor.client.widgets.properties;
 
 import com.google.appinventor.client.Ode;
+import com.google.appinventor.client.TopPanel;
 import com.google.appinventor.client.editor.simple.SimpleComponentDatabase;
 import static com.google.appinventor.client.Ode.MESSAGES;
 import com.google.appinventor.client.ComponentsTranslation;
@@ -19,6 +20,7 @@ import com.google.appinventor.components.common.ComponentCategory;
 import com.google.appinventor.shared.rpc.project.ProjectNode;
 import com.google.appinventor.shared.simple.ComponentDatabaseInterface;
 import com.google.common.collect.Lists;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.dom.client.Element;
@@ -34,6 +36,8 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.TextResource;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
@@ -56,6 +60,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+interface BeginnerToolkit extends ClientBundle {
+  BeginnerToolkit INSTANCE = GWT.create(BeginnerToolkit.class);
+
+  @Source("toolkit_beginner.json")
+  TextResource getToolkit();
+}
+
+interface IntermediateToolkit extends ClientBundle {
+  IntermediateToolkit INSTANCE = GWT.create(IntermediateToolkit.class);
+
+  @Source("toolkit_intermediate.json")
+  TextResource getToolkit();
+}
+
 public class SubsetJSONPropertyEditor  extends PropertyEditor
         implements ProjectChangeListener {
 
@@ -72,12 +90,7 @@ public class SubsetJSONPropertyEditor  extends PropertyEditor
     file.addChangeHandler(new ChangeHandler() {
       @Override
       public void onChange(ChangeEvent changeEvent) {
-        if (customPopupShowing) {
-          loadJSONfile(file, false);
-        }
-        else {
-          loadJSONfile(file, true);
-        }
+        loadJSONfile(file, !customPopupShowing);
       }
     });
 
@@ -96,17 +109,27 @@ public class SubsetJSONPropertyEditor  extends PropertyEditor
         property.setValue("");
         updateValue();
       }}));
-    items.add(new DropDownButton.DropDownItem("Subset Property Editor", MESSAGES.matchProjectButton(), new Command() {
+
+    items.add(new DropDownButton.DropDownItem("Subset Property Editor", "Beginner Toolkit", new Command() {
+      @Override
+      public void execute() {
+        property.setValue(BeginnerToolkit.INSTANCE.getToolkit().getText());
+        updateValue();
+      }}));
+    items.add(new DropDownButton.DropDownItem("Subset Property Editor", "Intermediate Toolkit", new Command() {
+      @Override
+      public void execute() {
+        property.setValue(IntermediateToolkit.INSTANCE.getToolkit().getText());
+        updateValue();
+      }}));
+
+    items.add(new DropDownButton.DropDownItem("Subset Property Editor",
+        MESSAGES.matchProjectButton(), new Command() {
       @Override
       public void execute() {
         matchProject();
         property.setValue(createJSONString());
         updateValue();
-      }}));
-    items.add(new DropDownButton.DropDownItem("Subset Property Editor", MESSAGES.fileUploadWizardCaption(), new Command() {
-      @Override
-      public void execute() {
-        file.click();
       }}));
 
     items.add(new DropDownButton.DropDownItem("Subset Property Editor", MESSAGES.viewAndModifyButton(), new Command() {
@@ -114,7 +137,8 @@ public class SubsetJSONPropertyEditor  extends PropertyEditor
       public void execute() {
         showCustomSubsetPanel();
       }}));
-    dropDownButton = new DropDownButton("Subset Property Editor", "", items, false);
+    dropDownButton = new DropDownButton("Subset Property Editor",
+        "", items, false);
     dropDownButton.setStylePrimaryName("ode-ChoicePropertyEditor");
     initWidget(dropDownButton);
     INSTANCE = this;
@@ -122,7 +146,7 @@ public class SubsetJSONPropertyEditor  extends PropertyEditor
   }
 
   protected void showCustomSubsetPanel() {
-    if (property.getValue() != "") {
+    if (!property.getValue().equals("")) {
       JSONObject jsonSet = JSONParser.parseStrict(property.getValue()).isObject();
       loadComponents(jsonSet);
       loadGlobalBlocks(jsonSet);
@@ -130,7 +154,7 @@ public class SubsetJSONPropertyEditor  extends PropertyEditor
       clearSelections();
     }
 
-    if (customPopup.getTitle() != MESSAGES.blocksToolkitTitle()) {
+    if (!customPopup.getTitle().equals(MESSAGES.blocksToolkitTitle())) {
       final DockLayoutPanel treePanel = new DockLayoutPanel(Style.Unit.PCT);
       VerticalPanel componentPanel = new VerticalPanel();
       VerticalPanel blockPanel = new VerticalPanel();
@@ -243,7 +267,7 @@ public class SubsetJSONPropertyEditor  extends PropertyEditor
           subTree.addItem(createCascadeCheckboxItem(methcb));
         }
         for (ComponentDatabaseInterface.BlockPropertyDefinition pdef : cd.getBlockProperties()) {
-          if (pdef.getRW() != "invisible") {
+          if (!pdef.getRW().equals("invisible")) {
             CheckBox propcb = new CheckBox(ComponentsTranslation.getPropertyName(pdef.getName()));
             propcb.setName("blockProperties");
             propcb.setFormValue(pdef.getRW());
@@ -578,7 +602,7 @@ public class SubsetJSONPropertyEditor  extends PropertyEditor
         if (newItem.getChildCount() > 0) {
           toggleChildren(newItem, valueChangeEvent.getValue());
         }
-        if (valueChangeEvent.getValue() == true) {
+        if (valueChangeEvent.getValue()) {
           TreeItem parentItem = newItem.getParentItem();
           while (parentItem != null) {
             ((CheckBox)parentItem.getWidget()).setValue(true, false);
@@ -595,8 +619,12 @@ public class SubsetJSONPropertyEditor  extends PropertyEditor
     if (StringUtils.isNullOrEmpty(property.getValue())) {
       dropDownButton.setCaption("All");
       dropDownButton.setWidth("");
+    } else if (property.getValue().equals(BeginnerToolkit.INSTANCE.getToolkit().getText())) {
+      dropDownButton.setCaption("Beginner Toolkit");
+    } else if (property.getValue().equals(IntermediateToolkit.INSTANCE.getToolkit().getText())) {
+      dropDownButton.setCaption("Intermediate Toolkit");
     } else {
-      dropDownButton.setCaption("Toolkit Defined");
+      dropDownButton.setCaption("Custom Toolkit");
     }
   }
 

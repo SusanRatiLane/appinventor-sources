@@ -180,6 +180,12 @@
       </fileset>
     </copy>
 
+    <!-- Copy Blocks Toolkit presets into place -->
+    <copy todir="${build.war.dir}/WEB-INF/classes/com/google/appinventor/client/widget/properties"
+          file="${src.dir}/com/google/appinventor/client/widgets/properties/toolkit_beginner.json" />
+    <copy todir="${build.war.dir}/WEB-INF/classes/com/google/appinventor/client/widget/properties"
+          file="${src.dir}/com/google/appinventor/client/widgets/properties/toolkit_intermediate.json" />
+
     <copy todir="${build.static.dir}">
       <fileset dir="src/${appinventor.pkg}">
         <!-- canvas is a special case (see MockCanvas.java) -->
