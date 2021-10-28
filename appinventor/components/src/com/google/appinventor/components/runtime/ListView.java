@@ -133,8 +133,8 @@ public final class ListView extends AndroidViewComponent implements AdapterView.
     layout = ComponentConstants.LISTVIEW_LAYOUT_SINGLE_TEXT;
 
     recyclerView = new RecyclerView(container.$context());
-    LayoutParams paramms = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
-    recyclerView.setLayoutParams(paramms);
+    LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+    recyclerView.setLayoutParams(params);
     // initialize selectionIndex which also sets selection
     SelectionIndex(0);
 
@@ -153,10 +153,14 @@ public final class ListView extends AndroidViewComponent implements AdapterView.
       @Override
       public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
         // When user changed the Text
-        if (cs.length() == 0) {
-          setAdapterData();
+        if (cs.length() > 0) {
+          if (!listAdapterWithRecyclerView.hasVisibleItems()) {
+            setAdapterData();
+          }
+          listAdapterWithRecyclerView.getFilter().filter(cs);
+          recyclerView.setAdapter(listAdapterWithRecyclerView);
         } else {
-          listAdapterWithRecyclerView.getFilter().filter(cs.toString());
+          setAdapterData();
         }
       }
 
@@ -346,44 +350,27 @@ public final class ListView extends AndroidViewComponent implements AdapterView.
       // if the data is available in AddData property
       listAdapterWithRecyclerView = new ListAdapterWithRecyclerView(container, dictItems, textColor, detailTextColor, fontSizeMain, fontSizeDetail, fontTypeface, fontTypeDetail, layout, backgroundColor, selectionColor, imageWidth, imageHeight, false);
 
-      listAdapterWithRecyclerView.setOnItemClickListener(new ListAdapterWithRecyclerView.ClickListener() {
-        @Override
-        public void onItemClick(int position, View v) {
-          listAdapterWithRecyclerView.toggleSelection(position);
-          SelectionIndex(position + 1);
-          AfterPicking();
-        }
-      });
-      GridLayoutManager gridlayoutManager;
-
       if (orientation == ComponentConstants.LAYOUT_ORIENTATION_HORIZONTAL) {
         layoutManager = new LinearLayoutManager(container.$context(), LinearLayoutManager.HORIZONTAL, false);
-        recyclerView.setLayoutManager(layoutManager);
       } else { // if (orientation == ComponentConstants.LAYOUT_ORIENTATION_VERTICAL) {
         layoutManager = new LinearLayoutManager(container.$context(), LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(layoutManager);
-      } //else {
-//        gridlayoutManager = new GridLayoutManager(container.$context(), gridCount, GridLayoutManager.VERTICAL, false);
-//        recyclerView.setLayoutManager(gridlayoutManager);
-      // TODO: Grid Layout
-      //     }
-      recyclerView.setAdapter(listAdapterWithRecyclerView);
+      }
     } else {
       // Legacy Support: if the data is not available in AddData property but is available in ElementsFromString property
       listAdapterWithRecyclerView = new ListAdapterWithRecyclerView(container, stringItems, textColor, fontSizeMain, fontTypeface, backgroundColor, selectionColor);
 
-      listAdapterWithRecyclerView.setOnItemClickListener(new ListAdapterWithRecyclerView.ClickListener() {
-        @Override
-        public void onItemClick(int position, View v) {
-          listAdapterWithRecyclerView.toggleSelection(position);
-          SelectionIndex(position + 1);
-          AfterPicking();
-        }
-      });
       layoutManager = new LinearLayoutManager(container.$context(), LinearLayoutManager.VERTICAL, false);
-      recyclerView.setLayoutManager(layoutManager);
-      recyclerView.setAdapter(listAdapterWithRecyclerView);
     }
+    listAdapterWithRecyclerView.setOnItemClickListener(new ListAdapterWithRecyclerView.ClickListener() {
+      @Override
+      public void onItemClick(int position, View v) {
+        listAdapterWithRecyclerView.toggleSelection(position);
+        SelectionIndex(position + 1);
+        AfterPicking();
+      }
+    });
+    recyclerView.setLayoutManager(layoutManager);
+    recyclerView.setAdapter(listAdapterWithRecyclerView);
   }
 
   /**
@@ -651,7 +638,7 @@ public final class ListView extends AndroidViewComponent implements AdapterView.
   /**
    * Specifies the `ListView` item's text font size
    *
-   * @param integer value for font size
+   * @param textSize int value for font size
    */
   @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_NON_NEGATIVE_INTEGER,
       defaultValue = DEFAULT_TEXT_SIZE + "")
