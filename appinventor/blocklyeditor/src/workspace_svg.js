@@ -296,6 +296,15 @@ Blockly.WorkspaceSvg.prototype.showComponent = function(component) {
   return this;
 };
 
+/**
+ * Show the drawer for a component instance.
+ */
+Blockly.WorkspaceSvg.prototype.rebuildLanguageTree = function() {
+  if (this.drawer_)
+    this.drawer_.rebuildLanguageTree();
+  return this;
+};
+
 //noinspection JSUnusedGlobalSymbols Called from BlocklyPanel.java
 /**
  * Check whether the drawer is showing.

@@ -784,6 +784,16 @@ public class BlocklyPanel extends HTMLPanel {
   }-*/;
 
   /**
+   * Update the languageTree, which contains the blocks that will be visible
+   * in the Blocks Editor
+   */
+  public native void updateLanguageTree()/*-{
+    this.@com.google.appinventor.client.editor.youngandroid.BlocklyPanel::workspace
+      .hideDrawer()
+      .rebuildLanguageTree();
+  }-*/;
+
+  /**
    * Show the generic blocks drawer with the specified name
    *
    * @param drawerName

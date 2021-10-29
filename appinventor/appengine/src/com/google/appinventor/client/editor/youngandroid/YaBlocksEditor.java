@@ -515,6 +515,12 @@ public final class YaBlocksEditor extends FileEditor
     }
   }
 
+  public void updateBuiltInBlocksTree() {
+    if (loadComplete) {
+      blocksArea.updateLanguageTree();
+    }
+  }
+
   public void showGenericBlocks(String drawerName) {
     OdeLog.log("Showing generic drawer " + drawerName);
     String genericDrawer = "generic_" + drawerName;

@@ -8,9 +8,13 @@ package com.google.appinventor.client.editor.simple.components;
 
 import static com.google.appinventor.client.Ode.MESSAGES;
 
+import com.google.appinventor.client.Ode;
+import com.google.appinventor.client.editor.FileEditor;
 import com.google.appinventor.client.editor.simple.SimpleEditor;
 import com.google.appinventor.client.editor.simple.components.utils.PropertiesUtil;
+import com.google.appinventor.client.editor.youngandroid.YaBlocksEditor;
 import com.google.appinventor.client.editor.youngandroid.YaFormEditor;
+import com.google.appinventor.client.editor.youngandroid.YaProjectEditor;
 import com.google.appinventor.client.editor.youngandroid.properties.YoungAndroidLengthPropertyEditor;
 import com.google.appinventor.client.editor.youngandroid.properties.YoungAndroidVerticalAlignmentChoicePropertyEditor;
 import com.google.appinventor.client.output.OdeLog;
@@ -933,6 +937,15 @@ public final class MockForm extends MockContainer {
           SettingsConstants.YOUNG_ANDROID_SETTINGS_BLOCK_SUBSET, asJson);
       if (editor.isLoadComplete()) {
         ((YaFormEditor)editor).reloadComponentPalette(asJson);
+      }
+
+      // TODO: Consult with team about the correct way to get the blocks editor
+      // There should be a better way than this.
+      Iterable<FileEditor> openEditors = editor.getProjectEditor().getOpenFileEditors();
+      for (FileEditor blocksEditor : openEditors) {
+        if (blocksEditor instanceof YaBlocksEditor) {
+          ((YaBlocksEditor) blocksEditor).updateBuiltInBlocksTree();
+        }
       }
     }
   }

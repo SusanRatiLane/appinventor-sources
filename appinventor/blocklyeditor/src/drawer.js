@@ -174,6 +174,12 @@ Blockly.Drawer.prototype.showComponent = function(instanceName) {
   }
 };
 
+Blockly.Drawer.prototype.rebuildLanguageTree = function() {
+  if (this.options.languageTree) {
+    this.options.languageTree = Blockly.Drawer.buildTree_();
+  }
+};
+
 /**
  * Show the contents of the generic component drawer named drawerName. (This is under the
  * "Any components" section in App Inventor). drawerName should be the name of a component type for
@@ -248,8 +254,6 @@ Blockly.Drawer.prototype.instanceRecordToXMLArray = function(instanceRecord) {
         var obj = subsetBlockArray[i];
         obj['mutatorNameToValue']['instance_name'] = instanceRecord.name;
         obj['fieldNameToValue']['COMPONENT_SELECTOR'] = instanceRecord.name;
-        console.log("added obj");
-        console.log(obj);
         var xml = bd.toolbox.ctr.blockObjectToXML(bd.toolbox.ctr.blockInfoToBlockObject(obj));
         xmlArray.push(xml);
       }
