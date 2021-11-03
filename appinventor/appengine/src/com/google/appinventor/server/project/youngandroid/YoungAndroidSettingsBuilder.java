@@ -29,6 +29,8 @@ import com.google.common.base.Strings;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Properties;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class YoungAndroidSettingsBuilder {
@@ -206,7 +208,7 @@ public class YoungAndroidSettingsBuilder {
    *
    * @return a JSON string containing the settings
    */
-  public String build() {
+  public String build() throws JSONException {
     JSONObject object = new JSONObject();
     object.put(YOUNG_ANDROID_SETTINGS_ICON, icon);
     object.put(YOUNG_ANDROID_SETTINGS_VERSION_CODE, versionCode);
@@ -272,7 +274,12 @@ public class YoungAndroidSettingsBuilder {
 
   @Override
   public String toString() {
-    return build();
+    try {
+      return build();
+    } catch (JSONException e) {
+      e.printStackTrace();
+      throw new RuntimeException("Unexpected JSONException", e);
+    }
   }
 
   @Override
