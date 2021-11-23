@@ -49,7 +49,7 @@ public class Toolbar extends Composite {
   private final Map<String, DropDownButton> dropDownButtonMap;
 
 
-  private final HorizontalPanel leftButtons;
+  protected final HorizontalPanel leftButtons;
   private final HorizontalPanel rightButtons;
 
   /**

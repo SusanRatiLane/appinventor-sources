@@ -19,10 +19,14 @@ import com.google.appinventor.client.output.OdeLog;
 
 import com.google.appinventor.client.tracking.Tracking;
 
+import com.google.appinventor.client.widgets.DropDownButton;
 import com.google.appinventor.client.widgets.DropDownButton.DropDownItem;
 
 import com.google.appinventor.client.widgets.Toolbar;
 
+import com.google.appinventor.client.widgets.properties.EditableProperty;
+import com.google.appinventor.client.widgets.properties.PropertyEditor;
+import com.google.appinventor.client.widgets.properties.SubsetJSONPropertyEditor;
 import com.google.appinventor.common.version.AppInventorFeatures;
 
 import com.google.appinventor.shared.rpc.RpcResult;
@@ -38,6 +42,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -124,6 +129,7 @@ public class DesignToolbar extends Toolbar {
   private static final String WIDGET_NAME_SWITCH_TO_BLOCKS_EDITOR = "SwitchToBlocksEditor";
   private static final String WIDGET_NAME_SWITCH_TO_FORM_EDITOR = "SwitchToFormEditor";
   private static final String WIDGET_NAME_SENDTOGALLERY = "SendToGallery";
+  private DropDownButton toolkitDp;
 
   // Switch language
   private static final String WIDGET_NAME_SWITCH_LANGUAGE = "Language";
@@ -205,6 +211,11 @@ public class DesignToolbar extends Toolbar {
     toggleEditor(false);
     Ode.getInstance().getTopToolbar().updateFileMenuButtons(0);
   }
+
+  public void addPropertyToToolbar(EditableProperty property) {
+    leftButtons.add(property.getEditor());
+  }
+
 
   private class ToogleTutorialAction implements Command {
     @Override

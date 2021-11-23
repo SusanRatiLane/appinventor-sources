@@ -6,7 +6,6 @@
 package com.google.appinventor.client.widgets.properties;
 
 import com.google.appinventor.client.Ode;
-import com.google.appinventor.client.TopPanel;
 import com.google.appinventor.client.editor.simple.SimpleComponentDatabase;
 import static com.google.appinventor.client.Ode.MESSAGES;
 import com.google.appinventor.client.ComponentsTranslation;
@@ -103,12 +102,6 @@ public class SubsetJSONPropertyEditor  extends PropertyEditor
     invisibleFilePanel.show();
 
     List<DropDownButton.DropDownItem> items = Lists.newArrayList();
-    items.add(new DropDownButton.DropDownItem("Subset Property Editor", MESSAGES.allButton(), new Command() {
-      @Override
-      public void execute() {
-        property.setValue("");
-        updateValue();
-      }}));
 
     items.add(new DropDownButton.DropDownItem("Subset Property Editor", "Beginner Toolkit", new Command() {
       @Override
@@ -122,15 +115,23 @@ public class SubsetJSONPropertyEditor  extends PropertyEditor
         property.setValue(IntermediateToolkit.INSTANCE.getToolkit().getText());
         updateValue();
       }}));
-
-    items.add(new DropDownButton.DropDownItem("Subset Property Editor",
-        MESSAGES.matchProjectButton(), new Command() {
+    
+    items.add(new DropDownButton.DropDownItem("Subset Property Editor", MESSAGES.allToolkitButton(), new Command() {
       @Override
       public void execute() {
-        matchProject();
-        property.setValue(createJSONString());
+        property.setValue("");
         updateValue();
       }}));
+
+    //
+//    items.add(new DropDownButton.DropDownItem("Subset Property Editor",
+//        MESSAGES.matchProjectButton(), new Command() {
+//      @Override
+//      public void execute() {
+//        matchProject();
+//        property.setValue(createJSONString());
+//        updateValue();
+//      }}));
 
     items.add(new DropDownButton.DropDownItem("Subset Property Editor", MESSAGES.viewAndModifyButton(), new Command() {
       @Override
@@ -617,14 +618,14 @@ public class SubsetJSONPropertyEditor  extends PropertyEditor
 
   protected void updateValue() {
     if (StringUtils.isNullOrEmpty(property.getValue())) {
-      dropDownButton.setCaption("All");
+      dropDownButton.setCaption(MESSAGES.allToolkitButton());
       dropDownButton.setWidth("");
     } else if (property.getValue().equals(BeginnerToolkit.INSTANCE.getToolkit().getText())) {
       dropDownButton.setCaption("Beginner Toolkit");
     } else if (property.getValue().equals(IntermediateToolkit.INSTANCE.getToolkit().getText())) {
       dropDownButton.setCaption("Intermediate Toolkit");
     } else {
-      dropDownButton.setCaption("Custom Toolkit");
+      dropDownButton.setCaption(MESSAGES.viewAndModifyButton());
     }
   }
 

@@ -6,6 +6,8 @@
 
 package com.google.appinventor.client.widgets.properties;
 
+import com.google.appinventor.client.DesignToolbar;
+import com.google.appinventor.client.Ode;
 import com.google.appinventor.client.boxes.PaletteBox;
 import com.google.appinventor.client.properties.Properties;
 import com.google.appinventor.shared.settings.SettingsConstants;
@@ -108,7 +110,8 @@ public class EditableProperties extends Properties<EditableProperty> {
   void addToPropertiesPanel(PropertiesPanel panel) {
     for (EditableProperty property : this) {
       if (property.getName().equals(SettingsConstants.YOUNG_ANDROID_SETTINGS_BLOCK_SUBSET)) {
-        PaletteBox.getPaletteBox().addPropertyToPopup(property);
+//        PaletteBox.getPaletteBox().addPropertyToPalette(property);
+        Ode.getInstance().getDesignToolbar().addPropertyToToolbar(property);
       } else
       if (property.isVisible()) {
         panel.addProperty(property);
