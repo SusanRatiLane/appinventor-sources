@@ -149,6 +149,8 @@
   <extend-property name="locale" values="lt"/>
   <!-- Armenian -->
   <extend-property name="locale" values="hy"/>
+  <!-- Indonesian -->
+  <extend-property name="locale" values="id"/>
 
   <set-property-fallback name="locale" value="en"/>
 </module>
