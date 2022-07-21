@@ -145,30 +145,33 @@ body {
 
 .ode-Box-content {
   font-size: 13px;
-  background-color: #f7f9f2;
-  /* TODO(opensource): Delete the background-image line below once we're ready */
-  background-image: url(../images/watermark.png);
+/*  background-color: #f7f9f2;
   color: #555;
   border-left: 1px solid #d2d2d2;
   border-bottom: 1px solid #d2d2d2;
   border-right: 1px solid #d2d2d2;
+  border-top: 1px solid #d2d2d2;
   margin: 4px;
-  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.065);
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.065);*/
 }
 
 .ode-Box-header {
-  background: rgba(102, 153, 0, 0.3);
-  height: 31px;
-  border: 1px solid;
-  border-color: #d2d2d2 #d2d2d2 #b0b2a7 #d2d2d2;
+/*  background: rgba(102, 153, 0, 0.3); */
+  height: 0px;
+  aria-hidden: true;
+/*  border: 1px solid;
+  border-color: #d2d2d2 #d2d2d2 #b0b2a7 #d2d2d2; */
 }
 
 .ode-Box-header-caption,
 .ode-Box-header-caption-highlighted {
-  font-size: 13px;
+  height: 0px;
+  font-size: 0px;
+  aria-hidden: true;
+/*  font-size: 13px;
   font-weight: bold;
   padding-top: 7px;
-  padding-left: 9px;
+  padding-left: 9px; */
 }
 
 .ode-Box-header-caption {
@@ -582,7 +585,7 @@ body {
 
 .gwt-Tree .gwt-TreeItem span:hover,
 .gwt-Tree .gwt-TreeItem-selected span {
-  background-color: #d2e0a6;
+  background-color: rgba(167, 36, 122, 0.21);
 }
 
 /* Young Android Toolbar */
@@ -604,7 +607,7 @@ body {
 
 .ode-TextButton,
 .gwt-Button {
-  font-size: 18px;
+  font-size: 14px;
   background-color: #a5cf47;
   border-color: #444;
   border: 1px solid;
@@ -623,28 +626,9 @@ body {
 /*  font-size: 18px; */
 }
 
-.ode-TextButton, .left {
-  border-radius: l-border-radius;
+.ode-TextButton-down {
+  box-shadow: 0px 0px;
 }
-
-.ode-TextButton, .right {
-  border-radius: l-border-radius;
-}
-
-.ode-TextButton, .center {
-/*  border-radius: 0;
-  border-width: 1px 0; */
-}
-
-.ode-TextButton, .none {
-  border-radius: l-border-radius;
-}
-
-.ode-TextButton, .primary {
-  background-color: c-primary;
-  border-color: c-border-dark;
-}
-
 
 .ode-TextButton-up-disabled,
 .gwt-Button-up-disabled {
@@ -653,9 +637,8 @@ body {
 
 .ode-TextButton:hover,
 .gwt-Button:hover {
-  background-color: c-primary-dark;
+  background-color: #7d9d36;
 }
-
 .ode-TextButton:active,
 .gwt-Button:active {
   background-image: none;
@@ -687,8 +670,10 @@ body {
 /*  font-size: 11px; */
 }
 
-.ode-PanelButtons .ode-TextButton {
+.ode-PanelButtons {
   font-size: 12px;
+  width: fit-content;
+  padding-bottom: 5px;
 }
 
 .ode-BlocksDesignerButton {
@@ -725,7 +710,9 @@ body {
 .gwt-StackPanelItem div {
   border-top: 1px solid #d2d2d2;
   border-bottom: 1px solid #d2d2d2;
-  background-color: #eef2e0;
+  border-right: 1px solid #d2d2d2;
+  border-left: 1px solid #d2d2d2;
+  background-color: #ffffff;
   font-size: 13px;
   cursor: pointer;
   height: 14px;
@@ -738,15 +725,20 @@ body {
 }
 
 .gwt-StackPanelContent {
-  padding-left: 10px;
-  padding-right: 10px;
+/*  padding-left: 10px;
+  padding-right: 10px; */
   padding-top: 10px;
   margin-top: 8px;
 }
 
 /* Overrides for gwt.css */
 .gwt-StackPanel .gwt-StackPanelContent {
-  padding: 8px 4px 8px 8px;
+  padding-top: 8px;
+  padding-bottom: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+/*  padding: 8px 4px 8px 8px; */
+
 }
 .gwt-StackPanel .gwt-StackPanelItem {
   padding: 0px;
@@ -761,7 +753,15 @@ body {
   padding: 5px;
 }
 
+.ode-SimplePaletteItem-selected {
+  background-color: rgba(167, 36, 122, 0.21);
+  height: 15px;
+  cursor: pointer;
+  padding: 5px;
+}
+
 .ode-SimplePaletteItem-icon {
+  padding-left: 5px;
   height: 16px;
   width: 16px;
 }
@@ -822,10 +822,28 @@ body {
 }
 
 .ode-PropertiesPanel {
-  background-color: #f7f9f2;
+/*  background-color: #f7f9f2; */
   padding-left: 9px;
   padding-right: 9px;
   padding-bottom: 9px;
+  border-left: 1px solid #d2d2d2;
+  border-right: 1px solid #d2d2d2;
+  border-bottom: 1px solid #d2d2d2;
+}
+
+.ode-AssetPanel  {
+  margin-top: 10px;
+  border: 1px solid #d2d2d2;
+}
+
+.ode-AssetPanel-caption {
+    aria-hidden: true;
+    font-size: 16px;
+    font-weight: bold;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    height: 20px;
+    text-align: center;
 }
 
 .ode-PropertiesPanel td {
@@ -834,9 +852,12 @@ body {
 }
 
 .ode-PropertiesComponentName {
-  background-color: #eef2e0;
-  color: #555;
+/*  background-color: #eef2e0;
+  color: #555; */
   font-size: 13px;
+  border-left: 1px solid #d2d2d2;
+  border-right: 1px solid #d2d2d2;
+  border-top: 1px solid #d2d2d2;
   border-bottom: 1px solid #d2d2d2;
   padding: 9px 9px 8px 10px;
 }

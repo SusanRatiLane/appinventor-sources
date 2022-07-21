@@ -1005,7 +1005,7 @@ public class Ode implements EntryPoint {
     //workColumns.add(switchToDesignerButton);
 
     Box palletebox = PaletteBox.getPaletteBox();
-    palletebox.setWidth("240px");
+    palletebox.setWidth("220px");
     workColumns.add(palletebox);
 
     Box viewerbox = ViewerBox.getViewerBox();

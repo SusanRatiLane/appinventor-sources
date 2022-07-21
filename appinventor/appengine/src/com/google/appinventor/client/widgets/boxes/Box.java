@@ -428,6 +428,11 @@ public abstract class Box extends HandlerPanel {
     captionLabel.setText(caption);
   }
 
+  // TODO: Fix styling and get rid of this kludge
+  public void setCaptionStyle(String style) {
+    captionLabel.setStylePrimaryName(style);
+  }
+
   /**
    * Returns the box header.
    *

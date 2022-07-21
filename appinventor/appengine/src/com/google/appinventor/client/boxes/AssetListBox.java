@@ -40,6 +40,8 @@ public final class AssetListBox extends Box {
         false); // removable
 
     alist = new AssetList();
+    setStylePrimaryName("ode-AssetPanel");
+    setCaptionStyle("ode-AssetPanel-caption");
     setContent(alist);
   }
 
