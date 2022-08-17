@@ -82,13 +82,13 @@ import java.util.ArrayList;
 @DesignerComponent(version = YaVersion.SPREADSHEETS_COMPONENT_VERSION,
     category = ComponentCategory.STORAGE,
     description = "Spreadsheets is a non-visible component for storing and " +
-      "receiving data from a Google Sheets document using the Google Sheets API. " +
+      "receiving data from a Spreadsheet document using the Google Sheets API. " +
       "<p>In order to utilize this component, one must first have a Google " +
       "Developer Account. Then, one must create a new project under that Google " +
       "Developer Account, enable the Google Sheets API on that project, and " +
       "finally create a Service Account for the Sheets API.</p>" +
       "<p>Instructions on how to create the Service Account, as well as where to " +
-      "find other relevant information for using the Google Sheets Component, " +
+      "find other relevant information for using the Spreadsheets Component, " +
       "can be found <a href='https://docs.google.com/document/d/1PurfpFV6_ncXq-SvMKCF7_xBHKTWF10L1LqmHoSTUF4/edit?usp=sharing'>" +
       "here</a>.</p>",
     nonVisible = true,
@@ -146,7 +146,7 @@ public class Spreadsheets extends AndroidNonvisibleComponent implements Componen
   // This gets changed to the name of the project by MockGoogleSheets by default
   private String ApplicationName = "App Inventor";
 
-  // Variables for Authenticating the Google Sheets Component
+  // Variables for Authenticating the Spreadsheets Component
   private File cachedCredentialsFile = null;
   private String accessToken = null;
   private Sheets sheetsService = null;
