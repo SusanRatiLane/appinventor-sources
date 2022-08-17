@@ -20,8 +20,8 @@ import com.google.gwt.user.client.ui.Widget;
  *
  * @author theng@mit.edu (Tommy S. Heng)
  */
-public class MockGoogleSheets extends MockNonVisibleComponent {
-  public static final String TYPE = "GoogleSheets";
+public class MockSpreadsheets extends MockNonVisibleComponent {
+  public static final String TYPE = "Spreadsheets";
 
   /**
    * Creates a new instance of a non-visible component whose icon is
@@ -31,7 +31,7 @@ public class MockGoogleSheets extends MockNonVisibleComponent {
    * @param type
    * @param iconImage
    */
-  public MockGoogleSheets(SimpleEditor editor, String type, Image iconImage) {
+  public MockSpreadsheets(SimpleEditor editor, String type, Image iconImage) {
     super(editor, type, iconImage);
   }
 

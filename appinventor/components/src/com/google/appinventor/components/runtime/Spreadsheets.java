@@ -55,7 +55,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
@@ -66,7 +65,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 /**
- * GoogleSheets is a non-visible component for storing and receiving data from
+ * Spreadsheets is a non-visible component for storing and receiving data from
  * a Google Sheets document using the Google Sheets API.
  *
  * In order to utilize this component, one must first have a Google Developer
@@ -80,9 +79,9 @@ import java.util.ArrayList;
  *
  * Row and column numbers are 1-indexed.
  */
-@DesignerComponent(version = YaVersion.GOOGLESHEETS_COMPONENT_VERSION,
+@DesignerComponent(version = YaVersion.SPREADSHEETS_COMPONENT_VERSION,
     category = ComponentCategory.STORAGE,
-    description = "GoogleSheets is a non-visible component for storing and " +
+    description = "Spreadsheets is a non-visible component for storing and " +
       "receiving data from a Google Sheets document using the Google Sheets API. " +
       "<p>In order to utilize this component, one must first have a Google " +
       "Developer Account. Then, one must create a new project under that Google " +
@@ -128,13 +127,13 @@ import java.util.ArrayList;
            })
     })
 })
-public class GoogleSheets extends AndroidNonvisibleComponent implements Component {
-  private static final String LOG_TAG = "GOOGLESHEETS";
+public class Spreadsheets extends AndroidNonvisibleComponent implements Component {
+  private static final String LOG_TAG = "SPREADSHEETS";
 
   private static final String WEBVIEW_ACTIVITY_CLASS = WebViewActivity.class
     .getName();
   private int requestCode;
-  public GoogleSheets(ComponentContainer componentContainer) {
+  public Spreadsheets(ComponentContainer componentContainer) {
     super(componentContainer.$form());
     this.container = componentContainer;
     this.activity = componentContainer.$context();
@@ -299,7 +298,7 @@ public class GoogleSheets extends AndroidNonvisibleComponent implements Componen
     description="Triggered whenever an API call encounters an error. Details " +
       "about the error are in `errorMessage`.")
   public void ErrorOccurred (final String errorMessage) {
-    final GoogleSheets thisInstance = this;
+    final Spreadsheets thisInstance = this;
     Log.d(LOG_TAG, errorMessage);
     activity.runOnUiThread(new Runnable() {
       @Override
