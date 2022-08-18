@@ -150,6 +150,13 @@ Blockly.Versioning.upgrade = function (preUpgradeFormJsonString, blocksContent, 
   var blocksRep = dom; // Initial blocks rep is dom
   blocksRep = upgradeComponentType("Language", preUpgradeLanguageVersion, systemLanguageVersion, blocksRep);
 
+  if ((versionTags.length === 0 ||
+       parseInt(versionTags[0].getAttribute('ya-version'), 10) <= 216) &&
+      systemYoungAndroidVersion >= 217) {
+    // Spreadsheets was introduced as GoogleSheets in 216 but renamed in 217
+    blocksRep = Blockly.Versioning.renameComponentType("GoogleSheets", "Spreadsheets")(blocksRep);
+  }
+
   // --------------------------------------------------------------------------------
   // Upgrade components based on pre-upgrade version numbers
   var preUpgradeComponentVersionDict = Blockly.Versioning.makeComponentVersionDict(preUpgradeFormJsonObject);
