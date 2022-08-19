@@ -886,6 +886,10 @@ public final class YaFormEditor extends SimpleEditor implements FormChangeListen
     updateMockComponents(componentTypes);
     PropertiesBox.getPropertiesBox().show(this, true);
     SourceStructureBox.getSourceStructureBox().show(form);
+    //Update the Properties Panel
+    //if (form != null) {
+    //  updatePropertiesPanel(form.getSelectedComponents(), true);
+    //}
   }
 
   @Override

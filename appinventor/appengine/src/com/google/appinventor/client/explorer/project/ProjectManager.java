@@ -7,15 +7,18 @@
 package com.google.appinventor.client.explorer.project;
 
 import com.google.appinventor.client.Ode;
-import static com.google.appinventor.client.Ode.MESSAGES;
-import com.google.appinventor.client.OdeAsyncCallback;
+import com.google.appinventor.client.utils.Promise;
 import com.google.appinventor.shared.rpc.project.ProjectNode;
+import com.google.appinventor.shared.rpc.project.ProjectServiceAsync;
 import com.google.appinventor.shared.rpc.project.UserProject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.google.appinventor.client.Ode.MESSAGES;
+import static com.google.appinventor.client.utils.Promise.resolve;
 
 /**
  * This class manages projects.
@@ -29,6 +32,8 @@ public final class ProjectManager {
   // List of listeners for any project manager events.
   private final List<ProjectManagerEventListener> projectManagerEventListeners;
 
+  private Promise<List<Project>> loadProjectPromise = null;
+
   /**
    * Flag indicating whether the project infos have all loaded.
    */
@@ -38,19 +43,54 @@ public final class ProjectManager {
    * Creates a new projects manager.
    */
   public ProjectManager() {
-    projectsMap = new HashMap<Long, Project>();
-    projectManagerEventListeners = new ArrayList<ProjectManagerEventListener>();
-    Ode.getInstance().getProjectService().getProjectInfos(
-      new OdeAsyncCallback<List<UserProject>>(
-        MESSAGES.projectInformationRetrievalError()) {
-        @Override
-        public void onSuccess(List<UserProject> projectInfos) {
-          for (UserProject projectInfo : projectInfos) {
-            addProject(projectInfo);
-          }
-          fireProjectsLoaded();
-        }
-      });
+    projectsMap = new HashMap<>();
+    projectManagerEventListeners = new ArrayList<>();
+  }
+
+  /**
+   * Load the user's projects.
+   *
+   * <p>The returned Promise is a singleton representing the result of loading the initial
+   * project list at the start of the session.</p>
+   *
+   * @return a Promise to load the user's projects
+   */
+  public Promise<List<Project>> loadProjects(ProjectServiceAsync projectService) {
+    if (loadProjectPromise == null) {
+      loadProjectPromise = Promise.call(MESSAGES.projectInformationRetrievalError(),
+              projectService::getProjectInfos)
+          .then(projectInfos -> {
+            for (UserProject projectInfo : projectInfos) {
+              addProject(projectInfo);
+            }
+            return resolve(new ArrayList<>(projectsMap.values()));
+          });
+    }
+    return loadProjectPromise;
+  }
+
+  /**
+   * Load the user's projects.
+   *
+   * <p>This version can only be called once {@link #loadProjects(ProjectServiceAsync)} has been
+   * called. Otherwise, it will throw {@code IllegalStateException}.</p>
+   *
+   * @return a Promise to load the user's projects
+   */
+  public Promise<List<Project>> loadProjects() {
+    if (loadProjectPromise == null) {
+      throw new IllegalStateException("Project loading has not been initiated.");
+    }
+    return loadProjectPromise;
+  }
+
+  /**
+   * Returns a list of all projects.
+   *
+   * @return  a list of projects
+   */
+  public List<Project> getProjects() {
+    return new ArrayList<>(projectsMap.values());
   }
 
   /**
@@ -60,7 +100,7 @@ public final class ProjectManager {
    * @return  a list of projects
    */
   public List<Project> getProjects(String prefix) {
-    List<Project> projects = new ArrayList<Project>();
+    List<Project> projects = new ArrayList<>();
 
     for (Project project : projectsMap.values()) {
       if (project.getProjectName().startsWith(prefix)) {
@@ -182,7 +222,7 @@ public final class ProjectManager {
   }
 
   private List<ProjectManagerEventListener> copyProjectManagerEventListeners() {
-    return new ArrayList<ProjectManagerEventListener>(projectManagerEventListeners);
+    return new ArrayList<>(projectManagerEventListeners);
   }
 
   /*
