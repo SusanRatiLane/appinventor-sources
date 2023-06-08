@@ -1,4 +1,4 @@
-<!--MoveProjectsWizard.ui.xml -->
+<!--FileUploadError.ui.xml -->
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui"
              xmlns:w="urn:import:com.google.appinventor.client.widgets"
@@ -7,13 +7,13 @@
              ui:generatedKeys="com.google.gwt.i18n.server.keygen.MethodNameKeyGenerator"
              ui:generateLocales="default">
   <ui:with field="messages" type="com.google.appinventor.client.OdeMessages" />
-  <wiz:Dialog ui:field="moveDialog" caption="Move Projects" styleName="ode-DialogBox">
+  <wiz:Dialog ui:field="uploadError" styleName="ode-DialogBox">
     <g:FlowPanel>
-      <g:Label styleName="ode-TreeLabel dialogContent" text="Move to folder:" />
-      <g:Tree ui:field='tree' />
+      <g:HTML ui:field="errorMessage" />
       <g:FlowPanel styleName="buttonRow" >
+        <g:Button ui:field='infoButton' text='{messages.aiaMediaAssetHelp}' visible="false"  />
         <g:Button ui:field='cancelButton' text='{messages.cancelButton}'  />
-        <g:Button ui:field='moveButton' text='{messages.okButton}' />
+        <g:Button ui:field='okButton' text='{messages.okButton}' />
       </g:FlowPanel>
     </g:FlowPanel>
   </wiz:Dialog>

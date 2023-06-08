@@ -246,6 +246,8 @@ div.StatusPanel {
  */
 .ode-ProjectFieldSpan {
   display: flex;
+  column-gap: 4px;
+  align-items: center;
 }
 
 .ode-ProjectNameLabel {
@@ -254,16 +256,19 @@ div.StatusPanel {
   color: #555;
   cursor: pointer;
   vertical-align: top;
-  padding-left: 10px;
+  padding-right: 10px;
   text-align: left;
+  flex-grow: 1;
+  min-width: 100px;
 }
 
 .ode-ProjectFieldLabel {
   font-size: small;
   color: #555;
   vertical-align: top;
-  padding-left: 10px;
+  padding-right: 10px;
   text-align: left;
+  width: 200px;
 }
 
 .ode-ProjectTable {
@@ -271,35 +276,27 @@ div.StatusPanel {
   margin: 0;
   border: 1px;
   overflow: auto;
-  /*display: flex;*/
-  text-align: left;
-  /*flex-direction: column;*/
-  display: grid;
-  grid-auto-rows: max-content;
-  grid-template-columns: auto 1fr auto auto;
+  border-radius: 4px;
+  height: auto;
+  width: 100%;
 }
 
 .ode-ProjectRowHighlighted {
-  display: grid;
-  grid-template-columns: subgrid;
-  border-bottom: 1px solid #ddd;
   background-color: #fff6c3 !important;
 }
 
 .ode-ProjectRowUnHighlighted {
-  display: grid;
-  grid-column: 1 / 5;
-  grid-template-columns: subgrid;
+  display: flex;
+  align-items: center;
+  grid-gap: 10px;
   border-bottom: 0;
   background-color: white;
   width: 100%;
   vertical-align: center;
-  /*display: flex;*/
-  /*flex-direction: row;*/
 }
 
 .ode-ProjectRowHidden {
-  display:none;
+  display:none !important;
 }
 
 .ode-ProjectElementHidden {
@@ -307,20 +304,21 @@ div.StatusPanel {
 }
 
 .ode-ProjectRowList {
-  display:grid;
-  grid-column: 1 / 5;
-  grid-template-columns: subgrid;
+  display:contents;
+}
+
+.ode-ProjectFolderList {
+  margin-left: 28px;
 }
 
 .ode-ProjectHeaderRow {
   background: url(../images/toolbarBG.png) repeat;
-  /*display: flex;*/
-  display: grid;
+  display: flex;
+  align-items: center;
+  grid-gap: 10px;
+
   border: 1px;
   border-bottom: 1px solid #bbccff;
-  grid-column: 1 / 5;
-  grid-template-columns: subgrid;
-  /*grid-template-columns: auto 1fr auto auto;*/
   position: relative;
   flex-direction: row;
   width: 100%;
@@ -329,10 +327,22 @@ div.StatusPanel {
 .ode-ProjectHeaderLabel {
   text-indent: initial;
   color: #112abb;
-  font-size: 11px;
+  font-size: 11px !important;
   cursor: pointer;
   text-align: left;
-  padding-left: 10px;
+  padding-right: 10px;
+  display: inline-flex;
+
+  align-items: center;
+}
+
+.ode-ProjectListName {
+  min-width: 100px;
+  flex-grow: 1;
+}
+
+.ode-ProjectListDate {
+  width: 200px;
 }
 
 .ode-CheckpointProjectTable {
@@ -546,7 +556,7 @@ div.StatusPanel {
   position: relative;
   flex-grow: 1;
   overflow-x: auto;
-  overflow-y: hidden;
+  overflow-y: visible;
   display: flex;
   flex-flow: row;
 }
@@ -592,13 +602,11 @@ div.StatusPanel {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  overflow: scroll;
   flex-grow: 1;
 }
 
 .ode-WorkColumns>* {
   max-height: 100%;
-  overflow: scroll;
   vertical-align: top;
 }
 
@@ -938,6 +946,10 @@ div.StatusPanel {
 
 .ode-SimplePaletteItem-button {
   padding: 2px;
+}
+
+.ode-SimplePaletteItem-Selected {
+  background-color: #d2e0a6 !important;
 }
 
 .gwt-SimplePanel {
@@ -1577,6 +1589,8 @@ path.ode-SimpleMockMapFeature-selected {
   border-right: 4px solid #8fc202;
   border-bottom: 4px solid #8fc202;
   z-index: 1000;
+  min-width: 340px;
+  min-height: 40px;
 }
 
 .DialogBox-message {}
@@ -1587,6 +1601,23 @@ path.ode-SimpleMockMapFeature-selected {
 
 .ode-DialogBox .gwt-CheckBox label {
   padding-left: 4px;
+}
+
+.ode-DialogBox .gwt-Label {
+  padding-left: 10px;
+  font-size: 12px;
+  color: #555;
+}
+
+.ode-TreeLabel {
+  margin-left: 10px;
+}
+
+.ode-DialogBox .gwt-Tree {
+  border: thin solid #CCCCCC;
+  border-radius: 3px;
+  font-size: 12px;
+  margin-left: 10px;
 }
 
 .ode-DialogBox .gwt-CheckBox input[type="checkbox"] {
@@ -1610,6 +1641,7 @@ path.ode-SimpleMockMapFeature-selected {
 
 .ode-DialogBox .dialogContent {
   padding: 5px 10px;
+  color: #555;
 }
 
 .ode-DialogBox .dialogContent td {
@@ -1628,6 +1660,12 @@ path.ode-SimpleMockMapFeature-selected {
 
 .ode-DialogBox .ode-LabeledTextBox {
   margin-bottom: 0;
+}
+
+.ode-DialogBox .buttonRow {
+  display: inline-flex;
+  justify-content: space-around ;
+  width: 95%;
 }
 
 /* AI2 Extensions Styles */
