@@ -39,10 +39,6 @@ import com.google.appinventor.client.tracking.Tracking;
 import com.google.appinventor.client.utils.HTML5DragDrop;
 import com.google.appinventor.client.utils.PZAwarePositionCallback;
 import com.google.appinventor.client.widgets.DropDownButton;
-import com.google.appinventor.client.widgets.ExpiredServiceOverlay;
-import com.google.appinventor.client.widgets.boxes.Box;
-import com.google.appinventor.client.widgets.boxes.ColumnLayout.Column;
-import com.google.appinventor.client.widgets.boxes.ColumnLayout;
 import com.google.appinventor.client.widgets.boxes.WorkAreaPanel;
 import com.google.appinventor.client.wizards.NewProjectWizard.NewProjectCommand;
 import com.google.appinventor.client.wizards.TemplateUploadWizard;
@@ -217,14 +213,16 @@ public class Ode implements EntryPoint {
   @UiField StatusPanel statusPanel;
   @UiField FlowPanel workColumns;
   @UiField FlowPanel structureAndAssets;
-  @UiField ProjectToolbar bindProjectToolbar;
+  @UiField ProjectToolbar projectToolbar;
   @UiField (provided = true) ProjectListBox bindProjectListbox;
-  @UiField DesignToolbar bindDesignToolbar;
+  @UiField DesignToolbar designToolbar;
   @UiField PaletteBox paletteBox;
-  @UiField ViewerBox bindViewerBox = ViewerBox.getViewerBox();
-  @UiField AssetListBox bindAssetListBox = AssetListBox.getAssetListBox();
-  @UiField SourceStructureBox bindSourceStructureBox;
-  @UiField PropertiesBox bindPropertiesBox = PropertiesBox.getPropertiesBox();
+  @UiField (provided = true) ViewerBox bindViewerBox = ViewerBox.getViewerBox();
+  @UiField (provided = true) AssetListBox bindAssetListBox = AssetListBox.getAssetListBox();
+  @UiField (provided = true) SourceStructureBox bindSourceStructureBox = SourceStructureBox.getSourceStructureBox();
+  @UiField (provided = true) PropertiesBox bindPropertiesBox = PropertiesBox.getPropertiesBox();
+ShowHiddenComponents hiddenIndicator;
+  DeviceViewOptions deviceViewOptions;
 
   // Is the tutorial toolbar currently displayed?
   private boolean tutorialVisible = false;
@@ -306,7 +304,7 @@ public class Ode implements EntryPoint {
     return instance.getCurrentYoungAndroidProjectId();
   }
 
-  public static ProjectEditor getCurretProjectEditor() {
+  public static ProjectEditor getCurrentProjectEditor() {
     return instance.editorManager.getOpenProjectEditor(getCurrentProjectID());
   }
 
@@ -405,17 +403,13 @@ public class Ode implements EntryPoint {
           // a second press while the new project wizard was starting (aka we "debounce"
           // the button). When the person switches to the projects list view again (here)
           // we re-enable it.
-          bindProjectToolbar.enableStartButton();
-          bindProjectToolbar.setProjectTabButtonsVisible(true);
-          bindProjectToolbar.setTrashTabButtonsVisible(false);
+          projectToolbar.enableStartButton();
+          projectToolbar.setProjectTabButtonsVisible(true);
+          projectToolbar.setTrashTabButtonsVisible(false);
         }
       };
-    if (bindDesignToolbar.getCurrentView() != DesignToolbar.View.BLOCKS) {
-      next.run();
-    } else {
       // maybe take a screenshot, second argument is true so we wait for i/o to complete
-      screenShotMaybe(next, true);
-    }
+      getCurrentProjectEditor().screenShotMaybe(next, true);
   }
 
   /**
@@ -428,9 +422,9 @@ public class Ode implements EntryPoint {
     hideTutorials();
     currentView = TRASHCAN;
     ProjectListBox.getProjectListBox().loadTrashList();
-    bindProjectToolbar.enableStartButton();
-    bindProjectToolbar.setProjectTabButtonsVisible(false);
-    bindProjectToolbar.setTrashTabButtonsVisible(true);
+    projectToolbar.enableStartButton();
+    projectToolbar.setProjectTabButtonsVisible(false);
+    projectToolbar.setTrashTabButtonsVisible(true);
   }
 
   /**
@@ -446,14 +440,14 @@ public class Ode implements EntryPoint {
 
   public void hideComponentDesigner() {
     paletteBox.setVisible(false);
-    bindSourceStructureBox.setVisible(false);
-    bindPropertiesBox.setVisible(false);
+    SourceStructureBox.getSourceStructureBox().setVisible(false);
+    PropertiesBox.getPropertiesBox().setVisible(false);
   }
 
   public void showComponentDesigner() {
     paletteBox.setVisible(true);
-    bindSourceStructureBox.setVisible(true);
-    bindPropertiesBox.setVisible(true);
+    SourceStructureBox.getSourceStructureBox().setVisible(true);
+    PropertiesBox.getPropertiesBox().setVisible(true);
   }
 
   /**
@@ -474,9 +468,23 @@ public class Ode implements EntryPoint {
     }
   }
 
+  public void setDeviceViewOptions(DeviceViewOptions opts) {
+    deviceViewOptions = opts;
+  }
+
+  public void setShowHiddenComponents(ShowHiddenComponents opts) {
+    hiddenIndicator = opts;
+  }
+
   public void refreshProperties()
   {
-    bindPropertiesBox.show((YaFormEditor) currentFileEditor, true);
+    PropertiesBox.getPropertiesBox().show((YaFormEditor) currentFileEditor, true);
+    if (hiddenIndicator != null) {
+      hiddenIndicator.refresh();
+    }
+    if (deviceViewOptions != null) {
+      deviceViewOptions.refresh();
+    }
   }
   /**
    * Switch to the Debugging tab
@@ -598,8 +606,8 @@ public class Ode implements EntryPoint {
       // the project. This will cause the projects source files to be fetched
       // asynchronously, and loaded into file editors.
 
-//      ViewerBox.getViewerBox().show(projectRootNode);
-      bindViewerBox.show(projectRootNode);
+      ViewerBox.getViewerBox().show(projectRootNode);
+//      bindViewerBox.show(projectRootNode);
       // Note: we can't call switchToDesignView until the Screen1 file editor
       // finishes loading. We leave that to setCurrentFileEditor(), which
       // will get called at the appropriate time.
@@ -612,7 +620,7 @@ public class Ode implements EntryPoint {
         assetManager = AssetManager.getInstance();
       }
       assetManager.loadAssets(project.getProjectId());
-      bindAssetListBox.getAssetList().refreshAssetList(project.getProjectId());
+      AssetListBox.getAssetListBox().getAssetList().refreshAssetList(project.getProjectId());
     }
     getTopToolbar().updateFileMenuButtons(1);
   }
@@ -1036,8 +1044,8 @@ public class Ode implements EntryPoint {
    *
    * @return  {@link ProjectToolbar}
    */
-  public ProjectToolbar getBindProjectToolbar() {
-    return bindProjectToolbar;
+  public ProjectToolbar getProjectToolbar() {
+    return projectToolbar;
   }
 
   /**
@@ -1064,7 +1072,7 @@ public class Ode implements EntryPoint {
    * @return  {@link DesignToolbar}
    */
   public DesignToolbar getDesignToolbar() {
-    return bindDesignToolbar;
+    return designToolbar;
   }
 
   /**
@@ -1153,7 +1161,7 @@ public class Ode implements EntryPoint {
     }
     LOG.info("Ode: Setting current file editor to " + currentFileEditor.getFileId());
     if (currentFileEditor instanceof YaFormEditor) {
-      bindSourceStructureBox.show((YaFormEditor) currentFileEditor);
+      SourceStructureBox.getSourceStructureBox().show((YaFormEditor) currentFileEditor);
       switchToDesignView();
     }
     if (!windowClosing) {
@@ -1165,7 +1173,7 @@ public class Ode implements EntryPoint {
   }
 
   public void refreshSourceStructure() {
-    bindSourceStructureBox.show((YaFormEditor) currentFileEditor);
+    SourceStructureBox.getSourceStructureBox().show((YaFormEditor) currentFileEditor);
   }
 
   /**
@@ -1255,9 +1263,7 @@ public class Ode implements EntryPoint {
    * HideChaff when switching view from block to others
    */
   private void hideChaff() {
-    if (bindDesignToolbar.getCurrentView() == DesignToolbar.View.BLOCKS
-        // currentFileEditor may be null when switching projects
-        && currentFileEditor != null) {
+    if (currentFileEditor != null) {
       currentFileEditor.hideChaff();
     }
   }
@@ -1481,7 +1487,7 @@ public class Ode implements EntryPoint {
     // We purposely do this after saving dirty
     // editors because saving work is more important then
     // getting this screenshot!
-    screenShotMaybe(new Runnable() {
+    getCurrentProjectEditor().screenShotMaybe(new Runnable() {
         @Override
         public void run() {
         }
@@ -2265,75 +2271,6 @@ public class Ode implements EntryPoint {
     screensLocked = value;
   }
 
-  /**
-   * Take a screenshot when the user leaves a blocks editor
-   *
-   * Take note of the "deferred" flag. If set, we run the runnable
-   * after i/o is finished. Otherwise we run it immediately while i/o
-   * may still be happening. We wait in the case of logout or window
-   * closing, where we want to hold things up until i/o is done.
-   *
-   * @param next a runnable to run when we are finished
-   * @param deferred whether to run the runnable immediately or after i/o is finished
-   */
-
-  public void screenShotMaybe(final Runnable next, final boolean deferred) {
-    // Only take screenshots if we are an enabled feature
-    if (!AppInventorFeatures.takeScreenShots()) {
-      next.run();
-      return;
-    }
-    // If we are not in the blocks editor, we do nothing
-    // but we do run our callback
-    if (bindDesignToolbar.getCurrentView() != DesignToolbar.View.BLOCKS) {
-      next.run();
-      return;
-    }
-    String image = "";
-    FileEditor editor = Ode.getInstance().getCurrentFileEditor();
-    final long projectId = editor.getProjectId();
-    final FileNode fileNode = editor.getFileNode();
-    currentFileEditor.getBlocksImage(new Callback<String,String>() {
-        @Override
-        public void onSuccess(String result) {
-          int comma = result.indexOf(",");
-          if (comma < 0) {
-            LOG.info("screenshot invalid");
-            next.run();
-            return;
-          }
-          result = result.substring(comma+1); // Strip off url header
-          String screenShotName = fileNode.getName();
-          int period = screenShotName.lastIndexOf(".");
-          screenShotName = "screenshots/" + screenShotName.substring(0, period) + ".png";
-          LOG.info("ScreenShotName = " + screenShotName);
-          projectService.screenshot(sessionId, projectId, screenShotName, result,
-            new OdeAsyncCallback<RpcResult>() {
-              @Override
-              public void onSuccess(RpcResult result) {
-                if (deferred) {
-                  next.run();
-                }
-              }
-              public void OnFailure(Throwable caught) {
-                super.onFailure(caught);
-                if (deferred) {
-                  next.run();
-                }
-              }
-            });
-          if (!deferred) {
-            next.run();
-          }
-        }
-        @Override
-        public void onFailure(String error) {
-          LOG.info("Screenshot failed: " + error);
-          next.run();
-        }
-      });
-  }
-
   // Used internally here so that the tutorial panel is only shown on
   // the blocks or designer view, not the gallery or projects (or
   // other) views. unlike setTutorialVisible, we do not side effect
@@ -2379,7 +2316,7 @@ public class Ode implements EntryPoint {
   public void setTutorialURL(String newURL) {
     if (newURL.isEmpty() || (!newURL.startsWith("http://appinventor.mit.edu/")
         && !newURL.startsWith("http://appinv.us/"))) {
-      bindDesignToolbar.setTutorialToggleVisible(false);
+      designToolbar.setTutorialToggleVisible(false);
       setTutorialVisible(false);
     } else {
       String[] urlSplits = newURL.split("//"); // [protocol, rest]
@@ -2390,7 +2327,7 @@ public class Ode implements EntryPoint {
       }
       String effectiveUrl = (isHttps ? "https://" : "http://") + urlSplits[1];
       tutorialPanel.setUrl(effectiveUrl);
-      bindDesignToolbar.setTutorialToggleVisible(true);
+      designToolbar.setTutorialToggleVisible(true);
       setTutorialVisible(true);
     }
   }

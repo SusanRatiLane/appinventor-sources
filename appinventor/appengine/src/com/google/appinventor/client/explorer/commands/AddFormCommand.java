@@ -13,6 +13,7 @@ import com.google.appinventor.client.Ode;
 import com.google.appinventor.client.OdeAsyncCallback;
 import com.google.appinventor.client.editor.FileEditor;
 import com.google.appinventor.client.editor.ProjectEditor;
+import com.google.appinventor.client.editor.youngandroid.YaProjectEditor;
 import com.google.appinventor.client.explorer.project.Project;
 import com.google.appinventor.client.widgets.LabeledTextBox;
 import com.google.appinventor.client.youngandroid.TextValidators;
@@ -241,11 +242,10 @@ public final class AddFormCommand extends ChainableCommand {
               FileEditor formEditor = projectEditor.getFileEditor(formFileId);
               FileEditor blocksEditor = projectEditor.getFileEditor(blocksFileId);
               if (formEditor != null && blocksEditor != null && !ode.screensLocked()) {
-                DesignToolbar designToolbar = Ode.getInstance().getDesignToolbar();
                 long projectId = formEditor.getProjectId();
-                designToolbar.addScreen(projectId, formName, formEditor, 
+                projectEditor.addScreen(projectId, formName, formEditor,
                     blocksEditor);
-                designToolbar.switchToScreen(projectId, formName, DesignToolbar.View.FORM);
+                projectEditor.switchToScreen(projectId, formName, ProjectEditor.View.FORM);
                 executeNextCommand(projectRootNode);
               } else {
                 // The form editor and/or blocks editor is still not there. Try again later.

@@ -10,7 +10,7 @@ public class SignOutAction implements Command {
   @Override
   public void execute() {
     // Maybe take a screenshot
-    Ode.getInstance().screenShotMaybe(new Runnable() {
+    Ode.getCurrentProjectEditor().screenShotMaybe(new Runnable() {
       @Override
       public void run() {
         Window.Location.replace(SIGNOUT_URL);

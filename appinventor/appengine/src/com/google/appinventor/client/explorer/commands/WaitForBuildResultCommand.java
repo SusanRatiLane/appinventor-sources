@@ -9,6 +9,7 @@ package com.google.appinventor.client.explorer.commands;
 import com.google.appinventor.client.ErrorReporter;
 import com.google.appinventor.client.Ode;
 import com.google.appinventor.client.OdeAsyncCallback;
+import com.google.appinventor.client.boxes.BlocksViewerBox;
 import com.google.appinventor.client.boxes.ViewerBox;
 import com.google.appinventor.client.editor.ProjectEditor;
 import com.google.appinventor.client.tracking.Tracking;
@@ -170,7 +171,7 @@ public class WaitForBuildResultCommand extends ChainableCommand {
    * care of any problems.
    */
   private static void showProblemBlocks(final YoungAndroidBlocksNode blocksNode) {
-    ProjectEditor projectEditor = ViewerBox.getViewerBox().show(blocksNode.getProjectRoot());
+    ProjectEditor projectEditor = BlocksViewerBox.getBlocksViewerBox().show(blocksNode.getProjectRoot());
     // TODO(sharon): cause the blocks editor to highlight the problem blocks=
   }
 }

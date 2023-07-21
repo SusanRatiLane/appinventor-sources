@@ -7,8 +7,8 @@ package com.google.appinventor.client.editor.simple.components;
 
 import static com.google.appinventor.client.Ode.MESSAGES;
 
-import com.google.appinventor.client.editor.youngandroid.DesignToolbar;
 import com.google.appinventor.client.Ode;
+import com.google.appinventor.client.editor.ProjectEditor;
 import com.google.appinventor.client.editor.simple.SimpleEditor;
 import com.google.appinventor.client.utils.MessageDialog;
 import com.google.appinventor.client.widgets.properties.EditableProperty;
@@ -67,7 +67,7 @@ public class MockFirebaseDB extends MockNonVisibleComponent {
     super.initComponent(widget);
 
     String devBucket = Ode.getInstance().getUser().getUserEmail().replace(".", ":") + "";
-    DesignToolbar.DesignProject currentProject = Ode.getInstance().getDesignToolbar().getCurrentProject();
+    ProjectEditor.DesignProject currentProject = Ode.getInstance().getDesignToolbar().getCurrentProject();
     String projectName = "";
     if (currentProject != null) {
       projectName = currentProject.name;

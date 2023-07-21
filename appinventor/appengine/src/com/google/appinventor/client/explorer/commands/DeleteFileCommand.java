@@ -219,7 +219,8 @@ public class DeleteFileCommand extends ChainableCommand {
                   project.deleteNode(sourceNode);
                 }
               }
-              ode.getDesignToolbar().removeScreen(project.getProjectId(), formName);
+
+              Ode.getCurrentProjectEditor().removeScreen(project.getProjectId(), formName);
               ode.updateModificationDate(projectId, date);
               executeNextCommand(node);
             }

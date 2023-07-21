@@ -19,11 +19,13 @@ import com.google.appinventor.client.editor.ProjectEditorFactory;
 import com.google.appinventor.client.editor.simple.SimpleComponentDatabase;
 import com.google.appinventor.client.editor.simple.components.MockComponent;
 import com.google.appinventor.client.editor.simple.components.MockFusionTablesControl;
+import com.google.appinventor.client.editor.youngandroid.actions.SwitchScreenAction;
 import com.google.appinventor.client.editor.youngandroid.i18n.BlocklyMsg;
 import com.google.appinventor.client.explorer.project.ComponentDatabaseChangeListener;
 import com.google.appinventor.client.explorer.project.Project;
 import com.google.appinventor.client.explorer.project.ProjectChangeListener;
 import com.google.appinventor.client.properties.json.ClientJsonParser;
+import com.google.appinventor.client.widgets.DropDownItem;
 import com.google.appinventor.common.utils.StringUtils;
 import com.google.appinventor.shared.properties.json.JSONArray;
 import com.google.appinventor.shared.properties.json.JSONObject;
@@ -161,8 +163,8 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
             if (readyToShowScreen1()) {
               LOG.info("YaProjectEditor.addBlocksEditor.loadFile.execute: switching to screen "
                   + formName + " for project " + newBlocksEditor.getProjectId());
-              Ode.getInstance().getDesignToolbar().switchToScreen(newBlocksEditor.getProjectId(),
-                  formName, DesignToolbar.View.FORM);
+              switchToScreen(newBlocksEditor.getProjectId(),
+                  formName, View.FORM);
             }
           }
         }
@@ -202,19 +204,18 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
       }
     }
     // Add the screens to the design toolbar, along with their associated editors
-    DesignToolbar designToolbar = Ode.getInstance().getDesignToolbar();
     for (String formName : editorMap.keySet()) {
       EditorSet editors = editorMap.get(formName);
       if (editors.formEditor != null && editors.blocksEditor != null) {
-        designToolbar.addScreen(projectRootNode.getProjectId(), formName, editors.formEditor, 
+        addScreen(projectRootNode.getProjectId(), formName, editors.formEditor,
             editors.blocksEditor);
         if (isScreen1(formName)) {
           screen1Added = true;
           if (readyToShowScreen1()) {  // probably not yet but who knows?
             LOG.info("YaProjectEditor.loadProject: switching to screen " + formName
                 + " for project " + projectRootNode.getProjectId());
-            Ode.getInstance().getDesignToolbar().switchToScreen(projectRootNode.getProjectId(), 
-                formName, DesignToolbar.View.FORM);
+            switchToScreen(projectRootNode.getProjectId(),
+                formName, View.FORM);
           }
         }
       } else if (editors.formEditor == null) {
@@ -229,17 +230,16 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
   protected void onShow() {
     AssetListBox.getAssetListBox().getAssetList().refreshAssetList(projectId);
     
-    DesignToolbar designToolbar = Ode.getInstance().getDesignToolbar();
     FileEditor selectedFileEditor = getSelectedFileEditor();
     if (selectedFileEditor != null) {
       if (selectedFileEditor instanceof YaFormEditor) {
         YaFormEditor formEditor = (YaFormEditor) selectedFileEditor;
-        designToolbar.switchToScreen(projectId, formEditor.getForm().getName(), 
-            DesignToolbar.View.FORM);
+        switchToScreen(projectId, formEditor.getForm().getName(),
+            View.FORM);
       } else if (selectedFileEditor instanceof YaBlocksEditor) {
         YaBlocksEditor blocksEditor = (YaBlocksEditor) selectedFileEditor;
-        designToolbar.switchToScreen(projectId, blocksEditor.getForm().getName(), 
-            DesignToolbar.View.BLOCKS);
+        switchToScreen(projectId, blocksEditor.getForm().getName(),
+            View.BLOCKS);
       } else {
         // shouldn't happen!
         LOG.severe("YaProjectEditor got onShow when selectedFileEditor"
@@ -267,6 +267,164 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
     }
   }
 
+
+  /*
+   * Switch to screen name in project projectId. Also switches projects if
+   * necessary.
+   */
+  public void switchToScreen(long projectId, String screenName, View view) {
+    doSwitchScreen(projectId, screenName, view);
+  }
+
+
+  private void doSwitchScreen(final long projectId, final String screenName, final View view) {
+    Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+      @Override
+      public void execute() {
+        if (Ode.getInstance().screensLocked()) { // Wait until I/O complete
+          Scheduler.get().scheduleDeferred(this);
+        } else {
+          doSwitchScreen1(projectId, screenName, view);
+        }
+      }
+    });
+  }
+
+  private void doSwitchScreen1(long projectId, String screenName, View view) {
+    if (!projectMap.containsKey(projectId)) {
+      LOG.warning("DesignToolbar: no project with id " + projectId
+                      + ". Ignoring SwitchScreenAction.execute().");
+      return;
+    }
+    ProjectEditor.DesignProject project = projectMap.get(projectId);
+    if (currentProject != project) {
+      // need to switch projects first. this will not switch screens.
+      if (!switchToProject(projectId, project.name)) {
+        return;
+      }
+    }
+    String newScreenName = screenName;
+    if (!currentProject.screens.containsKey(newScreenName)) {
+      // Can't find the requested screen in this project. This shouldn't happen, but if it does
+      // for some reason, try switching to Screen1 instead.
+      LOG.warning("Trying to switch to non-existent screen " + newScreenName +
+                      " in project " + currentProject.name + ". Trying Screen1 instead.");
+      if (currentProject.screens.containsKey(YoungAndroidSourceNode.SCREEN1_FORM_NAME)) {
+        newScreenName = YoungAndroidSourceNode.SCREEN1_FORM_NAME;
+      } else {
+        // something went seriously wrong!
+        ErrorReporter.reportError("Something is wrong. Can't find Screen1 for project "
+                                      + currentProject.name);
+        return;
+      }
+    }
+    currentView = view;
+    ProjectEditor.Screen screen = currentProject.screens.get(newScreenName);
+    ProjectEditor projectEditor = screen.formEditor.getProjectEditor();
+    currentProject.setCurrentScreen(newScreenName);
+    Ode.getInstance().getDesignToolbar().setDropDownButtonCaption(newScreenName);
+    LOG.info("Setting currentScreen to " + newScreenName);
+    if (currentView == View.FORM) {
+      projectEditor.selectFileEditor(screen.formEditor);
+      Ode.getInstance().getDesignToolbar().toggleEditor(false);
+    } else {  // must be View.BLOCKS
+      projectEditor.selectFileEditor(screen.blocksEditor);
+      Ode.getInstance().getDesignToolbar().toggleEditor(true);
+    }
+    Ode.getInstance().getTopToolbar().updateFileMenuButtons(1);
+    // Inform the Blockly Panel which project/screen (aka form) we are working on
+    BlocklyPanel.setCurrentForm(projectId + "_" + newScreenName);
+    screen.blocksEditor.makeActiveWorkspace();
+  }
+
+  public void addProject(long projectId, String projectName) {
+    if (!projectMap.containsKey(projectId)) {
+      projectMap.put(projectId, new ProjectEditor.DesignProject(projectName, projectId));
+      LOG.info("DesignToolbar added project " + projectName + " with id " + projectId);
+    } else {
+      LOG.warning("DesignToolbar ignoring addProject for existing project " + projectName
+                      + " with id " + projectId);
+    }
+  }
+
+  // Switch to an existing project. Note that this does not switch screens.
+  // TODO(sharon): it might be better to throw an exception if the
+  // project doesn't exist.
+  private boolean switchToProject(long projectId, String projectName) {
+    if (projectMap.containsKey(projectId)) {
+      ProjectEditor.DesignProject project = projectMap.get(projectId);
+      if (project == currentProject) {
+        LOG.warning("DesignToolbar: ignoring call to switchToProject for current project");
+        return true;
+      }
+      pushedScreens.clear();  // Effectively switching applications; clear stack of screens.
+      Ode.getInstance().getDesignToolbar().clearDropDownMenu();
+      LOG.info("DesignToolbar: switching to existing project " + projectName + " with id "
+                   + projectId);
+      currentProject = project;
+      Ode.getInstance().getDesignToolbar().switchToProject(projectId, projectName,
+          currentProject.screens.keySet());
+      YaBlocksEditor.resendAssetsAndExtensions();  // Send assets for active project
+    } else {
+      ErrorReporter.reportError("Design toolbar doesn't know about project " + projectName +
+                                    " with id " + projectId);
+      LOG.warning("Design toolbar doesn't know about project " + projectName + " with id "
+                      + projectId);
+      return false;
+    }
+    return true;
+  }
+
+  /*
+   * Add a screen name to the drop-down for the project with id projectId.
+   * name is the form name, formEditor is the file editor for the form UI,
+   * and blocksEditor is the file editor for the form's blocks.
+   */
+  public void addScreen(long projectId, String name, FileEditor formEditor,
+                        FileEditor blocksEditor) {
+    if (!projectMap.containsKey(projectId)) {
+      LOG.warning("DesignToolbar can't find project " + name + " with id " + projectId
+                      + ". Ignoring addScreen().");
+      return;
+    }
+//    Ode.getInstance().getDesignToolbar().addScreen(projectId, name);
+    ProjectEditor.DesignProject project = projectMap.get(projectId);
+    if (project.addScreen(name, formEditor, blocksEditor));
+//    {
+//      if (currentProject == project) {
+//
+//      }
+//    }
+  }
+
+  /*
+   * Remove screen name (if it exists) from project projectId
+   */
+  public void removeScreen(long projectId, String name) {
+    if (!projectMap.containsKey(projectId)) {
+      LOG.warning("DesignToolbar can't find project " + name + " with id " + projectId
+                      + " Ignoring removeScreen().");
+      return;
+    }
+    LOG.info("DesignToolbar: got removeScreen for project " + projectId
+                 + ", screen " + name);
+    ProjectEditor.DesignProject project = projectMap.get(projectId);
+    if (!project.screens.containsKey(name)) {
+      // already removed this screen
+      return;
+    }
+    if (currentProject == project) {
+      // if removing current screen, choose a new screen to show
+      if (currentProject.currentScreen.equals(name)) {
+        // TODO(sharon): maybe make a better choice than screen1, but for now
+        // switch to screen1 because we know it is always there
+        switchToScreen(projectId, YoungAndroidSourceNode.SCREEN1_FORM_NAME, View.FORM);
+      }
+      Ode.getInstance().getDesignToolbar().removeDropDownButtonItem(name);
+    }
+    project.removeScreen(name);
+  }
+
   // ProjectChangeListener methods
 
   @Override
@@ -291,7 +449,7 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
       // see if we have both editors yet
       EditorSet editors = editorMap.get(formName);
       if (editors.formEditor != null && editors.blocksEditor != null) {
-        Ode.getInstance().getDesignToolbar().addScreen(node.getProjectId(), formName, 
+        addScreen(node.getProjectId(), formName,
             editors.formEditor, editors.blocksEditor);
       }
     }
@@ -469,8 +627,7 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
           if (readyToShowScreen1()) {
             LOG.info("YaProjectEditor.addFormEditor.loadFile.execute: switching to screen "
                 + formName + " for project " + newFormEditor.getProjectId());
-            Ode.getInstance().getDesignToolbar().switchToScreen(newFormEditor.getProjectId(),
-                formName, DesignToolbar.View.FORM);
+            switchToScreen(newFormEditor.getProjectId(), formName, View.FORM);
           }
         }
         loadBlocksEditor(formName);

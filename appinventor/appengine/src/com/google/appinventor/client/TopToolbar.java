@@ -10,15 +10,12 @@ import static com.google.appinventor.client.Ode.MESSAGES;
 
 import com.google.appinventor.client.actions.EnableAutoloadAction;
 import com.google.appinventor.client.actions.SetFontDyslexicAction;
-import com.google.appinventor.client.actions.WindowOpenAction;
 import com.google.appinventor.client.boxes.ProjectListBox;
-import com.google.appinventor.client.editor.youngandroid.DesignToolbar;
+import com.google.appinventor.client.editor.ProjectEditor;
 import com.google.appinventor.client.editor.youngandroid.YaBlocksEditor;
 import com.google.appinventor.client.widgets.DropDownButton;
 import com.google.appinventor.common.version.AppInventorFeatures;
-import com.google.appinventor.shared.rpc.user.Config;
 import com.google.appinventor.shared.storage.StorageUtil;
-import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
@@ -249,13 +246,13 @@ public class TopToolbar extends Composite {
    */
 
   public void startRepl(boolean start, boolean forChromebook, boolean forEmulator, boolean forUsb) {
-    DesignToolbar.DesignProject currentProject = Ode.getInstance().getDesignToolbar().getCurrentProject();
+    ProjectEditor.DesignProject currentProject = Ode.getInstance().getDesignToolbar().getCurrentProject();
     if (currentProject == null) {
       LOG.warning("DesignToolbar.currentProject is null. "
             + "Ignoring attempt to start the repl.");
       return;
     }
-    DesignToolbar.Screen screen = currentProject.screens.get(currentProject.currentScreen);
+    ProjectEditor.Screen screen = currentProject.screens.get(currentProject.currentScreen);
     screen.blocksEditor.startRepl(!start, forChromebook, forEmulator, forUsb);
     if (start) {
       if (forEmulator) {        // We are starting the emulator...
@@ -271,25 +268,25 @@ public class TopToolbar extends Composite {
   }
 
   public void replHardReset() {
-    DesignToolbar.DesignProject currentProject = Ode.getInstance().getDesignToolbar().getCurrentProject();
+    ProjectEditor.DesignProject currentProject = Ode.getInstance().getDesignToolbar().getCurrentProject();
     if (currentProject == null) {
       LOG.warning("DesignToolbar.currentProject is null. "
             + "Ignoring attempt to do hard reset.");
       return;
     }
-    DesignToolbar.Screen screen = currentProject.screens.get(currentProject.currentScreen);
+    ProjectEditor.Screen screen = currentProject.screens.get(currentProject.currentScreen);
     ((YaBlocksEditor)screen.blocksEditor).hardReset();
     updateConnectToDropDownButton(false, false, false);
   }
 
   public void replUpdate() {
-    DesignToolbar.DesignProject currentProject = Ode.getInstance().getDesignToolbar().getCurrentProject();
+    ProjectEditor.DesignProject currentProject = Ode.getInstance().getDesignToolbar().getCurrentProject();
     if (currentProject == null) {
       LOG.warning("DesignToolbar.currentProject is null. "
               + "Ignoring attempt to refresh companion screen.");
       return;
     }
-    DesignToolbar.Screen screen = currentProject.screens.get(currentProject.currentScreen);
+    ProjectEditor.Screen screen = currentProject.screens.get(currentProject.currentScreen);
     ((YaBlocksEditor)screen.blocksEditor).sendComponentData(true);
   }
 

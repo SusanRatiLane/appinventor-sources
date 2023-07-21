@@ -227,7 +227,7 @@ public class ProjectList extends Composite implements FolderManagerEventListener
       container.add(item);
     }
     selectAllCheckBox.setValue(false);
-    Ode.getInstance().getBindProjectToolbar().updateButtons();
+    Ode.getInstance().getProjectToolbar().updateButtons();
   }
 
   public boolean isSelected() {
@@ -251,7 +251,7 @@ public void fireSelectionChangeEvent() {
     } else {
       selectAllCheckBox.setValue(false);
     }
-    Ode.getInstance().getBindProjectToolbar().updateButtons();
+    Ode.getInstance().getProjectToolbar().updateButtons();
   }
 
   public List<Project> getSelectedProjects() {

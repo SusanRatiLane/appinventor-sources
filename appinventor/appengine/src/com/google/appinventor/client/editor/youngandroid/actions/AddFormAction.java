@@ -1,5 +1,6 @@
 package com.google.appinventor.client.editor.youngandroid.actions;
 
+import com.google.appinventor.client.editor.ProjectEditor;
 import com.google.appinventor.client.editor.youngandroid.DesignToolbar;
 import com.google.appinventor.client.Ode;
 import com.google.appinventor.client.explorer.commands.AddFormCommand;
@@ -25,8 +26,8 @@ public class AddFormAction implements Command {
         }
       };
       // take a screenshot of the current blocks if we are in the blocks editor
-      if (ode.getDesignToolbar().currentView == DesignToolbar.View.BLOCKS) {
-        Ode.getInstance().screenShotMaybe(doSwitch, false);
+      if (Ode.getCurrentProjectEditor().currentView == ProjectEditor.View.BLOCKS) {
+        Ode.getCurrentProjectEditor().screenShotMaybe(doSwitch, false);
       } else {
         doSwitch.run();
       }

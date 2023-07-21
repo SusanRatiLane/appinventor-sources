@@ -7,8 +7,8 @@ package com.google.appinventor.client.editor.simple.components;
 
 import com.google.appinventor.client.Ode;
 import com.google.appinventor.client.OdeAsyncCallback;
+import com.google.appinventor.client.editor.ProjectEditor;
 import com.google.appinventor.client.editor.simple.SimpleEditor;
-import com.google.appinventor.client.editor.youngandroid.DesignToolbar;
 import com.google.appinventor.client.widgets.properties.EditableProperty;
 
 import com.google.gwt.user.client.ui.Image;
@@ -50,7 +50,7 @@ public class MockTranslator extends MockNonVisibleComponent {
   @Override
   public final void initComponent(Widget widget) {
     super.initComponent(widget);
-    DesignToolbar.DesignProject currentProject = Ode.getInstance().getDesignToolbar().getCurrentProject();
+    ProjectEditor.DesignProject currentProject = Ode.getInstance().getDesignToolbar().getCurrentProject();
     String projectID = "";
     if (currentProject != null) {
       projectID = currentProject.name;

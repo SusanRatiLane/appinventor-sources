@@ -6,8 +6,8 @@
 package com.google.appinventor.client.editor.simple.components;
 
 import com.google.appinventor.client.Ode;
+import com.google.appinventor.client.editor.ProjectEditor;
 import com.google.appinventor.client.editor.simple.SimpleEditor;
-import com.google.appinventor.client.editor.youngandroid.DesignToolbar;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -42,7 +42,7 @@ public class MockSpreadsheet extends MockNonVisibleComponent {
     super.initComponent(widget);
 
     // Retrieve the current project name
-    DesignToolbar.DesignProject currentProject = Ode.getInstance().getDesignToolbar().getCurrentProject();
+    ProjectEditor.DesignProject currentProject = Ode.getInstance().getDesignToolbar().getCurrentProject();
     String projectName = "MIT App Inventor";
     if (currentProject != null) {
       projectName = currentProject.name;

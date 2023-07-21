@@ -55,13 +55,9 @@ public final class SourceStructureBox extends Box {
     return sourceStructureExplorer;
   }
 
-  public SourceStructureExplorer show(YaFormEditor form) {
-    sourceStructureExplorer.updateTree(form.getForm().buildComponentsTree(),
-        form.getForm().getLastSelectedComponent().getSourceStructureExplorerItem());
-    sourceStructureExplorer.setVisible(true);
+  public void show(YaFormEditor form) {
+    setContent(form.getSourceStructureExplorer());
     this.setVisible(true);
-    setContent(sourceStructureExplorer);
-    return sourceStructureExplorer;
   }
 
 }

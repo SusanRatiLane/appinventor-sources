@@ -13,6 +13,7 @@ import com.google.appinventor.client.ConnectProgressBar;
 import com.google.appinventor.client.ErrorReporter;
 import com.google.appinventor.client.Ode;
 import com.google.appinventor.client.TopToolbar;
+import com.google.appinventor.client.editor.ProjectEditor;
 import com.google.appinventor.client.editor.youngandroid.i18n.BlocklyMsg;
 import com.google.appinventor.client.settings.user.BlocksSettings;
 import com.google.appinventor.components.common.YaVersion;
@@ -312,15 +313,15 @@ public class BlocklyPanel extends HTMLPanel {
 
   public static void indicateDisconnect() {
     TopToolbar.indicateDisconnect();
-    DesignToolbar.clearScreens();
+    ProjectEditor.clearScreens();
   }
 
   public static boolean pushScreen(String newScreen) {
-    return DesignToolbar.pushScreen(newScreen);
+    return ProjectEditor.pushScreen(newScreen);
   }
 
   public static void popScreen() {
-    DesignToolbar.popScreen();
+    ProjectEditor.popScreen();
   }
 
   public void getBlocksImage(Callback<String, String> callback) {

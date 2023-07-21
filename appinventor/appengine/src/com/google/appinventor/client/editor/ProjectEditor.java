@@ -7,18 +7,30 @@
 package com.google.appinventor.client.editor;
 
 import com.google.appinventor.client.Ode;
+import com.google.appinventor.client.OdeAsyncCallback;
+import com.google.appinventor.client.editor.youngandroid.BlocklyPanel;
+import com.google.appinventor.client.editor.youngandroid.DesignToolbar;
+import com.google.appinventor.client.editor.youngandroid.YaBlocksEditor;
+import com.google.appinventor.client.editor.youngandroid.YaFormEditor;
 import com.google.appinventor.client.explorer.project.Project;
 import com.google.appinventor.client.settings.Settings;
 import com.google.appinventor.client.settings.project.ProjectSettings;
+import com.google.appinventor.common.version.AppInventorFeatures;
+import com.google.appinventor.shared.rpc.RpcResult;
+import com.google.appinventor.shared.rpc.project.FileNode;
 import com.google.appinventor.shared.rpc.project.ProjectRootNode;
+import com.google.appinventor.shared.rpc.project.youngandroid.YoungAndroidSourceNode;
 import com.google.appinventor.shared.settings.SettingsConstants;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.gwt.core.client.Callback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DeckPanel;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -37,6 +49,14 @@ import java.util.logging.Logger;
  */
 public abstract class ProjectEditor extends Composite {
   private static final Logger LOG = Logger.getLogger(ProjectEditor.class.getName());
+  // Stack of screens switched to from the Companion
+  // We implement screen switching in the Companion by having it tell us
+  // to switch screens. We then load into the companion the new Screen
+  // We save where we were because the companion can have us return from
+  // a screen. If we switch projects in the browser UI, we clear this
+  // list of screens as we are effectively running a different application
+  // on the device.
+  public static LinkedList<String> pushedScreens = Lists.newLinkedList();
 
   protected final ProjectRootNode projectRootNode;
   protected final long projectId;
@@ -48,11 +68,18 @@ public abstract class ProjectEditor extends Composite {
   // is non-null, it is one of the file editors in openFileEditors and the 
   // one currently showing in deckPanel. 
   private final Map<String, FileEditor> openFileEditors;
-  protected final List<String> fileIds; 
+  protected final List<String> fileIds;
   private final HashMap<String,String> locationHashMap = new HashMap<String,String>();
-  private final DeckPanel deckPanel;
+  private final DeckPanel projectDeckPanel;
   private FileEditor selectedFileEditor;
   private final TreeMap<String, Boolean> screenHashMap = new TreeMap<String, Boolean>();
+
+  protected ProjectEditor.DesignProject currentProject;
+
+
+  // Map of project id to project info for all projects we've ever shown
+  // in the Designer in this session.
+  public Map<Long, ProjectEditor.DesignProject> projectMap = Maps.newHashMap();
 
   /**
    * Creates a {@code ProjectEditor} instance.
@@ -67,16 +94,49 @@ public abstract class ProjectEditor extends Composite {
     openFileEditors = Maps.newHashMap();
     fileIds = new ArrayList<String>();
 
-    deckPanel = new DeckPanel();
+    projectDeckPanel = new DeckPanel();
 
 //    VerticalPanel panel = new VerticalPanel();
 //    panel.add(deckPanel);
-    deckPanel.setSize("100%", "100%");
+    projectDeckPanel.setSize("100%", "100%");
 //    panel.setSize("100%", "100%");
-    initWidget(deckPanel);
+    initWidget(projectDeckPanel);
     // Note: I'm not sure that the setSize call below does anything useful.
     setSize("100%", "100%");
   }
+
+  /*
+   * PushScreen -- Static method called by Blockly when the Companion requests
+   * That we switch to a new screen. We keep track of the Screen we were on
+   * and push that onto a stack of Screens which we pop when requested by the
+   * Companion.
+   */
+    public static boolean pushScreen(String screenName) {
+      DesignToolbar designToolbar = Ode.getInstance().getDesignToolbar();
+      long projectId = Ode.getInstance().getCurrentYoungAndroidProjectId();
+      String currentScreen = Ode.getCurrentProjectEditor().currentProject.currentScreen;
+      if (!Ode.getCurrentProjectEditor().currentProject.screens.containsKey(screenName)) // No such screen -- can happen
+        return false;                                                    // because screen is user entered here.
+      pushedScreens.addFirst(currentScreen);
+      Ode.getCurrentProjectEditor().switchToScreen(projectId, screenName, View.BLOCKS);
+      return true;
+    }
+
+  public static void popScreen() {
+      DesignToolbar designToolbar = Ode.getInstance().getDesignToolbar();
+      long projectId = Ode.getInstance().getCurrentYoungAndroidProjectId();
+      String newScreen;
+      if (pushedScreens.isEmpty()) {
+        return;                   // Nothing to do really
+      }
+      newScreen = pushedScreens.removeFirst();
+      Ode.getCurrentProjectEditor().switchToScreen(projectId, newScreen, View.BLOCKS);
+    }
+
+  // Called from Javascript when Companion is disconnected
+    public static void clearScreens() {
+      pushedScreens.clear();
+    }
 
   /**
    * Processes the project before loading into the project editor.
@@ -102,11 +162,30 @@ public abstract class ProjectEditor extends Composite {
    */
   protected abstract void onHide();
 
+  public abstract void switchToScreen(long projectId, String screenName, View view);
+
+  public abstract void removeScreen(long projectId, String name);
+
+  public abstract void addProject(long projectId, String projectName);
+
+  public abstract void addScreen(long projectId, String name, FileEditor formEditor,
+                        FileEditor blocksEditor);
+
+  public View getCurrentView() {
+    return currentView;
+  }
   public final void setScreenCheckboxState(String screen, Boolean isChecked) {
     screenHashMap.put(screen, isChecked);
+    changeProjectSettingsProperty(
+        SettingsConstants.PROJECT_YOUNG_ANDROID_SETTINGS,
+        SettingsConstants.YOUNG_ANDROID_SETTINGS_SCREEN_CHECKBOX_STATE_MAP,
+        getScreenCheckboxMapString());
   }
 
   public final Boolean getScreenCheckboxState(String screen) {
+    if(!screenHashMap.containsKey(screen)) {
+      setScreenCheckboxState(screen, false);
+    }
     return screenHashMap.get(screen);
   }
 
@@ -127,8 +206,11 @@ public abstract class ProjectEditor extends Composite {
     return screenCheckboxMap;
   }
 
-  public final void buildScreenHashMap(String screenCheckboxMap) {
-    String[] pairs = screenCheckboxMap.split(" ");
+  public final void buildScreenHashMap() {
+    String screenCheckboxMap = getProjectSettingsProperty(
+        SettingsConstants.PROJECT_YOUNG_ANDROID_SETTINGS,
+        SettingsConstants.YOUNG_ANDROID_SETTINGS_SCREEN_CHECKBOX_STATE_MAP
+    );    String[] pairs = screenCheckboxMap.split(" ");
     for (String pair : pairs) {
       String[] mapping = pair.split(":");
       String screen = mapping[0];
@@ -147,7 +229,7 @@ public abstract class ProjectEditor extends Composite {
     openFileEditors.put(fileId, fileEditor);
     fileIds.add(fileId);
     
-    deckPanel.add(fileEditor);
+    projectDeckPanel.add(fileEditor);
   }
 
   /**
@@ -160,10 +242,20 @@ public abstract class ProjectEditor extends Composite {
     String fileId = fileEditor.getFileId();
     openFileEditors.put(fileId, fileEditor);
     fileIds.add(beforeIndex, fileId);
-    deckPanel.insert(fileEditor, beforeIndex);
+    projectDeckPanel.insert(fileEditor, beforeIndex);
     LOG.info("Inserted file editor for " + fileEditor.getFileId() + " at pos " + beforeIndex);
+  }
+
+  public final void insertFormFileEditor(FileEditor fileEditor, int beforeIndex) {
+    insertFileEditor(fileEditor, beforeIndex);
 
   }
+
+  public final void insertBlocksFileEditor(FileEditor fileEditor, int beforeIndex) {
+    insertFileEditor(fileEditor, beforeIndex);
+
+  }
+
 
   /**
    * Selects the given file editor in the deck panel and calls its onShow()
@@ -178,7 +270,7 @@ public abstract class ProjectEditor extends Composite {
    * @param fileEditor  file editor to select
    */
   public final void selectFileEditor(FileEditor fileEditor) {
-    int index = deckPanel.getWidgetIndex(fileEditor);
+    int index = projectDeckPanel.getWidgetIndex(fileEditor);
     if (index == -1) {
       if (fileEditor != null) {
         LOG.warning("Can't find widget for fileEditor " + fileEditor.getFileId());
@@ -197,8 +289,78 @@ public abstract class ProjectEditor extends Composite {
     // selectedFileEditor == fileEditor already. This handles the case of switching back
     // to a previously opened project from another project.
     selectedFileEditor = fileEditor;
-    deckPanel.showWidget(index);
+    projectDeckPanel.showWidget(index);
     selectedFileEditor.onShow();
+  }
+
+  /**
+   * Take a screenshot when the user leaves a blocks editor
+   *
+   * Take note of the "deferred" flag. If set, we run the runnable
+   * after i/o is finished. Otherwise we run it immediately while i/o
+   * may still be happening. We wait in the case of logout or window
+   * closing, where we want to hold things up until i/o is done.
+   *
+   * @param next a runnable to run when we are finished
+   * @param deferred whether to run the runnable immediately or after i/o is finished
+   */
+
+  public void screenShotMaybe(final Runnable next, final boolean deferred) {
+    // Only take screenshots if we are an enabled feature
+    if (!AppInventorFeatures.takeScreenShots()) {
+      next.run();
+      return;
+    }
+    // If we are not in the blocks editor, we do nothing
+    // but we do run our callback
+    if (currentView != View.BLOCKS) {
+      next.run();
+      return;
+    }
+    String image = "";
+    FileEditor editor = Ode.getInstance().getCurrentFileEditor();
+    final long projectId = editor.getProjectId();
+    final FileNode fileNode = editor.getFileNode();
+    Ode.getInstance().getCurrentFileEditor().getBlocksImage(new Callback<String,String>() {
+      @Override
+      public void onSuccess(String result) {
+        int comma = result.indexOf(",");
+        if (comma < 0) {
+          LOG.info("screenshot invalid");
+          next.run();
+          return;
+        }
+        result = result.substring(comma+1); // Strip off url header
+        String screenShotName = fileNode.getName();
+        int period = screenShotName.lastIndexOf(".");
+        screenShotName = "screenshots/" + screenShotName.substring(0, period) + ".png";
+        LOG.info("ScreenShotName = " + screenShotName);
+        Ode.getInstance().getProjectService().screenshot(Ode.getInstance().getSessionId(),
+            projectId, screenShotName, result,
+            new OdeAsyncCallback<RpcResult>() {
+              @Override
+              public void onSuccess(RpcResult result) {
+                if (deferred) {
+                  next.run();
+                }
+              }
+              public void OnFailure(Throwable caught) {
+                super.onFailure(caught);
+                if (deferred) {
+                  next.run();
+                }
+              }
+            });
+        if (!deferred) {
+          next.run();
+        }
+      }
+      @Override
+      public void onFailure(String error) {
+        LOG.info("Screenshot failed: " + error);
+        next.run();
+      }
+    });
   }
 
   /**
@@ -238,9 +400,9 @@ public abstract class ProjectEditor extends Composite {
         LOG.severe("File editor is unexpectedly null for " + fileId);
         continue;
       }
-      int index = deckPanel.getWidgetIndex(fileEditor);
+      int index = projectDeckPanel.getWidgetIndex(fileEditor);
       fileIds.remove(index);
-      deckPanel.remove(fileEditor);
+      projectDeckPanel.remove(fileEditor);
       if (selectedFileEditor == fileEditor) {
         selectedFileEditor.onHide();
         selectedFileEditor = null;
@@ -374,4 +536,72 @@ public abstract class ProjectEditor extends Composite {
     super.onUnload();
     onHide();
   }
+
+  /*
+   * A Screen groups together the form editor and blocks editor for an
+   * application screen. Name is the name of the screen (form) displayed
+   * in the screens pull-down.
+   */
+  public static class Screen {
+    public final String screenName;
+    public final FileEditor formEditor;
+    public final FileEditor blocksEditor;
+
+    public Screen(String name, FileEditor formEditor, FileEditor blocksEditor) {
+      this.screenName = name;
+      this.formEditor = formEditor;
+      this.blocksEditor = blocksEditor;
+    }
+  }
+  // Enum for type of view showing in the design tab
+  public enum View {
+    FORM,   // Form editor view
+    BLOCKS  // Blocks editor view
+  }
+  public View currentView = View.FORM;
+
+  /*
+   * A project as represented in the DesignToolbar. Each project has a name
+   * (as displayed in the DesignToolbar on the left), a set of named screens,
+   * and an indication of which screen is currently being edited.
+   */
+  public static class DesignProject {
+    public final String name;
+    public final Map<String, Screen> screens; // screen name -> Screen
+    public String currentScreen; // name of currently displayed screen
+    private final long projectId;
+
+    public DesignProject(String name, long projectId) {
+      this.name = name;
+      this.projectId = projectId;
+      screens = Maps.newHashMap();
+      // Screen1 is initial screen by default
+      currentScreen = YoungAndroidSourceNode.SCREEN1_FORM_NAME;
+      // Let BlocklyPanel know which screen to send Yail for
+      BlocklyPanel.setCurrentForm(projectId + "_" + currentScreen);
+    }
+
+    // Returns true if we added the screen (it didn't previously exist), false otherwise.
+    public boolean addScreen(String name, FileEditor formEditor, FileEditor blocksEditor) {
+      if (screens.containsKey(name)) {
+        return false;
+      }
+      screens.put(name, new Screen(name, formEditor, blocksEditor));
+      return true;
+    }
+
+    public void removeScreen(String name) {
+      screens.remove(name);
+    }
+
+    public void setCurrentScreen(String name) {
+      currentScreen = name;
+    }
+
+    public long getProjectId() {
+      return projectId;
+    }
+
+  }
+
 }

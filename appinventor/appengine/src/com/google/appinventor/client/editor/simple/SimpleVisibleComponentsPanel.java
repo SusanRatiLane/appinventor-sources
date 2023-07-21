@@ -34,7 +34,6 @@ import java.util.Map;
 public final class SimpleVisibleComponentsPanel extends Composite implements DropTarget, ComponentDatabaseChangeListener {
   // UI elements
   private final VerticalPanel phoneScreen;
-  private final CheckBox checkboxShowHiddenComponents;
   private final ListBox listboxPhoneTablet; // A ListBox for Phone/Tablet/Monitor preview sizes
   private final ListBox listboxPhonePreview; // A ListBox for Holo/Material/iOS preview styles
   private final int[][] drop_lst = { {320, 505}, {480, 675}, {768, 1024} };
@@ -63,38 +62,7 @@ public final class SimpleVisibleComponentsPanel extends Composite implements Dro
     // Initialize UI
     phoneScreen = new VerticalPanel();
     phoneScreen.setStylePrimaryName("ode-SimpleFormDesigner");
-
-    checkboxShowHiddenComponents = new CheckBox(MESSAGES.showHiddenComponentsCheckbox()) {
-      @Override
-      protected void onLoad() {
-        // Get project settings
-        String screenCheckboxMap = projectEditor.getProjectSettingsProperty(
-          SettingsConstants.PROJECT_YOUNG_ANDROID_SETTINGS, 
-          SettingsConstants.YOUNG_ANDROID_SETTINGS_SCREEN_CHECKBOX_STATE_MAP
-        );
-        if (screenCheckboxMap != null && !screenCheckboxMap.equals("")) {
-          projectEditor.buildScreenHashMap(screenCheckboxMap);
-          Boolean isChecked = projectEditor.getScreenCheckboxState(form.getTitle());
-          checkboxShowHiddenComponents.setValue(isChecked);
-        }
-      }
-    };
-    checkboxShowHiddenComponents.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-      @Override
-      public void onValueChange(ValueChangeEvent<Boolean> event) {
-        boolean isChecked = event.getValue();
-        projectEditor.setScreenCheckboxState(form.getTitle(), isChecked);
-        projectEditor.changeProjectSettingsProperty(
-          SettingsConstants.PROJECT_YOUNG_ANDROID_SETTINGS, 
-          SettingsConstants.YOUNG_ANDROID_SETTINGS_SCREEN_CHECKBOX_STATE_MAP, 
-          projectEditor.getScreenCheckboxMapString()
-        );
-        if (form != null) {
-          form.refresh();
-        }
-      }
-    });
-    phoneScreen.add(checkboxShowHiddenComponents);
+    projectEditor.buildScreenHashMap();
 
     listboxPhoneTablet = new ListBox() {
       @Override
@@ -163,10 +131,6 @@ public final class SimpleVisibleComponentsPanel extends Composite implements Dro
     phoneScreen.add(listboxPhonePreview);
 
     initWidget(phoneScreen);
-  }
-
-  public boolean isHiddenComponentsCheckboxChecked() {
-    return checkboxShowHiddenComponents.getValue();
   }
 
   // get width and height stored in user settings, and change the preview size.

@@ -115,7 +115,7 @@ public final class EditorManager {
         openProjectEditors.put(projectId, projectEditor);
         
         // Tell the DesignToolbar about this project
-        Ode.getInstance().getDesignToolbar().addProject(projectId, projectRootNode.getName());
+        projectEditor.addProject(projectId, projectRootNode.getName());
 
         // Prepare the project before Loading into the editor.
         // Components are prepared before the project is actually loaded.

@@ -202,7 +202,12 @@ public final class YaFormEditor extends SimpleEditor implements FormChangeListen
   }
 
   public boolean shouldDisplayHiddenComponents() {
-    return visibleComponentsPanel.isHiddenComponentsCheckboxChecked();
+    return projectEditor.getScreenCheckboxState(form.getTitle());
+  }
+
+  public void setDisplayHiddenComponents(boolean isChecked) {
+    projectEditor.setScreenCheckboxState(form.getTitle(), isChecked);
+    form.refresh();
   }
 
   // FileEditor methods
@@ -360,6 +365,10 @@ public final class YaFormEditor extends SimpleEditor implements FormChangeListen
     if (selectedProperties != null) {
       designProperties.setProperties(selectedProperties);
     }
+  }
+
+  public PropertiesPanel getPropertiesPanel() {
+    return designProperties;
   }
 
   // PropertyChangeListener implementation
@@ -773,7 +782,6 @@ public final class YaFormEditor extends SimpleEditor implements FormChangeListen
     // TODO: This should be a method on Ode
     Ode.getInstance().refreshSourceStructure();
     Ode.getInstance().refreshProperties();
-
     Ode.getInstance().showComponentDesigner();
   }
 
