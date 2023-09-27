@@ -534,4 +534,23 @@ public class YoungAndroidPalettePanel extends Composite implements SimplePalette
     loadComponents();
   }
 
+  @Override
+  public void setSearchMode(boolean mode) {
+
+  }
+
+  @Override
+  public boolean getSearchMode() {
+    return false;
+  }
+
+  @Override
+  public void searchByComponentName(String componentName) {
+
+  }
+
+  @Override
+  public boolean showSearchBox() {
+    return false;
+  }
 }

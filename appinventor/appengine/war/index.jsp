@@ -31,10 +31,13 @@
     <link type="text/css" rel="stylesheet" href="static/css/ai2blockly.css">
     <link type="text/css" rel="stylesheet" href="static/closure-library/closure/goog/css/dialog.css">
     <link type="text/css" rel="stylesheet" href="static/closure-library/closure/goog/css/hsvapalette.css">
+    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined">
     <link type="text/css" rel="stylesheet" href="static/font-awesome/css/font-awesome.min.css">
+    <link type="text/css" rel="stylesheet" href="static/css/materialdesignicons.min.css">
     <link type="text/css" rel="stylesheet" href="static/leaflet/leaflet.css">
     <link type="text/css" rel="stylesheet" href="static/leaflet/leaflet.toolbar.css">
     <link type="text/css" rel="stylesheet" href="static/leaflet/leaflet-vector-markers.css">
+    <link type="text/css" rel="stylesheet" href="static/css/mdl.min.css">
     <link type="text/css" rel="stylesheet" href="static/css/Ya.css">
     <link type="text/css" rel="stylesheet" href="static/css/android_holo.css">
     <link type="text/css" rel="stylesheet" href="static/css/android_material.css">
@@ -70,6 +73,7 @@
     <script src="static/leaflet/Leaflet.Editable.js"></script>
     <script src="static/leaflet/leaflet.geometryutil.js"></script>
     <script src="static/leaflet/leaflet.snap.js"></script>
+    <script src="static/js/mdl.min.js"></script>
     <script>
       if (window.navigator.userAgent.indexOf("MSIE") != -1){
           document.getElementById("unsupported").style.display = 'block';

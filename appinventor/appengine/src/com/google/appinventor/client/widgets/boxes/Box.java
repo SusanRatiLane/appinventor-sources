@@ -202,9 +202,9 @@ public abstract class Box extends HandlerPanel {
 
   // UI elements
   private final SimplePanel body;
-  private final Label captionLabel;
+  protected final Label captionLabel;
   private final HandlerPanel header;
-  private final DockPanel headerContainer;
+  protected final DockPanel headerContainer;
   private final ScrollPanel scrollPanel;
   private final PushButton minimizeButton;
   private final PushButton menuButton;

@@ -16,17 +16,14 @@ import com.google.appinventor.client.editor.simple.SimpleComponentDatabase;
 import com.google.appinventor.client.editor.simple.components.FormChangeListener;
 import com.google.appinventor.client.editor.simple.components.MockComponent;
 import com.google.appinventor.client.editor.simple.components.MockForm;
-import com.google.appinventor.client.editor.simple.palette.DropTargetProvider;
 import com.google.appinventor.client.editor.youngandroid.BlocklyPanel.BlocklyWorkspaceChangeListener;
 import com.google.appinventor.client.editor.youngandroid.events.EventHelper;
-import com.google.appinventor.client.editor.youngandroid.palette.YoungAndroidPalettePanel;
 import com.google.appinventor.client.explorer.SourceStructureExplorer;
 import com.google.appinventor.client.explorer.SourceStructureExplorerItem;
 import com.google.appinventor.client.explorer.project.ComponentDatabaseChangeListener;
 import com.google.appinventor.client.explorer.project.Project;
 import com.google.appinventor.client.explorer.project.ProjectChangeListener;
 import com.google.appinventor.client.tracking.Tracking;
-import com.google.appinventor.client.widgets.dnd.DropTarget;
 import com.google.appinventor.shared.properties.json.JSONArray;
 import com.google.appinventor.shared.properties.json.JSONValue;
 import com.google.appinventor.shared.rpc.project.ChecksumedFileException;
@@ -96,9 +93,6 @@ public final class YaBlocksEditor extends FileEditor
   // References to other panels that we need to control.
   private final SourceStructureExplorer sourceStructureExplorer;
 
-  // Panel that is used as the content of the palette box
-  private YoungAndroidPalettePanel palettePanel;
-
   // Blocks area. Note that the blocks area is a part of the "document" in the
   // browser (via the deckPanel in the ProjectEditor). So if the document changes (which happens
   // when we switch projects) we will lose the blocks editor state, even though
@@ -163,22 +157,11 @@ public final class YaBlocksEditor extends FileEditor
   }
 
   public void setFormEditor(YaFormEditor editor) {
-    // Create palettePanel, which will be used as the content of the PaletteBox.
     myFormEditor = editor;
-    if (myFormEditor != null) {
-      palettePanel = new YoungAndroidPalettePanel(myFormEditor);
-      palettePanel.loadComponents(new DropTargetProvider() {
-        // TODO(sharon): make the tree in the BlockSelectorBox a drop target
-        @Override
-        public DropTarget[] getDropTargets() {
-          return new DropTarget[0];
-        }
-      });
-      palettePanel.setSize("100%", "100%");
-    } else {
-      palettePanel = null;
-      LOG.warning("Can't get form editor for blocks: " + getFileId());
-    }
+
+    project = Ode.getInstance().getProjectManager().getProject(blocksNode.getProjectId());
+    project.addProjectChangeListener(this);
+    onProjectLoaded(project);
   }
 
   // FileEditor methods
@@ -242,11 +225,7 @@ public final class YaBlocksEditor extends FileEditor
    */
   private void loadBlocksEditor() {
 
-    // Set the palette box's content.
-    if (palettePanel != null) {
-      PaletteBox paletteBox = PaletteBox.getPaletteBox();
-      paletteBox.setContent(palettePanel);
-    }
+    // Hide the palette box's content.
     PaletteBox.getPaletteBox().setVisible(false);
 
     // Update the source structure explorer with the tree of this form's components.

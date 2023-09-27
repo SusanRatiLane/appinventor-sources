@@ -30,7 +30,7 @@ import com.google.appinventor.client.editor.simple.components.MockVisibleCompone
 import com.google.appinventor.client.editor.simple.palette.DropTargetProvider;
 import com.google.appinventor.client.editor.simple.palette.SimpleComponentDescriptor;
 import com.google.appinventor.client.editor.simple.palette.SimplePalettePanel;
-import com.google.appinventor.client.editor.youngandroid.palette.YoungAndroidPalettePanel;
+import com.google.appinventor.client.editor.youngandroid.palette.PaletteFactory;
 import com.google.appinventor.client.explorer.SourceStructureExplorer;
 import com.google.appinventor.client.explorer.project.ComponentDatabaseChangeListener;
 import com.google.appinventor.client.properties.json.ClientJsonParser;
@@ -60,6 +60,7 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DockPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -119,7 +120,7 @@ public final class YaFormEditor extends SimpleEditor implements FormChangeListen
   private final SourceStructureExplorer sourceStructureExplorer;
 
   // Panels that are used as the content of the palette and properties boxes.
-  private final YoungAndroidPalettePanel palettePanel;
+  private final SimplePalettePanel palettePanel;
   private final PropertiesPanel designProperties;
 
   // UI elements
@@ -180,7 +181,7 @@ public final class YaFormEditor extends SimpleEditor implements FormChangeListen
     designProperties.setSize("100%", "100%");
 
     // Create palettePanel, which will be used as the content of the PaletteBox.
-    palettePanel = new YoungAndroidPalettePanel(this);
+    palettePanel = PaletteFactory.create(this);
     palettePanel.loadComponents(new DropTargetProvider() {
       @Override
       public DropTarget[] getDropTargets() {
@@ -193,8 +194,8 @@ public final class YaFormEditor extends SimpleEditor implements FormChangeListen
         return dropTargets.toArray(new DropTarget[dropTargets.size()]);
       }
     });
-    palettePanel.setSize("100%", "100%");
-    componentDatabaseChangeListeners.add(palettePanel);
+    ((Widget) palettePanel).setSize("100%", "100%");
+    componentDatabaseChangeListeners.add((ComponentDatabaseChangeListener) palettePanel);
 
     initWidget(componentsPanel);
     setSize("100%", "100%");
@@ -739,7 +740,7 @@ public final class YaFormEditor extends SimpleEditor implements FormChangeListen
 
     // Set the palette box's content.
     PaletteBox paletteBox = PaletteBox.getPaletteBox();
-    paletteBox.setContent(palettePanel);
+    paletteBox.setContent((Widget) palettePanel);
 
     // Update the source structure explorer with the tree of this form's components.
     // TODO: SMRL Refactor links to source structure

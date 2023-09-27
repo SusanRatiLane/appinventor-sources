@@ -42,6 +42,7 @@ import com.google.appinventor.client.tracking.Tracking;
 import com.google.appinventor.client.utils.HTML5DragDrop;
 import com.google.appinventor.client.utils.PZAwarePositionCallback;
 import com.google.appinventor.client.utils.Promise;
+import com.google.appinventor.client.utils.Promise.WrappedException;
 import com.google.appinventor.client.utils.Urls;
 import com.google.appinventor.client.widgets.ExpiredServiceOverlay;
 
@@ -75,9 +76,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.MouseWheelEvent;
-import com.google.gwt.event.dom.client.MouseWheelHandler;
+import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseWheelEvent;
 import com.google.gwt.event.dom.client.MouseWheelHandler;
@@ -87,6 +86,7 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.History;
@@ -127,6 +127,9 @@ public class Ode implements EntryPoint {
   private static final Logger LOG = Logger.getLogger(Ode.class.getName());
 
   interface OdeUiBinder extends UiBinder<FlowPanel, Ode> {}
+
+  @UiTemplate("Ode_Kodular.ui.xml")
+  interface KodularUiBinder extends UiBinder<FlowPanel, Ode> {}
 
   // Global instance of the Ode object
   private static Ode instance;
@@ -576,6 +579,13 @@ public class Ode implements EntryPoint {
   }
 
   public void openYoungAndroidProjectInDesigner(final Project project) {
+    loadUi(null).then(result -> {
+      doOpenProject(project);
+      return resolve(null);
+    });
+  }
+
+  private void doOpenProject(final Project project) {
     ProjectRootNode projectRootNode = project.getRootNode();
     if (projectRootNode == null) {
       // The project nodes haven't been loaded yet.
@@ -710,7 +720,7 @@ public class Ode implements EntryPoint {
           editorManager = new EditorManager();
           return resolve(null);
         })
-        .then(this::initializeUi)
+        .then(this::loadUi)
         .then(settings -> projectManager.loadProjects(projectService))
         .then(projects -> {
           folderManager.loadFolders();
@@ -881,10 +891,58 @@ public class Ode implements EntryPoint {
     return resolve(true);
   }
 
+  private Promise<Object> loadUiPromise = null;
+
+  private Promise<Object> loadUi(Object result) {
+    if (loadUiPromise != null) {
+      return loadUiPromise;
+    }
+    projectListbox = ProjectListBox.getProjectListBox();
+    String platform = Window.Location.getParameter("ui");
+    Promise<UiBinder<FlowPanel, Ode>> promise;
+    if ("next".equals(platform)) {
+      if ("blue".equals(Window.Location.getParameter("color"))) {
+        RootPanel.getBodyElement().addClassName("blues");
+      } else {
+        RootPanel.getBodyElement().addClassName("kodular");
+      }
+      RootPanel.getBodyElement().addClassName("nextui");
+      promise = new Promise<>((resolve, reject) -> {
+          GWT.runAsync(new RunAsyncCallback() {
+              @Override
+              public void onFailure(Throwable throwable) {
+                reject.apply(new WrappedException(throwable));
+              }
+
+              @Override
+              public void onSuccess() {
+                resolve.apply(GWT.create(KodularUiBinder.class));
+              }
+            });
+      });
+    } else {
+      promise = new Promise<>((resolve, reject) -> {
+          GWT.runAsync(new RunAsyncCallback() {
+              @Override
+              public void onFailure(Throwable throwable) {
+                reject.apply(new WrappedException(throwable));
+              }
+
+              @Override
+              public void onSuccess() {
+                resolve.apply(GWT.create(OdeUiBinder.class));
+              }
+            });
+      });
+    }
+    loadUiPromise = promise.then(this::initializeUi);
+    return loadUiPromise;
+  }
+
   /*
    * Initializes all UI elements.
    */
-  private Promise<Object> initializeUi(Object result) {
+  private Promise<Object> initializeUi(UiBinder<FlowPanel, Ode> uiBinder) {
     rpcStatusPopup = new RpcStatusPopup();
 
     // Register services with RPC status popup
@@ -912,9 +970,6 @@ public class Ode implements EntryPoint {
     };
     deckPanel.sinkEvents(Event.ONCONTEXTMENU);
 
-    projectListbox = ProjectListBox.getProjectListBox();
-
-    OdeUiBinder uiBinder = GWT.create(OdeUiBinder.class);
     FlowPanel mainPanel = uiBinder.createAndBindUi(this);
 
     deckPanel.showWidget(0);
@@ -971,7 +1026,7 @@ public class Ode implements EntryPoint {
     setupMotd();
     HTML5DragDrop.init();
     topPanel.showUserEmail(user.getUserEmail());
-    return resolve(result);
+    return resolve(uiBinder);
   }
 
   private void setupMotd() {
@@ -2346,6 +2401,14 @@ public class Ode implements EntryPoint {
 
   public boolean getDeleteAccountAllowed() {
     return config.getDeleteAccountAllowed();
+  }
+
+  public static String getLiteMode() {
+    return "False";
+  }
+
+  public static String getExperimentalVisibilityPreference() {
+    return "False";
   }
 
   /**

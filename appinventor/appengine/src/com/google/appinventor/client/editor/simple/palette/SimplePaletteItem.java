@@ -12,6 +12,7 @@ import com.google.appinventor.client.editor.simple.components.MockComponentsUtil
 import com.google.appinventor.client.widgets.dnd.DragSourcePanel;
 import com.google.appinventor.client.widgets.dnd.DragSourceSupport;
 import com.google.appinventor.client.widgets.dnd.DropTarget;
+import com.google.appinventor.components.common.ComponentCategory;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
@@ -39,6 +40,10 @@ public class SimplePaletteItem extends DragSourcePanel {
   //It is here to keep the selected panel item
   private static Widget selectedPaletteItemWidget;
 
+  private boolean showInSearch;
+
+  private ComponentCategory category;
+
   /**
    * Creates a new palette item.
    *
@@ -46,8 +51,15 @@ public class SimplePaletteItem extends DragSourcePanel {
    * @param dropTargetProvider provider of targets that palette items can be dropped on
    */
   public SimplePaletteItem(SimpleComponentDescriptor scd, DropTargetProvider dropTargetProvider) {
+    this(scd, dropTargetProvider, true, null);
+  }
+
+  public SimplePaletteItem(SimpleComponentDescriptor scd, DropTargetProvider dropTargetProvider,
+      boolean showInSearch, ComponentCategory category) {
     this.dropTargetProvider = dropTargetProvider;
     this.scd = scd;
+    this.showInSearch = showInSearch;
+    this.category = category;
 
     componentPrototype = null;
 

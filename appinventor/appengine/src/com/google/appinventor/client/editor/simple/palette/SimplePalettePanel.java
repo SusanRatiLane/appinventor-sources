@@ -35,4 +35,14 @@ public interface SimplePalettePanel {
   void clearComponents();
 
   void reloadComponents();
+
+  void setSearchMode(boolean mode);
+
+  boolean getSearchMode();
+
+  void searchByComponentName(String componentName);
+
+  boolean showSearchBox();
+
+  void clearComponentsExceptExtension();
 }

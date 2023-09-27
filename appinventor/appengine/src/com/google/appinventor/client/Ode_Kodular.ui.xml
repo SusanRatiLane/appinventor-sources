@@ -22,17 +22,17 @@
           <box:ProjectListBox width="100%" ui:field="projectListbox" />
         </g:FlowPanel>
         <g:FlowPanel styleName="ode-ProjectEditor" ui:field="projectEditor">
-          <ed:DesignToolbar ui:field="designToolbar" />
           <g:FlowPanel ui:field="workColumns" styleName="ode-WorkColumns">
             <box:PaletteBox ui:field="paletteBox"/>
             <box:ViewerBox ui:field="viewerBox" />
+            <box:PropertiesBox ui:field="propertiesBox" width="222px" />
             <g:FlowPanel ui:field="structureAndAssets">
               <box:SourceStructureBox ui:field="sourceStructureBox" />
               <box:BlockSelectorBox />
               <box:AssetListBox  ui:field="assetListBox" />
             </g:FlowPanel>
-            <box:PropertiesBox ui:field="propertiesBox" width="222px" />
           </g:FlowPanel>
+          <ed:DesignToolbar ui:field="designToolbar" />
         </g:FlowPanel>
         <g:FlowPanel width="100%">
           <box:AdminUserListBox />

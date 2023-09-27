@@ -18,6 +18,7 @@ import com.google.appinventor.client.editor.ProjectEditorFactory;
 import com.google.appinventor.client.editor.simple.SimpleComponentDatabase;
 import com.google.appinventor.client.editor.simple.components.MockComponent;
 import com.google.appinventor.client.editor.simple.components.MockFusionTablesControl;
+import com.google.appinventor.client.editor.youngandroid.palette.PaletteFactory;
 import com.google.appinventor.client.explorer.project.ComponentDatabaseChangeListener;
 import com.google.appinventor.client.explorer.project.Project;
 import com.google.appinventor.client.explorer.project.ProjectChangeListener;
@@ -178,6 +179,11 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
   // blocks are loaded!
 
   private Promise<Object> loadProject(Object result) {
+    return PaletteFactory.initialize()
+      .then(this::doLoadProject);
+  }
+
+  private Promise<Object> doLoadProject(Object result) {
     // add form editors first, then blocks editors because the blocks editors
     // need access to their corresponding form editors to set up properly
     for (ProjectNode source : projectRootNode.getAllSourceNodes()) {
