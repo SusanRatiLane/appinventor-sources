@@ -3623,3 +3623,15 @@ div.dropdiv p {
   flex-shrink: 0;
   flex-grow: 0;
 }
+
+svg.blocklySvg,
+.blocklyMainBackground,
+rect.gridBackground {
+  fill: white;
+}
+
+.dark svg.blocklySvg,
+.dark .blocklyMainBackground,
+.dark rect.gridBackground {
+  fill: #333;
+}

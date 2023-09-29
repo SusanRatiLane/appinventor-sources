@@ -1136,7 +1136,7 @@ Blockly.WorkspaceSvg.prototype.customContextMenu = function(menuOptions) {
       self.svgBackground_.setAttribute('style', 'fill: url(#' + self.options.gridPattern.id + ');');
     } else {
       // remove grid
-      self.svgBackground_.setAttribute('style', 'fill: white;');
+      self.svgBackground_.removeAttribute('style');
     }
     if (top.BlocklyPanel_setGridEnabled) {
       top.BlocklyPanel_setGridEnabled(self.options.gridOptions['enabled']);
@@ -1259,6 +1259,52 @@ Blockly.WorkspaceSvg.prototype.onMouseWheel_ = function(e) {
   }
 };
 
+Blockly.WorkspaceSvg.prototype.updateGridPattern_ = function() {
+  if (!this.options.gridPattern) {
+    return;
+  }
+  var safeSpacing = (this.options.gridOptions['spacing'] * this.scale) || 100;
+  var rect;
+  if (this.options.gridPattern.firstElementChild.tagName !== 'rect') {
+    rect = Blockly.utils.createSvgElement('rect', {
+      'width': safeSpacing,
+      'height': safeSpacing,
+      'class': 'gridBackground'
+    }, this.options.gridPattern);
+    this.options.gridPattern.insertBefore(rect, this.options.gridPattern.firstElementChild);
+  } else {
+    rect = this.options.gridPattern.firstElementChild;
+    rect.setAttribute('width', safeSpacing);
+    rect.setAttribute('height', safeSpacing);
+  }
+  // Note that the remainder is copied from Blockly core and adapted slightly
+  // MSIE freaks if it sees a 0x0 pattern, so set empty patterns to 100x100.
+  this.options.gridPattern.setAttribute('width', safeSpacing);
+  this.options.gridPattern.setAttribute('height', safeSpacing);
+  var half = Math.floor(this.options.gridOptions['spacing'] / 2) + 0.5;
+  var start = half - this.options.gridOptions['length'] / 2;
+  var end = half + this.options.gridOptions['length'] / 2;
+  var line1 = rect.nextSibling;
+  var line2 = line1 && line1.nextSibling;
+  half *= this.scale;
+  start *= this.scale;
+  end *= this.scale;
+  if (line1) {
+    line1.setAttribute('stroke-width', this.scale);
+    line1.setAttribute('x1', start);
+    line1.setAttribute('y1', half);
+    line1.setAttribute('x2', end);
+    line1.setAttribute('y2', half);
+  }
+  if (line2) {
+    line2.setAttribute('stroke-width', this.scale);
+    line2.setAttribute('x1', half);
+    line2.setAttribute('y1', start);
+    line2.setAttribute('x2', half);
+    line2.setAttribute('y2', end);
+  }
+};
+
 Blockly.WorkspaceSvg.prototype.setGridSettings = function(enabled, snap) {
   this.options.gridOptions['enabled'] = enabled;
   this.options.gridOptions['snap'] = enabled && snap;
@@ -1268,7 +1314,7 @@ Blockly.WorkspaceSvg.prototype.setGridSettings = function(enabled, snap) {
       this.svgBackground_.setAttribute('style', 'fill: url(#' + this.options.gridPattern.id + ');');
     } else {
       // remove grid
-      this.svgBackground_.setAttribute('style', 'fill: white;');
+      this.svgBackground_.removeAttribute('style');
     }
   }
 };
