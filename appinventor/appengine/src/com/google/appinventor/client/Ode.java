@@ -6,8 +6,6 @@
 
 package com.google.appinventor.client;
 
-import com.google.appinventor.client.actions.DisableAutoloadAction;
-import com.google.appinventor.client.actions.EnableAutoloadAction;
 import com.google.appinventor.client.boxes.AssetListBox;
 import com.google.appinventor.client.boxes.PaletteBox;
 import com.google.appinventor.client.boxes.ProjectListBox;
@@ -17,6 +15,7 @@ import com.google.appinventor.client.boxes.ViewerBox;
 import com.google.appinventor.client.editor.EditorManager;
 import com.google.appinventor.client.editor.FileEditor;
 import com.google.appinventor.client.editor.ProjectEditor;
+import com.google.appinventor.client.editor.simple.components.MockForm;
 import com.google.appinventor.client.editor.simple.palette.DropTargetProvider;
 import com.google.appinventor.client.editor.youngandroid.BlocklyPanel;
 import com.google.appinventor.client.editor.youngandroid.DesignToolbar;
@@ -38,7 +37,6 @@ import com.google.appinventor.client.settings.user.UserSettings;
 import com.google.appinventor.client.tracking.Tracking;
 import com.google.appinventor.client.utils.HTML5DragDrop;
 import com.google.appinventor.client.utils.PZAwarePositionCallback;
-import com.google.appinventor.client.widgets.DropDownButton;
 import com.google.appinventor.client.widgets.ExpiredServiceOverlay;
 import com.google.appinventor.client.widgets.boxes.WorkAreaPanel;
 import com.google.appinventor.client.wizards.NewProjectWizard.NewProjectCommand;
@@ -70,6 +68,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseWheelEvent;
 import com.google.gwt.event.dom.client.MouseWheelHandler;
@@ -79,6 +78,7 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.History;
@@ -222,6 +222,7 @@ public class Ode implements EntryPoint {
   @UiField (provided = true) AssetListBox assetListBox = AssetListBox.getAssetListBox();
   @UiField (provided = true) SourceStructureBox sourceStructureBox = SourceStructureBox.getSourceStructureBox();
   @UiField (provided = true) PropertiesBox propertiesBox = PropertiesBox.getPropertiesBox();
+  @UiField CheckBox showHiddenComponents;
 
   // Is the tutorial toolbar currently displayed?
   private boolean tutorialVisible = false;
@@ -295,6 +296,17 @@ public class Ode implements EntryPoint {
     return instance;
   }
 
+  // TODO: This checkbox should move to ProjectEditor in
+  // a future refactor
+  @SuppressWarnings("unused")
+  @UiHandler("showHiddenComponents")
+  void toggleHiddenComponents(ClickEvent e) {
+    MockForm form = ((YaFormEditor) currentFileEditor).getForm();
+    getCurrentProjectEditor().setScreenCheckboxState(form.getTitle(),
+        showHiddenComponents.getValue());
+    form.doRefresh();
+  }
+
   public static Project getCurrentProject() {
     return instance.projectManager.getProject(instance.getCurrentYoungAndroidProjectId());
   }
@@ -303,7 +315,7 @@ public class Ode implements EntryPoint {
     return instance.getCurrentYoungAndroidProjectId();
   }
 
-  public static ProjectEditor getCurretProjectEditor() {
+  public static ProjectEditor getCurrentProjectEditor() {
     return instance.editorManager.getOpenProjectEditor(getCurrentProjectID());
   }
 
@@ -1147,6 +1159,7 @@ public class Ode implements EntryPoint {
     LOG.info("Ode: Setting current file editor to " + currentFileEditor.getFileId());
     if (currentFileEditor instanceof YaFormEditor) {
       sourceStructureBox.show(((YaFormEditor) currentFileEditor).getForm());
+      showHiddenComponents.setValue(getCurrentProjectEditor().getScreenCheckboxState(((YaFormEditor) currentFileEditor).getForm().getTitle()));
       switchToDesignView();
     }
     if (!windowClosing) {
