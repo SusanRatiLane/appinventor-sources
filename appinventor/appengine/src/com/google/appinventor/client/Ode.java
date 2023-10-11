@@ -79,6 +79,7 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.History;
@@ -930,7 +931,8 @@ public class Ode implements EntryPoint {
     };
     deckPanel.sinkEvents(Event.ONCONTEXTMENU);
 
-    OdeUiBinder uiBinder = GWT.create(OdeUiBinder.class);
+    OdeStyle test = new OdeStyle();
+    OdeStyle.OdeUiBinder uiBinder = test.getOdeUiBinder();
     FlowPanel mainPanel = uiBinder.createAndBindUi(this);
 
     deckPanel.showWidget(0);
