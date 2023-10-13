@@ -5,7 +5,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.FlowPanel;
 
-public class OdeStyle {
+public class UIBinderStyle {
   public static final String design = "com.google.appinventor.client.style.classic.";
 
   @UiTemplate(design + "Ode.ui.xml")

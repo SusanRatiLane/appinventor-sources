@@ -18,12 +18,13 @@
     <g:FlowPanel styleName="ode-TutorialWrapper" ui:field="overDeckPanel">
       <ed:TutorialPanel ui:field="tutorialPanel" width="100%" height="100%" visible="false" />
       <g:DeckPanel ui:field="deckPanel" animationEnabled="true" styleName="ode-DeckPanel">
-        <g:Label text="DYNAMIC STYLE" />
         <g:FlowPanel styleName="ode-ProjectListView" width="100%" >
+          <g:Label text="DYNAMIC STYLE SETTING" />
           <ex:ProjectToolbar ui:field="projectToolbar" />
           <box:ProjectListBox ui:field="projectListbox" />
         </g:FlowPanel>
         <g:FlowPanel styleName="ode-ProjectEditor" ui:field="projectEditor">
+          <g:Label text="DYNAMIC STYLE SETTING" />
           <ed:DesignToolbar ui:field="designToolbar" />
           <g:FlowPanel ui:field="workColumns" styleName="ode-WorkColumns" >
             <box:PaletteBox width="240px" ui:field="paletteBox"/>
