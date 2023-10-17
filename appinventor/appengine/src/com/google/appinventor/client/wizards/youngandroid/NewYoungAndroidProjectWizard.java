@@ -42,8 +42,6 @@ import java.util.logging.Logger;
  * @author markf@google.com (Mark Friedman)
  */
 public final class NewYoungAndroidProjectWizard {
-  interface NewYoungAndroidProjectWizardUiBinder extends UiBinder<Dialog, NewYoungAndroidProjectWizard> {}
-  private static final NewYoungAndroidProjectWizard.NewYoungAndroidProjectWizardUiBinder UI_BINDER = GWT.create(NewYoungAndroidProjectWizard.NewYoungAndroidProjectWizardUiBinder.class);
   private static final Logger LOG = Logger.getLogger(NewYoungAndroidProjectWizard.class.getName());
 
   // UI element for project name
@@ -56,7 +54,7 @@ public final class NewYoungAndroidProjectWizard {
    * Creates a new YoungAndroid project wizard.
    */
   public NewYoungAndroidProjectWizard() {
-    UI_BINDER.createAndBindUi(this);
+    Ode.getInterfaceStyle().getNewYoungAndroidProjectWizardUiBinder().createAndBindUi(this);
     projectNameTextBox.setValidator(new Validator() {
       @Override
       public boolean validate(String value) {

@@ -930,9 +930,7 @@ public class Ode implements EntryPoint {
     };
     deckPanel.sinkEvents(Event.ONCONTEXTMENU);
 
-    UIBinderStyle test = new UIBinderStyle();
-    UIBinderStyle.OdeUiBinder uiBinder = test.getOdeUiBinder();
-    FlowPanel mainPanel = uiBinder.createAndBindUi(this);
+    FlowPanel mainPanel = getInterfaceStyle().getOdeUiBinder().createAndBindUi(this);
 
     deckPanel.showWidget(0);
     if ((mayNeedSplash || shouldShowWelcomeDialog()) && !didShowSplash) {
@@ -1295,6 +1293,18 @@ public class Ode implements EntryPoint {
           Window.Location.reload();
         }
       });
+  }
+
+  /**
+   * Returns identifier of the user interface style
+   *
+   * @return user default font
+   */
+  public static UIBinderStyle getInterfaceStyle() {
+//    String value = userSettings.getSettings(SettingsConstants.USER_GENERAL_SETTINGS).
+//                       getPropertyValue(SettingsConstants.USER_DYSLEXIC_FONT);
+//    return Boolean.parseBoolean(value)
+    return new UIBinderStyle();
   }
 
   /**
