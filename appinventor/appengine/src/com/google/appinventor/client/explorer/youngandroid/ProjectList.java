@@ -84,12 +84,13 @@ public class ProjectList extends Composite implements FolderManagerEventListener
     sortOrder = SortOrder.DESCENDING;
 
     initWidget(UI_BINDER.createAndBindUi(this));
+    setIsTrash(false);
+
     refreshSortIndicators();
     Ode.getInstance().getFolderManager().addFolderManagerEventListener(this);
 
     // It is important to listen to project manager events as soon as possible.
     Ode.getInstance().getProjectManager().addProjectManagerEventListener(this);
-    setIsTrash(false);
   }
 
   @SuppressWarnings("unused")

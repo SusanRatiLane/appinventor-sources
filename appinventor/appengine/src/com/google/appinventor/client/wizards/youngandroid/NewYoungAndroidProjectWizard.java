@@ -6,34 +6,27 @@
 
 package com.google.appinventor.client.wizards.youngandroid;
 
-
 import com.google.appinventor.client.Ode;
-import com.google.appinventor.client.UIStyle;
-import com.google.appinventor.client.wizards.Dialog;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.appinventor.client.widgets.Validator;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.KeyDownHandler;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Button;
 import com.google.appinventor.client.explorer.project.Project;
 import com.google.appinventor.client.tracking.Tracking;
 import com.google.appinventor.client.widgets.LabeledTextBox;
+import com.google.appinventor.client.widgets.Validator;
+import com.google.appinventor.client.wizards.Dialog;
 import com.google.appinventor.client.wizards.NewProjectWizard;
 import com.google.appinventor.client.youngandroid.TextValidators;
 import com.google.appinventor.common.utils.StringUtils;
 import com.google.appinventor.shared.rpc.project.youngandroid.NewYoungAndroidProjectParameters;
 import com.google.appinventor.shared.rpc.project.youngandroid.YoungAndroidProjectNode;
 import com.google.gwt.core.client.Scheduler;
-
-import java.util.logging.Logger;
-
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Button;
 import java.util.logging.Logger;
 
 
@@ -42,35 +35,25 @@ import java.util.logging.Logger;
  *
  * @author markf@google.com (Mark Friedman)
  */
-public final class NewYoungAndroidProjectWizard {
-  interface NewYoungAndroidProjectWizardUiBinder extends UiBinder<Dialog, NewYoungAndroidProjectWizard> {}
-  private static final NewYoungAndroidProjectWizardUiBinder UI_BINDER =
-      GWT.create(NewYoungAndroidProjectWizardUiBinder.class);
+public abstract class NewYoungAndroidProjectWizard {
   private static final Logger LOG = Logger.getLogger(NewYoungAndroidProjectWizard.class.getName());
-
-  // UI element for project name
-  @UiField Dialog addDialog;
-  @UiField Button addButton;
-  @UiField Button cancelButton;
-  @UiField LabeledTextBox projectNameTextBox;
 
   /**
    * Creates a new YoungAndroid project wizard.
    */
-  public NewYoungAndroidProjectWizard() {
-//    UIStyle.UI_BINDER.createAndBindUi(this);
-    UI_BINDER.createAndBindUi(this);
-    projectNameTextBox.setValidator(new Validator() {
+  protected NewYoungAndroidProjectWizard(UiBinder<Dialog, NewYoungAndroidProjectWizard> theme) {
+    theme.createAndBindUi(this);
+    getProjectNameTextBox().setValidator(new Validator() {
       @Override
       public boolean validate(String value) {
         errorMessage = TextValidators.getErrorMessage(value);
-        projectNameTextBox.setErrorMessage(errorMessage);
+        getProjectNameTextBox().setErrorMessage(errorMessage);
         if (errorMessage.length() > 0) {
-          addButton.setEnabled(false);
+          getAddButton().setEnabled(false);
           return false;
         }
         errorMessage = TextValidators.getWarningMessages(value);
-        addButton.setEnabled(true);
+        getAddButton().setEnabled(true);
         return true;
       }
       @Override
@@ -79,55 +62,66 @@ public final class NewYoungAndroidProjectWizard {
       }
     });
 
-    projectNameTextBox.getTextBox().addKeyDownHandler(new KeyDownHandler() {
+    getProjectNameTextBox().getTextBox().addKeyDownHandler(new KeyDownHandler() {
       @Override
       public void onKeyDown(KeyDownEvent event) {
         int keyCode = event.getNativeKeyCode();
         if (keyCode == KeyCodes.KEY_ENTER) {
-          addButton.click();
+          getAddButton().click();
         } else if (keyCode == KeyCodes.KEY_ESCAPE) {
-          cancelButton.click();
+          getCancelButton().click();
         }
       }});
 
-    projectNameTextBox.getTextBox().addKeyUpHandler(new KeyUpHandler() {
+    getProjectNameTextBox().getTextBox().addKeyUpHandler(new KeyUpHandler() {
       @Override
       public void onKeyUp(KeyUpEvent event) { //Validate the text each time a key is lifted
-        projectNameTextBox.validate();
+        getProjectNameTextBox().validate();
       }
     });
 
-    addDialog.center();
-    projectNameTextBox.setFocus(true);
+    getProjectNameTextBox().setFocus(true);
+  }
+
+  public abstract Dialog getAddDialog();
+
+  public abstract Button getAddButton();
+
+  public abstract Button getCancelButton();
+
+  public abstract LabeledTextBox getProjectNameTextBox();
+
+  public void show() {
+    getAddDialog().center();
   }
 
   @UiHandler("cancelButton")
-  void cancelAdd(ClickEvent e) {
-    addDialog.hide();
+  public void cancelAdd(ClickEvent e) {
+    getAddDialog().hide();
   }
 
   @UiHandler("addButton")
-  void addProject(ClickEvent e) {
-    String projectName = projectNameTextBox.getText().trim();
+  public void addProject(ClickEvent e) {
+    String projectName = getProjectNameTextBox().getText().trim();
     projectName = projectName.replaceAll("( )+", " ").replace(" ", "_");
     TextValidators.ProjectNameStatus status = TextValidators.checkNewProjectName(projectName);
     if (status == TextValidators.ProjectNameStatus.SUCCESS) {
       LOG.info("Project status success");
       doCreateProject(projectName);
-      addDialog.hide();
+      getAddDialog().hide();
     } else {
       LOG.info("Checking for error");
-      String errorMessage = TextValidators.getErrorMessage(projectNameTextBox.getText());
+      String errorMessage = TextValidators.getErrorMessage(getProjectNameTextBox().getText());
       if (errorMessage.length() > 0) {
         LOG.info("Found error: " + errorMessage);
-        projectNameTextBox.setErrorMessage(errorMessage);
+        getProjectNameTextBox().setErrorMessage(errorMessage);
       } else {
-        errorMessage = TextValidators.getWarningMessages(projectNameTextBox.getText());
+        errorMessage = TextValidators.getWarningMessages(getProjectNameTextBox().getText());
         if (errorMessage.length() > 0) {
-          projectNameTextBox.setErrorMessage(errorMessage);
+          getProjectNameTextBox().setErrorMessage(errorMessage);
         } else {
           // Internationalize or change handling here.
-          projectNameTextBox.setErrorMessage("There has been an unexpected error validating the project name.");
+          getProjectNameTextBox().setErrorMessage("There has been an unexpected error validating the project name.");
         }
       }
     }

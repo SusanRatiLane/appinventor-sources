@@ -115,7 +115,7 @@ public class TopToolbar extends Composite {
     // UIBinder can't negate the boolean itself.
     hasWriteAccess = !Ode.getInstance().isReadOnly();
 
-    initWidget(UIStyle.bindTopToolbar(this));
+    initWidget(Ode.getUiFactory().createTopToolbar(this));
     if (iamChromebook) {
       RootPanel.getBodyElement().addClassName("onChromebook");
     }
