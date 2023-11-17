@@ -65,7 +65,7 @@ public class TopToolbar extends Composite {
   private static final String WIDGET_NAME_IMPORTPROJECT = "ImportProject";
   private static final String WIDGET_NAME_IMPORTTEMPLATE = "ImportTemplate";
   private static final String WIDGET_NAME_EXPORTPROJECT = "ExportProject";
-
+  private static final String WIDGET_NAME_EXPORTALLPROJECTS = "ExportAllProjects";
   private static final String WIDGET_NAME_ADMIN = "Admin";
   private static final String WIDGET_NAME_USER_ADMIN = "UserAdmin";
   private static final String WIDGET_NAME_DOWNLOAD_USER_SOURCE = "DownloadUserSource";
@@ -158,7 +158,6 @@ public class TopToolbar extends Composite {
   public void bindUI() {
     // The boolean needs to be reversed here so it is true when items need to be visible.
     // UIBinder can't negate the boolean itself.
-    LOG.info("bindUI Original");
     readOnly = Ode.getInstance().isReadOnly();
     hasWriteAccess = !readOnly;
     initWidget(UI_BINDER.createAndBindUi(this));
@@ -177,19 +176,17 @@ public class TopToolbar extends Composite {
   }
 
   public void updateMenuState(int numSelectedProjects, int numProjects) {
-    LOG.info("UpdateMenuState");
     boolean allowDelete = readOnly && numSelectedProjects > 0;
     boolean allowExport = numSelectedProjects > 0;
     boolean allowExportAll = numProjects > 0;
-    LOG.info("Update fileDropDown");
-    fileDropDown.setItemEnabled(MESSAGES.trashProjectMenuItem(), allowDelete);
+    fileDropDown.setItemEnabled(WIDGET_NAME_DELETE, allowDelete);
     fileDropDown.setItemEnabled(MESSAGES.deleteFromTrashButton(), allowDelete);
     String exportProjectLabel = numSelectedProjects > 1
         ? MESSAGES.exportSelectedProjectsMenuItem(numSelectedProjects)
         : MESSAGES.exportProjectMenuItem();
     fileDropDown.setItemHtmlById(WIDGET_NAME_EXPORTPROJECT, exportProjectLabel);
     fileDropDown.setItemEnabledById(WIDGET_NAME_EXPORTPROJECT, allowExport);
-    fileDropDown.setItemEnabledById(MESSAGES.exportAllProjectsMenuItem(), allowExportAll);
+    fileDropDown.setItemEnabledById(WIDGET_NAME_EXPORTALLPROJECTS, allowExportAll);
   }
 
   public void updateKeystoreStatus(boolean present) {

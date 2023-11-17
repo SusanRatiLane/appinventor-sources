@@ -12,12 +12,13 @@ import java.util.logging.Logger;
 public class ProjectToolbarGSoC extends ProjectToolbar {
   private static final Logger LOG = Logger.getLogger(ProjectToolbarGSoC.class.getName());
   interface ProjectToolbarUiBinderGSoC extends UiBinder<Toolbar, ProjectToolbarGSoC> {}
-  private static final ProjectToolbarUiBinderGSoC UI_BINDER =
-      GWT.create(ProjectToolbarUiBinderGSoC.class);
-  @UiField Label projectLabel;
-  @UiField Label trashLabel;
 
-  public void bindProjectToolbar() {
+  @UiField protected Label projectLabel;
+  @UiField protected Label trashLabel;
+
+  @Override
+  public void bindUI() {
+    ProjectToolbarUiBinderGSoC UI_BINDER = GWT.create(ProjectToolbarUiBinderGSoC.class);
     populateToolbar(UI_BINDER.createAndBindUi(this));
     super.projectLabel = projectLabel;
     super.trashLabel = trashLabel;

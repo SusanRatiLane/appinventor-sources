@@ -27,7 +27,6 @@ public class TopToolbarGSoC extends TopToolbar {
   public void bindUI() {
     // The boolean needs to be reversed here so it is true when items need to be visible.
     // UIBinder can't negate the boolean itself.
-    LOG.info("bindUI GSoC");
     readOnly = Ode.getInstance().isReadOnly();
     hasWriteAccess = !readOnly;
 

@@ -10,7 +10,10 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 
+import java.util.logging.Logger;
+
 public class NewYoungAndroidProjectWizardGSoC extends NewYoungAndroidProjectWizard {
+  private static final Logger LOG = Logger.getLogger(NewYoungAndroidProjectWizardGSoC.class.getName());
   interface NewYoungAndroidProjectWizardUiBinderGSoC
       extends UiBinder<Dialog, NewYoungAndroidProjectWizardGSoC> {}
 
@@ -32,11 +35,14 @@ public class NewYoungAndroidProjectWizardGSoC extends NewYoungAndroidProjectWiza
 
   @UiHandler("cancelButton")
   protected void cancelAdd(ClickEvent e) {
+    LOG.warning("Cancel button pressed GSoC");
     super.cancelAdd(e);
   }
 
   @UiHandler("addButton")
-  protected void addProject(ClickEvent e) {
-    super.addProject(e);
+  @Override
+  protected void pressAdd(ClickEvent e) {
+    LOG.warning("Add button pressed GSoC");
+    addProject();
   }
 }

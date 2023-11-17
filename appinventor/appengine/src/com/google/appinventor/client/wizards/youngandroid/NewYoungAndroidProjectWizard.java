@@ -40,15 +40,22 @@ import java.util.logging.Logger;
  * @author markf@google.com (Mark Friedman)
  */
 public class NewYoungAndroidProjectWizard {
-  interface NewYoungAndroidProjectWizardUiBinder extends UiBinder<Dialog, NewYoungAndroidProjectWizard> {}
+  interface NewYoungAndroidProjectWizardUiBinder extends UiBinder<Dialog, NewYoungAndroidProjectWizard> {
+  }
 
   private static final Logger LOG = Logger.getLogger(NewYoungAndroidProjectWizard.class.getName());
 
   // UI element for project name
-  @UiField protected Dialog addDialog;
-  @UiField protected Button addButton;
-  @UiField protected Button cancelButton;
-  @UiField protected LabeledTextBox projectNameTextBox;
+  @UiField
+  protected Dialog addDialog;
+  @UiField
+  protected Button addButton;
+  @UiField
+  protected Button cancelButton;
+  @UiField
+  protected LabeledTextBox projectNameTextBox;
+
+  boolean createReady = true;
 
   /**
    * Creates a new YoungAndroid project wizard.
@@ -68,6 +75,7 @@ public class NewYoungAndroidProjectWizard {
         addButton.setEnabled(true);
         return true;
       }
+
       @Override
       public String getErrorMessage() {
         return errorMessage;
@@ -83,7 +91,8 @@ public class NewYoungAndroidProjectWizard {
         } else if (keyCode == KeyCodes.KEY_ESCAPE) {
           cancelButton.click();
         }
-      }});
+      }
+    });
 
     projectNameTextBox.getTextBox().addKeyUpHandler(new KeyUpHandler() {
       @Override
@@ -109,13 +118,23 @@ public class NewYoungAndroidProjectWizard {
   }
 
   @UiHandler("addButton")
-  protected void addProject(ClickEvent e) {
+  protected void pressAdd(ClickEvent e) {
+    addProject();
+  }
+
+  protected void addProject() {
     String projectName = projectNameTextBox.getText().trim();
     projectName = projectName.replaceAll("( )+", " ").replace(" ", "_");
     TextValidators.ProjectNameStatus status = TextValidators.checkNewProjectName(projectName);
     if (status == TextValidators.ProjectNameStatus.SUCCESS) {
-      LOG.info("Project status success");
-      doCreateProject(projectName);
+      // TODO: This is a hack. Need to determine why GSoC subclass
+      // seems to be triggering addProject click event twice.
+      if (createReady) {
+        createReady = false;
+        doCreateProject(projectName);
+      } else {
+        LOG.warning("Same project creation triggered second time.");
+      }
       addDialog.hide();
     } else {
       LOG.info("Checking for error");
@@ -136,28 +155,28 @@ public class NewYoungAndroidProjectWizard {
   }
 
   public void doCreateProject(String projectName) {
-      String packageName = StringUtils.getProjectPackage(
-          Ode.getInstance().getUser().getUserEmail(), projectName);
-      NewYoungAndroidProjectParameters parameters = new NewYoungAndroidProjectParameters(
-          packageName);
-      NewProjectWizard.NewProjectCommand callbackCommand = new NewProjectWizard.NewProjectCommand() {
-        @Override
-        public void execute(final Project project) {
-          Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
-            @Override
-            public void execute() {
-              if (Ode.getInstance().screensLocked()) { // Wait until I/O finished
-                Scheduler.get().scheduleDeferred(this); // on other project
-              } else {
-                Ode.getInstance().openYoungAndroidProjectInDesigner(project);
-              }
+    String packageName = StringUtils.getProjectPackage(
+        Ode.getInstance().getUser().getUserEmail(), projectName);
+    NewYoungAndroidProjectParameters parameters = new NewYoungAndroidProjectParameters(
+        packageName);
+    NewProjectWizard.NewProjectCommand callbackCommand = new NewProjectWizard.NewProjectCommand() {
+      @Override
+      public void execute(final Project project) {
+        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+          @Override
+          public void execute() {
+            if (Ode.getInstance().screensLocked()) { // Wait until I/O finished
+              Scheduler.get().scheduleDeferred(this); // on other project
+            } else {
+              Ode.getInstance().openYoungAndroidProjectInDesigner(project);
             }
-          });
-        }
-      };
+          }
+        });
+      }
+    };
 
-      NewProjectWizard.createNewProject(YoungAndroidProjectNode.YOUNG_ANDROID_PROJECT_TYPE, projectName,
-          parameters, callbackCommand);
-      Tracking.trackEvent(Tracking.PROJECT_EVENT, Tracking.PROJECT_ACTION_NEW_YA, projectName);
+    NewProjectWizard.createNewProject(YoungAndroidProjectNode.YOUNG_ANDROID_PROJECT_TYPE, projectName,
+        parameters, callbackCommand);
+    Tracking.trackEvent(Tracking.PROJECT_EVENT, Tracking.PROJECT_ACTION_NEW_YA, projectName);
   }
 }

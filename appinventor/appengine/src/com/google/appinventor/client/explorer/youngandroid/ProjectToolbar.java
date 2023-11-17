@@ -23,8 +23,7 @@ import com.google.gwt.user.client.ui.Label;
 public class ProjectToolbar extends Toolbar {
   private static final Logger LOG = Logger.getLogger(ProjectToolbar.class.getName());
   interface ProjectToolbarUiBinder extends UiBinder<Toolbar, ProjectToolbar> {}
-  private static final ProjectToolbar.ProjectToolbarUiBinder UI_BINDER =
-      GWT.create(ProjectToolbar.ProjectToolbarUiBinder.class);
+
 
   private static final String WIDGET_NAME_NEW = "New";
   private static final String WIDGET_NAME_MOVE = "Move";
@@ -40,8 +39,8 @@ public class ProjectToolbar extends Toolbar {
   public final boolean isReadOnly;
 //  @UiField(provided=true)
   public final boolean galleryEnabled;
-  @UiField public Label projectLabel;
-  @UiField public Label trashLabel;
+  @UiField protected Label projectLabel;
+  @UiField protected Label trashLabel;
 
   private static volatile boolean lockPublishButton = false; // To prevent double clicking
 
@@ -53,7 +52,7 @@ public class ProjectToolbar extends Toolbar {
     isReadOnly = Ode.getInstance().isReadOnly();
     // Is the new gallery enabled
     galleryEnabled = Ode.getSystemConfig().getGalleryEnabled();
-    bindProjectToolbar();
+    bindUI();
     if (galleryEnabled) {
       setButtonVisible(WIDGET_NAME_LOGINTOGALLERY, true);
       if (!Ode.getInstance().getGalleryReadOnly()) {
@@ -63,13 +62,12 @@ public class ProjectToolbar extends Toolbar {
     setTrashTabButtonsVisible(false);
   }
 
-  protected void bindProjectToolbar()
-  {
+  protected void bindUI() {
+    ProjectToolbarUiBinder UI_BINDER = GWT.create(ProjectToolbarUiBinder.class);
     populateToolbar(UI_BINDER.createAndBindUi(this));
   }
 
   public void setTrashTabButtonsVisible(boolean visible) {
-    LOG.info("setTrashTabButtonsVisible");
     setButtonVisible(WIDGET_NAME_PROJECT, visible);
     setButtonVisible(WIDGET_NAME_RESTORE, visible);
     setButtonVisible(WIDGET_NAME_DELETE_FROM_TRASH, visible);
@@ -98,11 +96,9 @@ public class ProjectToolbar extends Toolbar {
    * of "Delete" and "Download Source").
    */
   public void updateButtons() {
-    LOG.info("updateButtons");
     ProjectList projectList = ProjectListBox.getProjectListBox().getProjectList();
     int numAllItems = projectList.getMyProjectsCount();  // Get number of valid projects not in trash
     int numSelectedProjects = projectList.getSelectedProjectsCount();
-    LOG.info("Set Project List variables");
     if (isReadOnly) {           // If we are read-only, we disable all buttons
       setButtonEnabled(WIDGET_NAME_NEW, false);
       setButtonEnabled(WIDGET_NAME_DELETE, false);
@@ -114,7 +110,6 @@ public class ProjectToolbar extends Toolbar {
     setButtonEnabled(WIDGET_NAME_DELETE, numSelectedProjects > 0);
     setButtonEnabled(WIDGET_NAME_DELETE_FROM_TRASH, numSelectedProjects > 0);
     setButtonEnabled(WIDGET_NAME_RESTORE, numSelectedProjects > 0);
-    LOG.info("Before updateMenuState");
     Ode.getInstance().getTopToolbar().updateMenuState(numSelectedProjects, numAllItems);
   }
 
