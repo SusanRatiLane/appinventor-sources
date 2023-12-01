@@ -187,7 +187,7 @@ public final class BlockSelectorBox extends Box {
   private String getBuiltinDrawerNames(String drawerName) {
     String name;
 
-    LOG.warning("getBuiltinDrawerNames: drawerName = " + drawerName);
+    LOG.info("getBuiltinDrawerNames: drawerName = " + drawerName);
 
     if (drawerName.equals("Control")) {
        name = MESSAGES.builtinControlLabel();

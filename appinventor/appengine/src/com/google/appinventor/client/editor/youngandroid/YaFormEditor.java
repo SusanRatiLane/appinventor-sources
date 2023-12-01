@@ -402,9 +402,7 @@ public final class YaFormEditor extends SimpleEditor implements FormChangeListen
   @Override
   public void onComponentSelectionChange(MockComponent component, boolean selected) {
     if (loadComplete) {
-      // TODO: SMRL Not sure this class should keep a pointer to source structure
       sourceStructureExplorer.selectItem(component.getSourceStructureExplorerItem());
-      SourceStructureBox.getSourceStructureBox().show(form);
       PropertiesBox.getPropertiesBox().show(this, true);
     } else {
       LOG.severe("onComponentSelectionChange called when loadComplete is false");
