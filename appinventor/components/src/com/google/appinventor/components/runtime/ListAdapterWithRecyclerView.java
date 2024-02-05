@@ -106,12 +106,8 @@ public class ListAdapterWithRecyclerView
 
     @Override
     protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-      if (filterResults.count > 0) {
-        items = new ArrayList<>((List<Object>) filterResults.values);
-      } else {
-        items = new ArrayList<>(oryginalItems);
-      }
-      notifyDataSetChanged();
+      items = new ArrayList<>((List<Object>) filterResults.values);
+      clearSelections();
       // We store the original data in the originalItems variable
       // We store the original item indexes in the originalPositions variable
       // We have eliminated hiding/showing CardView to improve performance
@@ -140,9 +136,7 @@ public class ListAdapterWithRecyclerView
     if (oryginalPositions.isEmpty()) {
       this.items = new ArrayList<>(newItems);
     }
-   // if (!selectedItems.isEmpty()) {
-      clearSelections();
-   // }
+    clearSelections();
   }
 
   @Override
