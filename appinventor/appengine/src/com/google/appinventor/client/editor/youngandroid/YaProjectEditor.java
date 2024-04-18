@@ -20,6 +20,8 @@ import com.google.appinventor.client.editor.simple.components.MockComponent;
 import com.google.appinventor.client.editor.simple.components.MockFusionTablesControl;
 import com.google.appinventor.client.editor.simple.components.MockTwitter;
 import com.google.appinventor.client.explorer.dialogs.ProjectPropertiesDialogBox;
+import com.google.appinventor.client.editor.youngandroid.i18n.BlocklyMsg;
+import com.google.appinventor.client.explorer.dialogs.ProgressBarDialogBox;
 import com.google.appinventor.client.explorer.project.ComponentDatabaseChangeListener;
 import com.google.appinventor.client.explorer.project.Project;
 import com.google.appinventor.client.explorer.project.ProjectChangeListener;
@@ -33,6 +35,7 @@ import com.google.appinventor.shared.rpc.project.ChecksumedFileException;
 import com.google.appinventor.shared.rpc.project.ChecksumedLoadFile;
 import com.google.appinventor.shared.rpc.project.ProjectNode;
 import com.google.appinventor.shared.rpc.project.ProjectRootNode;
+import com.google.appinventor.shared.rpc.project.SourceNode;
 import com.google.appinventor.shared.rpc.project.youngandroid.YoungAndroidBlocksNode;
 import com.google.appinventor.shared.rpc.project.youngandroid.YoungAndroidComponentsFolder;
 import com.google.appinventor.shared.rpc.project.youngandroid.YoungAndroidFormNode;
@@ -52,8 +55,11 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -87,6 +93,8 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
   private static class EditorSet {
     YaFormEditor formEditor = null;
     YaBlocksEditor blocksEditor = null;
+    YoungAndroidFormNode formNode = null;
+    YoungAndroidBlocksNode blocksNode = null;
   }
 
   // Maps form name -> editors for this form
@@ -103,7 +111,9 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
   // Database of component type descriptions
   private final SimpleComponentDatabase COMPONENT_DATABASE;
 
-  // State variables to help determine whether we are ready to show Screen1
+  private final Deque<EditorSet> loadingEditors = new LinkedList<>();
+
+  // State variables to help determine whether we are ready to show Screen1  
   // Automatically select the Screen1 form editor when we have finished loading
   // both the form and blocks editors for Screen1 and we have added the
   // screen to the DesignToolbar. Since the loading happens asynchronously,
@@ -147,34 +157,6 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
     COMPONENT_DATABASE = SimpleComponentDatabase.getInstance(projectId);
   }
 
-  private void loadBlocksEditor(String formNamePassedIn) {
-
-    final String formName = formNamePassedIn;
-    final YaBlocksEditor newBlocksEditor = editorMap.get(formName).blocksEditor;
-    newBlocksEditor.loadFile(new Command() {
-        @Override
-        public void execute() {
-          YaBlocksEditor newBlocksEditor = editorMap.get(formName).blocksEditor;
-          int pos = Collections.binarySearch(fileIds, newBlocksEditor.getFileId(),
-              getFileIdComparator());
-          if (pos < 0) {
-            pos = -pos - 1;
-          }
-          insertFileEditor(newBlocksEditor, pos);
-          if (isScreen1(formName)) {
-            screen1BlocksLoaded = true;
-            if (readyToShowScreen1()) {
-              LOG.info("YaProjectEditor.addBlocksEditor.loadFile.execute: switching to screen "
-                  + formName + " for project " + newBlocksEditor.getProjectId());
-              Ode.getInstance().getDesignToolbar().switchToScreen(newBlocksEditor.getProjectId(),
-                  formName, DesignToolbar.View.FORM);
-            }
-          }
-        }
-      });
-
-  }
-
   /**
    * Project process is completed before loadProject is started!
    * Currently Project process loads all External Components into Component Database
@@ -194,15 +176,12 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
   // blocks are loaded!
 
   private Promise<Object> loadProject(Object result) {
-    // add form editors first, then blocks editors because the blocks editors
-    // need access to their corresponding form editors to set up properly
-    for (ProjectNode source : projectRootNode.getAllSourceNodes()) {
+    YoungAndroidFormNode screen1scm = null;
+    YoungAndroidBlocksNode screen1bky = null;
+    for (SourceNode source : projectRootNode.getAllSourceNodes()) {
       if (source instanceof YoungAndroidFormNode) {
         addFormEditor((YoungAndroidFormNode) source);
-      }
-    }
-    for (ProjectNode source: projectRootNode.getAllSourceNodes()) {
-      if (source instanceof YoungAndroidBlocksNode) {
+      } else if (source instanceof YoungAndroidBlocksNode) {
         addBlocksEditor((YoungAndroidBlocksNode) source);
       }
     }
@@ -218,7 +197,7 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
           screen1Added = true;
           if (readyToShowScreen1()) {  // probably not yet but who knows?
             LOG.info("YaProjectEditor.loadProject: switching to screen " + formName
-                + " for project " + projectRootNode.getProjectId());
+                         + " for project " + projectRootNode.getProjectId());
             Ode.getInstance().getDesignToolbar().switchToScreen(projectRootNode.getProjectId(),
                 formName, DesignToolbar.View.FORM);
           }
@@ -237,6 +216,14 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
     // 4. Upgrade all other screens
     // 5. Open Screen1
     return Promise.resolve(result);
+  }
+  private EditorSet getOrCreateEditorSet(String formName) {
+    EditorSet result = editorMap.get(formName);
+    if (result == null) {
+      result = new EditorSet();
+      editorMap.put(formName, result);
+    }
+    return result;
   }
 
   @Override
@@ -459,17 +446,9 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
   }
 
   private void addFormEditor(YoungAndroidFormNode formNode) {
+    final long start = System.currentTimeMillis();
     final YaFormEditor newFormEditor = new YaFormEditor(this, formNode);
     final String formName = formNode.getFormName();
-    if (editorMap.containsKey(formName)) {
-      // This happens if the blocks editor was already added.
-      editorMap.get(formName).formEditor = newFormEditor;
-      editorMap.get(formName).blocksEditor.setFormEditor(newFormEditor);
-    } else {
-      EditorSet editors = new EditorSet();
-      editors.formEditor = newFormEditor;
-      editorMap.put(formName, editors);
-    }
     final Command afterLoadCommand = new Command() {
       @Override
       public void execute() {
@@ -488,7 +467,6 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
                 formName, DesignToolbar.View.FORM);
           }
         }
-        loadBlocksEditor(formName);
       }
     };
     if (!isScreen1(formName) && !screen1FormLoaded) {
@@ -515,18 +493,11 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
   }
 
   private void addBlocksEditor(YoungAndroidBlocksNode blocksNode) {
+    final long start = System.currentTimeMillis();
     final YaBlocksEditor newBlocksEditor = new YaBlocksEditor(this, blocksNode);
     final String formName = blocksNode.getFormName();
-    if (editorMap.containsKey(formName)) {
-      // This happens if the form editor was already added.
-      EditorSet pair = editorMap.get(formName);
-      pair.blocksEditor = newBlocksEditor;
-      newBlocksEditor.setFormEditor(pair.formEditor);
-    } else {
-      EditorSet editors = new EditorSet();
-      editors.blocksEditor = newBlocksEditor;
-      editorMap.put(formName, editors);
-    }
+    getOrCreateEditorSet(formName).blocksEditor = newBlocksEditor;
+    LOG.info("Adding blocks editor for " + formName + " took " + (System.currentTimeMillis() - start) + " ms");
   }
 
   private void removeFormEditor(String formName) {

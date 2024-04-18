@@ -2411,6 +2411,10 @@ public class Ode implements EntryPoint {
     console.log(message);
   }-*/;
 
+  public static native void CWarn(String message) /*-{
+    console.warn(message);
+  }-*/;
+
   private static native void doCloseProxy() /*-{
     if (top.proxy) {
       top.proxy.close();
