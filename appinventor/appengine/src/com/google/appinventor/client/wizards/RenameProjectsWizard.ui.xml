@@ -1,0 +1,20 @@
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+    xmlns:g="urn:import:com.google.gwt.user.client.ui"
+    xmlns:ai="urn:import:com.google.appinventor.client.wizards"
+    ui:generatedFormat="com.google.gwt.i18n.server.PropertyCatalogFactory"
+    ui:generatedKeys="com.google.gwt.i18n.server.keygen.MethodNameKeyGenerator"
+    ui:generateLocales="default">
+  <ui:with field="messages" type="com.google.appinventor.client.OdeMessages" />
+  <ai:Dialog ui:field="renameDialog" caption="Rename projects">
+    <g:FlowPanel>
+      <g:Label text="If you selected multiple projects, a number will be suffixed to each project to uniquely distinguish it." />
+      <g:Label text="You may add a + anywhere in the new name to insert each projects existing name." />
+      <g:Label text='New name' />
+      <g:TextBox ui:field='input' />
+      <g:FlowPanel styleName="buttonRow" >
+        <g:Button ui:field='cancelButton' text='{messages.cancelButton}'  />
+        <g:Button ui:field='moveButton' text='{messages.okButton}' />
+      </g:FlowPanel>
+    </g:FlowPanel>
+  </ai:Dialog>
+</ui:UiBinder>
