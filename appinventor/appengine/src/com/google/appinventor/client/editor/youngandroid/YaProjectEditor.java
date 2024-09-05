@@ -1,6 +1,6 @@
 // -*- mode: java; c-basic-offset: 2; -*-
 // Copyright 2009-2011 Google, All Rights reserved
-// Copyright 2011-2017 MIT, All rights reserved
+// Copyright 2011-2024 MIT, All rights reserved
 // Released under the Apache License, Version 2.0
 // http://www.apache.org/licenses/LICENSE-2.0
 
@@ -10,14 +10,15 @@ import static com.google.appinventor.client.Ode.MESSAGES;
 
 import com.google.appinventor.client.ErrorReporter;
 import com.google.appinventor.client.Ode;
+import com.google.appinventor.client.UiStyleFactory;
 import com.google.appinventor.client.boxes.AssetListBox;
 import com.google.appinventor.client.editor.EditorManager;
 import com.google.appinventor.client.editor.FileEditor;
 import com.google.appinventor.client.editor.ProjectEditor;
-import com.google.appinventor.client.editor.ProjectEditorFactory;
 import com.google.appinventor.client.editor.simple.SimpleComponentDatabase;
 import com.google.appinventor.client.editor.simple.components.MockComponent;
 import com.google.appinventor.client.editor.simple.components.MockFusionTablesControl;
+import com.google.appinventor.client.editor.simple.components.MockTwitter;
 import com.google.appinventor.client.explorer.dialogs.ProjectPropertiesDialogBox;
 import com.google.appinventor.client.explorer.project.ComponentDatabaseChangeListener;
 import com.google.appinventor.client.explorer.project.Project;
@@ -60,12 +61,12 @@ import java.util.logging.Logger;
 
 /**
  * Project editor for Young Android projects. Each instance corresponds to
- * one project that has been opened in this App Inventor session. 
- * Also responsible for managing screens list for this project in 
+ * one project that has been opened in this App Inventor session.
+ * Also responsible for managing screens list for this project in
  * the DesignToolbar.
  *
  * @author lizlooney@google.com (Liz Looney)
- * @author sharon@google.com (Sharon Perl) - added logic for screens in  
+ * @author sharon@google.com (Sharon Perl) - added logic for screens in
  *     DesignToolbar
  */
 public final class YaProjectEditor extends ProjectEditor implements ProjectChangeListener,
@@ -79,9 +80,9 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
   @UiTemplate("YaProjectEditorCombined.ui.xml")
   interface CombinedUi extends UiBinder<FlowPanel, YaProjectEditor> {}
 
-  // FileEditors in a YA project come in sets. Every form in the project has 
-  // a YaFormEditor for editing the UI, and a YaBlocksEditor for editing the 
-  // blocks representation of the program logic. Some day it may also have an 
+  // FileEditors in a YA project come in sets. Every form in the project has
+  // a YaFormEditor for editing the UI, and a YaBlocksEditor for editing the
+  // blocks representation of the program logic. Some day it may also have an
   // editor for the textual representation of the program logic.
   private static class EditorSet {
     YaFormEditor formEditor = null;
@@ -102,9 +103,9 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
   // Database of component type descriptions
   private final SimpleComponentDatabase COMPONENT_DATABASE;
 
-  // State variables to help determine whether we are ready to show Screen1  
+  // State variables to help determine whether we are ready to show Screen1
   // Automatically select the Screen1 form editor when we have finished loading
-  // both the form and blocks editors for Screen1 and we have added the 
+  // both the form and blocks editors for Screen1 and we have added the
   // screen to the DesignToolbar. Since the loading happens asynchronously,
   // there are multiple points when we may be ready to show the screen, and
   // we shouldn't try to show it before everything is ready.
@@ -126,22 +127,8 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
     propertyDialogBox.showDialog(curScreen);
   }
 
-  /**
-   * Returns a project editor factory for {@code YaProjectEditor}s.
-   *
-   * @return a project editor factory for {@code YaProjectEditor}s.
-   */
-  public static ProjectEditorFactory getFactory() {
-    return new ProjectEditorFactory() {
-      @Override
-      public ProjectEditor createProjectEditor(ProjectRootNode projectRootNode) {
-        return new YaProjectEditor(projectRootNode);
-      }
-    };
-  }
-
-  public YaProjectEditor(ProjectRootNode projectRootNode) {
-    super(projectRootNode);
+  public YaProjectEditor(ProjectRootNode projectRootNode, UiStyleFactory styleFactory) {
+    super(projectRootNode, styleFactory);
     project.addProjectChangeListener(this);
     COMPONENT_DATABASE = SimpleComponentDatabase.getInstance(projectId);
   }
@@ -211,14 +198,14 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
     for (String formName : editorMap.keySet()) {
       EditorSet editors = editorMap.get(formName);
       if (editors.formEditor != null && editors.blocksEditor != null) {
-        designToolbar.addScreen(projectRootNode.getProjectId(), formName, editors.formEditor, 
+        designToolbar.addScreen(projectRootNode.getProjectId(), formName, editors.formEditor,
             editors.blocksEditor);
         if (isScreen1(formName)) {
           screen1Added = true;
           if (readyToShowScreen1()) {  // probably not yet but who knows?
             LOG.info("YaProjectEditor.loadProject: switching to screen " + formName
                 + " for project " + projectRootNode.getProjectId());
-            Ode.getInstance().getDesignToolbar().switchToScreen(projectRootNode.getProjectId(), 
+            Ode.getInstance().getDesignToolbar().switchToScreen(projectRootNode.getProjectId(),
                 formName, DesignToolbar.View.FORM);
           }
         }
@@ -237,21 +224,21 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
     // 5. Open Screen1
     return Promise.resolve(result);
   }
-  
+
   @Override
   protected void onShow() {
     AssetListBox.getAssetListBox().getAssetList().refreshAssetList(projectId);
-    
+
     DesignToolbar designToolbar = Ode.getInstance().getDesignToolbar();
     FileEditor selectedFileEditor = getSelectedFileEditor();
     if (selectedFileEditor != null) {
       if (selectedFileEditor instanceof YaFormEditor) {
         YaFormEditor formEditor = (YaFormEditor) selectedFileEditor;
-        designToolbar.switchToScreen(projectId, formEditor.getForm().getName(), 
+        designToolbar.switchToScreen(projectId, formEditor.getForm().getName(),
             DesignToolbar.View.FORM);
       } else if (selectedFileEditor instanceof YaBlocksEditor) {
         YaBlocksEditor blocksEditor = (YaBlocksEditor) selectedFileEditor;
-        designToolbar.switchToScreen(projectId, blocksEditor.getForm().getName(), 
+        designToolbar.switchToScreen(projectId, blocksEditor.getForm().getName(),
             DesignToolbar.View.BLOCKS);
       } else {
         // shouldn't happen!
@@ -271,7 +258,7 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
       selectedFileEditor.onHide();
     }
   }
-  
+
   @Override
   protected void onUnload() {
     super.onUnload();
@@ -304,7 +291,7 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
       // see if we have both editors yet
       EditorSet editors = editorMap.get(formName);
       if (editors.formEditor != null && editors.blocksEditor != null) {
-        Ode.getInstance().getDesignToolbar().addScreen(node.getProjectId(), formName, 
+        Ode.getInstance().getDesignToolbar().addScreen(node.getProjectId(), formName,
             editors.formEditor, editors.blocksEditor);
       }
     }
@@ -313,8 +300,8 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
 
   @Override
   public void onProjectNodeRemoved(Project project, ProjectNode node) {
-    // remove blocks and/or form editor if applicable. Remove screen from 
-    // DesignToolbar. If the partner node to this one (blocks or form) was already 
+    // remove blocks and/or form editor if applicable. Remove screen from
+    // DesignToolbar. If the partner node to this one (blocks or form) was already
     // removed, calling DesignToolbar.removeScreen a second time will be a no-op.
     LOG.info("YaProjectEditor: got onProjectNodeRemoved for project "
             + project.getProjectId() + ", node " + node.getFileId());
@@ -327,7 +314,7 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
       removeBlocksEditor(formName);
     }
   }
-  
+
   /*
    * Returns the YaBlocksEditor for the given form name in this project
    */
@@ -339,7 +326,7 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
     }
   }
 
-  /* 
+  /*
    * Returns the YaFormEditor for the given form name in this project
    */
   public YaFormEditor getFormFileEditor(String formName) {
@@ -456,7 +443,7 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
       }
     };
   }
-  
+
   private void addFormEditor(YoungAndroidFormNode formNode) {
     final YaFormEditor newFormEditor = new YaFormEditor(this, formNode);
     final String formName = formNode.getFormName();
@@ -508,7 +495,7 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
       newFormEditor.loadFile(afterLoadCommand);
     }
   }
-    
+
   private boolean readyToShowScreen1() {
     return screen1FormLoaded && screen1BlocksLoaded && screen1Added;
   }
@@ -527,7 +514,7 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
       editorMap.put(formName, editors);
     }
   }
-  
+
   private void removeFormEditor(String formName) {
     if (editorMap.containsKey(formName)) {
       EditorSet editors = editorMap.get(formName);
@@ -538,7 +525,7 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
       }
     }
   }
-  
+
   private void removeBlocksEditor(String formName) {
     if (editorMap.containsKey(formName)) {
       EditorSet editors = editorMap.get(formName);
@@ -547,7 +534,7 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
       } else {
         editors.blocksEditor = null;
       }
-    }    
+    }
   }
 
   /**
@@ -704,10 +691,11 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
 
   // Resets any warnings that should be given when a project is loaded
   // For now this is just the deprecation warning for the
-  // FusiontablesControl component.
+  // FusiontablesControl and Twitter components.
 
   private void resetProjectWarnings() {
     MockFusionTablesControl.resetWarning();
+    MockTwitter.resetWarning();
   }
 
   private void resetExternalComponents() {

@@ -2,7 +2,7 @@
 
 <!-- ======================================================================
      Copyright 2011 Google Inc.  All Rights Reserved.
-     Copyright 2012-2020 Massachusetts Institute of Technology, All rights reserved.
+     Copyright 2012-2024 Massachusetts Institute of Technology, All rights reserved.
 
      App Inventor component libraries
      ====================================================================== -->
@@ -12,7 +12,7 @@
     App Inventor component libraries
   </description>
 
-  <property name="android.sdk.version" value="33"/>
+  <property name="android.sdk.version" value="34"/>
 
   <target name="all"
           depends="CommonConstants,AndroidRuntime">
@@ -170,6 +170,8 @@
     <!-- Protocol Buf Support (used by the Translation Component) -->
     <copy toFile="${public.deps.dir}/protobuf-java-3.0.0.jar" file="${lib.dir}/protobuf/protobuf-java-3.0.0.jar" />    
     <copy toFile="${public.deps.dir}/mpandroidchart.jar" file="${lib.dir}/mpandroidchart/mpandroidchart.jar" />
+    <!-- Commons Math used by Trendline -->
+    <copy toFile="${public.deps.dir}/commons-math3.jar" file="${lib.dir}/commons-math3/commons-math3-3.6.1.jar" />
     <!-- BEGIN Android Support Libraries -->
     <copy todir="${public.deps.dir}/">
       <fileset dir="${support.dir}/" includes="*.aar,*.jar" excludes="testing-support-R-classes.jar" />
@@ -468,7 +470,10 @@
        dexAllExtensions: create classes.dex for each extension.
        ===================================================================== -->
   <target name="dexAllExtensions" depends="jarAllExtensions">
-    <foreach target="dexExtension" param="extension">
+    <condition property="dextask" value="dexExtension" else="d8Extension">
+      <equals arg1="${lang.version}" arg2="8" />
+    </condition>
+    <foreach target="${dextask}" param="extension">
       <path>
         <fileset dir="${ExternalComponent-class.dir}" >
           <include name="*.jar"/>
@@ -477,7 +482,7 @@
     </foreach>
   </target>
 
-  <target name="dexExtension" depends="">
+  <target name="dexExtension">
     <basename property="extensionType" file="${extension}" suffix=".jar"/>
     <java jar="${lib.dir}/android/tools/dx.jar"
           fork="true"
@@ -489,6 +494,24 @@
       <arg value="${ExternalComponent-class.dir}/${extensionType}.jar"/>
     </java>
     <echo>Dexing extension: ${extensionType}</echo>
+  </target>
+
+  <target name="d8Extension">
+    <basename property="extensionType" file="${extension}" suffix=".jar" />
+    <java classname="com.android.tools.r8.D8"
+          fork="true"
+          failonerror="true">
+      <classpath>
+        <pathelement location="${lib.dir}/android/tools/d8.jar"/>
+      </classpath>
+      <arg line="--lib ${lib.dir}/android/android-${android.sdk.version}/android.jar"/>
+      <arg line="--classpath ${public.build.dir}/AndroidRuntime.jar"/>
+      <arg line="--min-api 8"/> <!-- Extensions only available starting with SDK 8 -->
+      <arg value="--output"/>
+      <arg value="${ExternalComponent.dir}/${extensionType}/classes.jar"/>
+      <arg value="${ExternalComponent-class.dir}/${extensionType}.jar"/>
+    </java>
+    <echo>D8ing extension: ${extensionType}</echo>
   </target>
 
 
