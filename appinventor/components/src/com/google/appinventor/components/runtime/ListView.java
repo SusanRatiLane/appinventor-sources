@@ -81,7 +81,6 @@ public final class ListView extends AndroidViewComponent {
   private static final String LOG_TAG = "ListView";
 
   private EditText txtSearchBox;
-  private String txtSearchHint;
   protected final ComponentContainer container;
   private final LinearLayout linearLayout;
 
@@ -91,7 +90,7 @@ public final class ListView extends AndroidViewComponent {
   private List<Object> items;
   private int selectionIndex;
   private String selection;
-  private String selectionDetailText;
+  private String selectionDetailText = "Uninitialized";
   private boolean showFilter = false;
   private static final boolean DEFAULT_ENABLED = false;
   private int orientation;
@@ -232,7 +231,6 @@ public final class ListView extends AndroidViewComponent {
     ElementCornerRadius(DEFAULT_RADIUS);
     MultiSelect(false);
     BounceEdgeEffect(false);
-    SearchHintText("Search list...");
     ElementsFromString("");
     ListData("");
 
@@ -281,30 +279,6 @@ public final class ListView extends AndroidViewComponent {
       width = LENGTH_FILL_PARENT;
     }
     super.Width(width);
-  }
-
-  /**
-   * Returns hint text from the list filter bar.
-   *
-   * @return string, default "Search list..."
-   */
-  @SimpleProperty(description = "Hint text displayed in the filter bar.",
-      category = PropertyCategory.APPEARANCE)      
-  public String SearchHintText() {  
-    return txtSearchHint;
-  }
-
-  /**
-   * Sets the hint text in the list filter bar.
-   *
-   * @param text string, default "Search list..."
-   */
-  @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_STRING,
-      defaultValue = "Search list...")
-  @SimpleProperty
-  public void SearchHintText(String text) {  
-    this.txtSearchHint = text;              
-    txtSearchBox.setHint(text);
   }
 
   /**
@@ -410,6 +384,8 @@ public final class ListView extends AndroidViewComponent {
       if (o instanceof YailDictionary) {
         if (((YailDictionary) o).containsKey(Component.LISTVIEW_KEY_MAIN_TEXT)) {
           selection = ((YailDictionary) o).get(Component.LISTVIEW_KEY_MAIN_TEXT).toString();
+          selectionDetailText = ElementsUtil.toStringEmptyIfNull(((YailDictionary) o)
+              .get(Component.LISTVIEW_KEY_DESCRIPTION));;
         } else {
           selection = o.toString();
         }
@@ -454,11 +430,13 @@ public final class ListView extends AndroidViewComponent {
           if (((YailDictionary) item).containsKey(Component.LISTVIEW_KEY_MAIN_TEXT)) {
             if (((YailDictionary) item).get(Component.LISTVIEW_KEY_MAIN_TEXT).toString() == value) {
               selectionIndex = i + 1;
-              selectionDetailText = ElementsUtil.toStringEmptyIfNull(((YailDictionary) item).get("Text2"));
+              selectionDetailText = ElementsUtil.toStringEmptyIfNull(((YailDictionary) item)
+                  .get(Component.LISTVIEW_KEY_DESCRIPTION));
               break;
             }
             // Not found
             selectionIndex = 0;
+            selectionDetailText = "Not Found";
           } else {            
             if (item.toString().equals(value)) {
               selectionIndex = i + 1;
@@ -970,10 +948,11 @@ public final class ListView extends AndroidViewComponent {
         for (int i = 0; i < arr.length(); ++i) {
           JSONObject jsonItem = arr.getJSONObject(i);
           YailDictionary yailItem = new YailDictionary();
-          if (jsonItem.has("Text1")) {
-            yailItem.put(Component.LISTVIEW_KEY_MAIN_TEXT, jsonItem.getString("Text1"));
-            yailItem.put(Component.LISTVIEW_KEY_DESCRIPTION, jsonItem.has("Text2") ? jsonItem.getString("Text2") : "");
-            yailItem.put(Component.LISTVIEW_KEY_IMAGE, jsonItem.has("Image") ? jsonItem.getString("Image") : "");
+          if (jsonItem.has(Component.LISTVIEW_KEY_MAIN_TEXT)) {
+            yailItem.put(Component.LISTVIEW_KEY_MAIN_TEXT, jsonItem.getString(Component.LISTVIEW_KEY_MAIN_TEXT));
+            yailItem.put(Component.LISTVIEW_KEY_DESCRIPTION, jsonItem.has(Component.LISTVIEW_KEY_DESCRIPTION) ? jsonItem.getString(Component.LISTVIEW_KEY_DESCRIPTION) : "");
+            yailItem.put(Component.LISTVIEW_KEY_IMAGE, jsonItem.has(Component.LISTVIEW_KEY_IMAGE) ? jsonItem
+               .getString(Component.LISTVIEW_KEY_IMAGE) : "");
             items.add(yailItem);
           }
         }
@@ -998,8 +977,8 @@ public final class ListView extends AndroidViewComponent {
   public YailDictionary CreateElement(final String mainText, final String detailText, final String imageName) {
     YailDictionary dictItem = new YailDictionary();
     dictItem.put(Component.LISTVIEW_KEY_MAIN_TEXT, mainText);
-    dictItem.put("Text2", detailText);
-    dictItem.put("Image", imageName);
+    dictItem.put(Component.LISTVIEW_KEY_DESCRIPTION, detailText);
+    dictItem.put(Component.LISTVIEW_KEY_IMAGE, imageName);
     return dictItem;
   }
 
@@ -1009,13 +988,14 @@ public final class ListView extends AndroidViewComponent {
   }
 
   @SimpleFunction(description = "Get the Detail Text of a ListView element.")
-  public String GetDetailText(final YailDictionary listElement) {
-    return listElement.get("Text2").toString();
+  public String GetDetailText(final YailDictionary listElement)
+  {
+    return listElement.get(Component.LISTVIEW_KEY_DESCRIPTION).toString();
   }
 
   @SimpleFunction(description = "Get the filename of the image of a ListView element that has been uploaded to Media.")
   public String GetImageName(final YailDictionary listElement) {
-    return listElement.get("Image").toString();
+    return listElement.get(Component.LISTVIEW_KEY_IMAGE).toString();
   }
 
   /**

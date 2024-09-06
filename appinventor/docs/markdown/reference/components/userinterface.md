@@ -842,9 +842,6 @@ This is a visible component that displays a list of text and image elements in y
  in rows one after the other; or `Horizontal`, which displays one element at a time and
  allows the user to swipe left or right to brows the elements.
 
-{:id="ListView.SearchHintText" .text} *SearchHintText*
-: Sets the hint text in the list filter bar.
-
 {:id="ListView.Selection" .text} *Selection*
 : Returns the text in the `ListView` at the position of [`SelectionIndex`](#ListView.SelectionIndex).
 
