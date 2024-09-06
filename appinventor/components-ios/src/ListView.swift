@@ -156,15 +156,6 @@ open class ListView: ViewComponent, AbstractMethodsForViewComponent,
     set(addEffect) {
     }
   }
-  
-  // This property is not supported in iOS
-  @objc open var SearchHintText: String {
-    get {
-      return "";
-    }
-    set(hintString) {
-    }
-  }
 
   //ListData
   @objc open var ListData: String {
