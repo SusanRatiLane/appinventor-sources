@@ -1227,7 +1227,7 @@ public final class ListView extends AndroidViewComponent {
   /**
    * Add new Items to list at specific index
    */
-  @SimpleFunction(description = "Add new Items to list at specyfic index")
+  @SimpleFunction(description = "Add new Items to list at specific index")
   public void AddItemsAtIndex(int index, YailList itemsList) {
     if (index < 1 || index > items.size()+ 1) {
       container.$form().dispatchErrorOccurredEvent(this, "AddItemsAtIndex",
