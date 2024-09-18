@@ -66,16 +66,16 @@ import android.graphics.Rect;
 
 @DesignerComponent(version = YaVersion.LISTVIEW_COMPONENT_VERSION,
     description = "<p>This is a visible component that displays a list of text and image elements.</p>" +
-        " <p>Simple lists of strings may be set using the ElementsFromString property." +
-        " More complex lists of elements containing multiple strings and/or images can be created using " +
-        "the ListData and ListViewLayout properties. </p>",
+                      " <p>Simple lists of strings may be set using the ElementsFromString property." +
+                      " More complex lists of elements containing multiple strings and/or images can be created using " +
+                      "the ListData and ListViewLayout properties. </p>",
     category = ComponentCategory.USERINTERFACE,
     nonVisible = false,
     iconName = "images/listView.png")
 @SimpleObject
 @UsesLibraries(libraries ="recyclerview.jar, cardview.jar, cardview.aar, dynamicanimation.jar")
 @UsesPermissions(permissionNames = "android.permission.INTERNET," +
-        "android.permission.READ_EXTERNAL_STORAGE")
+                                       "android.permission.READ_EXTERNAL_STORAGE")
 public final class ListView extends AndroidViewComponent {
 
   private static final String LOG_TAG = "ListView";
@@ -146,7 +146,7 @@ public final class ListView extends AndroidViewComponent {
     super(container);
     this.container = container;
     items = new ArrayList<>();
-    
+
     linearLayout = new LinearLayout(container.$context());
     linearLayout.setOrientation(LinearLayout.VERTICAL);
     orientation = ComponentConstants.LAYOUT_ORIENTATION_VERTICAL;
@@ -167,7 +167,7 @@ public final class ListView extends AndroidViewComponent {
     dividerColor = Component.COLOR_WHITE;
     dividerSize = DEFAULT_DIVIDER_SIZE;
     margins = DEFAULT_DIVIDER_SIZE;
-    
+
     edgeEffectFactory = recyclerView.getEdgeEffectFactory();
     bounceEdgeEffectFactory = new ListBounceEdgeEffectFactory();
 
@@ -288,7 +288,7 @@ public final class ListView extends AndroidViewComponent {
    * @suppressdoc
    */
   @SimpleProperty(description = "List filter bar, allows to search the list for relevant items. "
-      + "True will display the bar, Falseness will hide it.",
+                                    + "True will display the bar, Falseness will hide it.",
       category = PropertyCategory.BEHAVIOR)
   public boolean ShowFilterBar() {
     return showFilter;
@@ -301,7 +301,7 @@ public final class ListView extends AndroidViewComponent {
    * @param showFilter set the visibility according to this input
    */
   @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_BOOLEAN,
-          defaultValue = DEFAULT_ENABLED ? "True" : "False")
+      defaultValue = DEFAULT_ENABLED ? "True" : "False")
   @SimpleProperty
   public void ShowFilterBar(boolean showFilter) {
     this.showFilter = showFilter;
@@ -319,8 +319,8 @@ public final class ListView extends AndroidViewComponent {
    * @suppressdoc
    */
   @SimpleProperty(description = "List of elements to show in the ListView. Depending "
-      + "on the ListView, this may be a list of strings or a list of 3-element sub-lists "
-      + "containing Text, Description, and Image file name.",
+                                    + "on the ListView, this may be a list of strings or a list of 3-element sub-lists "
+                                    + "containing Text, Description, and Image file name.",
       category = PropertyCategory.BEHAVIOR)
   public List Elements() {
     return items;
@@ -346,8 +346,8 @@ public final class ListView extends AndroidViewComponent {
    */
   @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_TEXTAREA, defaultValue = "")
   @SimpleProperty(description = "The TextView elements specified as a string with the "
-      + "stringItems separated by commas such as: Cheese,Fruit,Bacon,Radish. Each word "
-      + "before the comma will be an element in the list.", 
+                                    + "stringItems separated by commas such as: Cheese,Fruit,Bacon,Radish. Each word "
+                                    + "before the comma will be an element in the list.",
       category = PropertyCategory.BEHAVIOR)
   public void ElementsFromString(String itemstring) {
     items = new ArrayList<Object>(ElementsUtil.elementsListFromString(itemstring));
@@ -362,9 +362,9 @@ public final class ListView extends AndroidViewComponent {
    * {@link #Selection(String)} will be set to the empty text.
    */
   @SimpleProperty(description = "The index of the currently selected item, starting at 1. "
-      + "If no item is selected, the value will be 0. If an attempt is made to set this "
-      + "to a number less than 1 or greater than the number of stringItems in the ListView, "
-      + "SelectionIndex will be set to 0, and Selection will be set to the empty text.", 
+                                    + "If no item is selected, the value will be 0. If an attempt is made to set this "
+                                    + "to a number less than 1 or greater than the number of stringItems in the ListView, "
+                                    + "SelectionIndex will be set to 0, and Selection will be set to the empty text.",
       category = PropertyCategory.BEHAVIOR)
   public int SelectionIndex() {
     return selectionIndex;
@@ -385,7 +385,7 @@ public final class ListView extends AndroidViewComponent {
         if (((YailDictionary) o).containsKey(Component.LISTVIEW_KEY_MAIN_TEXT)) {
           selection = ((YailDictionary) o).get(Component.LISTVIEW_KEY_MAIN_TEXT).toString();
           selectionDetailText = ElementsUtil.toStringEmptyIfNull(((YailDictionary) o)
-              .get(Component.LISTVIEW_KEY_DESCRIPTION));;
+                                                                     .get(Component.LISTVIEW_KEY_DESCRIPTION));;
         } else {
           selection = o.toString();
         }
@@ -402,7 +402,7 @@ public final class ListView extends AndroidViewComponent {
       listAdapterWithRecyclerView.clearSelections();
     }
   }
-  
+
   /**
    * Returns the text in the `ListView` at the position of {@link #SelectionIndex(int)}.
    */
@@ -431,24 +431,24 @@ public final class ListView extends AndroidViewComponent {
             if (((YailDictionary) item).get(Component.LISTVIEW_KEY_MAIN_TEXT).toString() == value) {
               selectionIndex = i + 1;
               selectionDetailText = ElementsUtil.toStringEmptyIfNull(((YailDictionary) item)
-                  .get(Component.LISTVIEW_KEY_DESCRIPTION));
+                                                                         .get(Component.LISTVIEW_KEY_DESCRIPTION));
               break;
             }
             // Not found
             selectionIndex = 0;
             selectionDetailText = "Not Found";
-          } else {            
+          } else {
             if (item.toString().equals(value)) {
               selectionIndex = i + 1;
               break;
             }
-          selectionIndex = 0; 
+            selectionIndex = 0;
           }
         } else {
           if (item.toString().equals(value)) {
-              selectionIndex = i + 1;
-              break;
-            }
+            selectionIndex = i + 1;
+            break;
+          }
           selectionIndex = 0;
         }
       }
@@ -470,7 +470,7 @@ public final class ListView extends AndroidViewComponent {
    * The selected element is available in the {@link #Selection(String)} property.
    */
   @SimpleEvent(description = "Simple event to be raised after the an element has been chosen in the"
-      + " list. The selected element is available in the Selection property.")
+                                 + " list. The selected element is available in the Selection property.")
   public void AfterPicking() {
     EventDispatcher.dispatchEvent(this, "AfterPicking");
   }
@@ -507,7 +507,7 @@ public final class ListView extends AndroidViewComponent {
     recyclerView.setBackgroundColor(backgroundColor);
     linearLayout.setBackgroundColor(backgroundColor);
   }
-  
+
   /**
    * Returns the listview's element color as an alpha-red-green-blue
    * integer, i.e., {@code 0xAARRGGBB}.  An alpha of {@code 00}
@@ -656,7 +656,7 @@ public final class ListView extends AndroidViewComponent {
   @SimpleProperty
   public void TextSize(int textSize) {
     if (textSize >1000) {
-        textSize = 999;
+      textSize = 999;
     }
     FontSize(Float.valueOf(textSize));
   }
@@ -861,7 +861,7 @@ public final class ListView extends AndroidViewComponent {
    * @suppressdoc
    */
   @SimpleProperty(description = "A function that allows you to select multiple elements. "
-      + "True - function enabled, false - disabled.",
+                                    + "True - function enabled, false - disabled.",
       category = PropertyCategory.BEHAVIOR)
   public boolean MultiSelect() {
     return multiSelect;
@@ -874,7 +874,7 @@ public final class ListView extends AndroidViewComponent {
    * @param multiSelect sets the function according to this input
    */
   @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_BOOLEAN,
-          defaultValue = "False")
+      defaultValue = "False")
   @SimpleProperty
   public void MultiSelect(boolean multi) {
     if (selectionIndex > 0) {
@@ -895,7 +895,7 @@ public final class ListView extends AndroidViewComponent {
     return orientation;
   }
 
- /**
+  /**
    * Specifies the layout's orientation. This may be: `Vertical`, which displays elements
    * in rows one after the other; or `Horizontal`, which displays one element at a time and
    * allows the user to swipe left or right to brows the elements.
@@ -952,7 +952,7 @@ public final class ListView extends AndroidViewComponent {
             yailItem.put(Component.LISTVIEW_KEY_MAIN_TEXT, jsonItem.getString(Component.LISTVIEW_KEY_MAIN_TEXT));
             yailItem.put(Component.LISTVIEW_KEY_DESCRIPTION, jsonItem.has(Component.LISTVIEW_KEY_DESCRIPTION) ? jsonItem.getString(Component.LISTVIEW_KEY_DESCRIPTION) : "");
             yailItem.put(Component.LISTVIEW_KEY_IMAGE, jsonItem.has(Component.LISTVIEW_KEY_IMAGE) ? jsonItem
-               .getString(Component.LISTVIEW_KEY_IMAGE) : "");
+                                                                                                        .getString(Component.LISTVIEW_KEY_IMAGE) : "");
             items.add(yailItem);
           }
         }
@@ -962,7 +962,7 @@ public final class ListView extends AndroidViewComponent {
       }
       updateAdapterData();
       listAdapterWithRecyclerView.notifyDataSetChanged();
-    } 
+    }
   }
 
   /**
@@ -1038,7 +1038,7 @@ public final class ListView extends AndroidViewComponent {
    * @return thickness of divider
    */
   @SimpleProperty(description = "The thickness of the element divider in the list view. "
-      + "If the thickness is 0, the divider is not visible.",
+                                    + "If the thickness is 0, the divider is not visible.",
       category = PropertyCategory.APPEARANCE)
   public int DividerThickness() {
     return dividerSize;
@@ -1056,7 +1056,7 @@ public final class ListView extends AndroidViewComponent {
     this.dividerSize = size;
     setDivider();
   }
-  
+
   /**
    * Returns the margins width of list view element
    *
@@ -1101,7 +1101,7 @@ public final class ListView extends AndroidViewComponent {
       defaultValue = DEFAULT_RADIUS + "")
   @SimpleProperty
   public void ElementCornerRadius(int radius) {
-    this.radius = radius;    
+    this.radius = radius;
     setAdapterData();
   }
 
@@ -1112,12 +1112,12 @@ public final class ListView extends AndroidViewComponent {
    * @suppressdoc
    */
   @SimpleProperty(description = "The effect of bounce from the edge after scrolling the list to the end. "
-      + " True will enable the bounce effect, false will disable it.",
+                                    + " True will enable the bounce effect, false will disable it.",
       category = PropertyCategory.BEHAVIOR)
   public boolean BounceEdgeEffect() {
     return bounceEffect;
   }
-  
+
   /**
    * Sets the bounce effect function. `true`{:.logic.block} will enable the function,
    * `false`{:.logic.block} will disable.
@@ -1125,10 +1125,10 @@ public final class ListView extends AndroidViewComponent {
    * @param bounce sets the function according to this input
    */
   @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_BOOLEAN,
-          defaultValue = "False")
+      defaultValue = "False")
   @SimpleProperty
   public void BounceEdgeEffect(boolean bounce) {
-    if (bounce) {      
+    if (bounce) {
       recyclerView.setEdgeEffectFactory(bounceEdgeEffectFactory);
     } else {
       recyclerView.setEdgeEffectFactory(edgeEffectFactory);
@@ -1172,7 +1172,7 @@ public final class ListView extends AndroidViewComponent {
         items.add(mainText);
       } else{
         items.add(CreateElement(mainText, detailText, imageName));
-      }      
+      }
     }
     updateAdapterData();
     listAdapterWithRecyclerView.notifyItemChanged(listAdapterWithRecyclerView.getItemCount() - 1);
@@ -1218,12 +1218,12 @@ public final class ListView extends AndroidViewComponent {
         items.add(index - 1, mainText);
       } else{
         items.add(index - 1, CreateElement(mainText, detailText, imageName));
-      }      
+      }
     }
     updateAdapterData();
     listAdapterWithRecyclerView.notifyItemInserted(index - 1);
   }
-  
+
   /**
    * Add new Items to list at specific index
    */
@@ -1241,7 +1241,7 @@ public final class ListView extends AndroidViewComponent {
       updateAdapterData();
       listAdapterWithRecyclerView.notifyItemRangeChanged(positionStart, itemCount);
     }
-  } 
+  }
 
   /**
    * Create a new adapter and apply visual changes, load data if it exists.
@@ -1283,9 +1283,9 @@ public final class ListView extends AndroidViewComponent {
 
   /**
    * A class that creates dividers between elements or margins, depending on the options selected.
-   */ 
+   */
   private class DividerItemDecoration extends RecyclerView.ItemDecoration {
-    public DividerItemDecoration() {      
+    public DividerItemDecoration() {
     }
     @Override
     public void onDraw(Canvas canvas, RecyclerView parent, RecyclerView.State state) {
@@ -1316,7 +1316,7 @@ public final class ListView extends AndroidViewComponent {
             }
           }
         }
-      } 
+      }
     }
 
     @Override
@@ -1338,9 +1338,9 @@ public final class ListView extends AndroidViewComponent {
         outRect.left = margins - column * margins / spanCount;
         outRect.right = (column + 1) * margins / spanCount;
         if (position < spanCount || first) {
-            first = false;
-            outRect.top = margins;
-        }        
+          first = false;
+          outRect.top = margins;
+        }
         outRect.bottom = margins;
       }
     }
