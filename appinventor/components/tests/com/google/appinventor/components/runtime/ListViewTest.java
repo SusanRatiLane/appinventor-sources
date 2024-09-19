@@ -83,7 +83,7 @@ public class ListViewTest extends RobolectricTestBase {
     Thread.sleep(100);  // Filtering runs on a separate thread for performance reasons
     runAllEvents();
 
-    LinearLayout listlayout =(LinearLayout) ((LinearLayout) listView1.getView()).getChildAt(1);
+    LinearLayout listlayout = (LinearLayout) ((LinearLayout) listView1.getView()).getChildAt(1);
     RecyclerView rv = (RecyclerView) listlayout.getChildAt(0);
     int count = 0;
     for (int i = 0; i < rv.getLayoutManager().getChildCount(); i++) {

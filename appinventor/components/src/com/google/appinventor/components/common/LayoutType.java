@@ -21,9 +21,9 @@ public enum LayoutType implements OptionList<Integer> {
 
   private final int layout;
 
-   LayoutType(int value) {
+  LayoutType(int value) {
     this.layout = value;
-  } 
+  }
 
   public Integer toUnderlyingValue() {
     return layout;
@@ -32,7 +32,7 @@ public enum LayoutType implements OptionList<Integer> {
   private static final Map<Integer, LayoutType> lookup = new HashMap<>();
 
   static {
-    for(LayoutType value : LayoutType.values()) {
+    for (LayoutType value : LayoutType.values()) {
       lookup.put(value.toUnderlyingValue(), value);
     }
   }

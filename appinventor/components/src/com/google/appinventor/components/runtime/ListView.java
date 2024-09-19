@@ -67,8 +67,8 @@ import android.graphics.Rect;
 @DesignerComponent(version = YaVersion.LISTVIEW_COMPONENT_VERSION,
     description = "<p>This is a visible component that displays a list of text and image elements.</p>" +
                       " <p>Simple lists of strings may be set using the ElementsFromString property." +
-                      " More complex lists of elements containing multiple strings and/or images can be created using " +
-                      "the ListData and ListViewLayout properties. </p>",
+                      " More complex lists of elements containing multiple strings and/or images can be created" +
+                      " using the ListData and ListViewLayout properties. </p>",
     category = ComponentCategory.USERINTERFACE,
     nonVisible = false,
     iconName = "images/listView.png")
@@ -136,6 +136,7 @@ public final class ListView extends AndroidViewComponent {
   private boolean bounceEffect;
   private final LinearLayout listLayout;
   private static final int DEFAULT_MARGINS_SIZE = 0;
+
   /**
    * Creates a new ListView component.
    *
@@ -385,7 +386,7 @@ public final class ListView extends AndroidViewComponent {
         if (((YailDictionary) o).containsKey(Component.LISTVIEW_KEY_MAIN_TEXT)) {
           selection = ((YailDictionary) o).get(Component.LISTVIEW_KEY_MAIN_TEXT).toString();
           selectionDetailText = ElementsUtil.toStringEmptyIfNull(((YailDictionary) o)
-                                                                     .get(Component.LISTVIEW_KEY_DESCRIPTION));;
+              .get(Component.LISTVIEW_KEY_DESCRIPTION));
         } else {
           selection = o.toString();
         }
@@ -655,7 +656,7 @@ public final class ListView extends AndroidViewComponent {
       defaultValue = DEFAULT_TEXT_SIZE + "")
   @SimpleProperty
   public void TextSize(int textSize) {
-    if (textSize >1000) {
+    if (textSize > 1000) {
       textSize = 999;
     }
     FontSize(Float.valueOf(textSize));
@@ -723,10 +724,10 @@ public final class ListView extends AndroidViewComponent {
    * Returns the label's text's font face as default, serif, sans
    * serif, or monospace.
    *
-   * @return  one of {@link Component#TYPEFACE_DEFAULT},
-   *          {@link Component#TYPEFACE_SERIF},
-   *          {@link Component#TYPEFACE_SANSSERIF} or
-   *          {@link Component#TYPEFACE_MONOSPACE}
+   * @return one of {@link Component#TYPEFACE_DEFAULT},
+   * {@link Component#TYPEFACE_SERIF},
+   * {@link Component#TYPEFACE_SANSSERIF} or
+   * {@link Component#TYPEFACE_MONOSPACE}
    */
   @SimpleProperty(category = PropertyCategory.APPEARANCE,
       userVisible = false)
@@ -738,10 +739,10 @@ public final class ListView extends AndroidViewComponent {
    * Specifies the label's text's font face as default, serif, sans
    * serif, or monospace.
    *
-   * @param typeface  one of {@link Component#TYPEFACE_DEFAULT},
-   *                  {@link Component#TYPEFACE_SERIF},
-   *                  {@link Component#TYPEFACE_SANSSERIF} or
-   *                  {@link Component#TYPEFACE_MONOSPACE}
+   * @param typeface one of {@link Component#TYPEFACE_DEFAULT},
+   *                 {@link Component#TYPEFACE_SERIF},
+   *                 {@link Component#TYPEFACE_SANSSERIF} or
+   *                 {@link Component#TYPEFACE_MONOSPACE}
    */
   @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_TYPEFACE,
       defaultValue = Component.TYPEFACE_DEFAULT + "")
@@ -755,10 +756,10 @@ public final class ListView extends AndroidViewComponent {
    * Returns the label's text's font face as default, serif, sans
    * serif, or monospace.
    *
-   * @return  one of {@link Component#TYPEFACE_DEFAULT},
-   *          {@link Component#TYPEFACE_SERIF},
-   *          {@link Component#TYPEFACE_SANSSERIF} or
-   *          {@link Component#TYPEFACE_MONOSPACE}
+   * @return one of {@link Component#TYPEFACE_DEFAULT},
+   * {@link Component#TYPEFACE_SERIF},
+   * {@link Component#TYPEFACE_SANSSERIF} or
+   * {@link Component#TYPEFACE_MONOSPACE}
    */
   @SimpleProperty(category = PropertyCategory.APPEARANCE,
       userVisible = false)
@@ -770,10 +771,10 @@ public final class ListView extends AndroidViewComponent {
    * Specifies the label's text's font face as default, serif, sans
    * serif, or monospace.
    *
-   * @param typeface  one of {@link Component#TYPEFACE_DEFAULT},
-   *                  {@link Component#TYPEFACE_SERIF},
-   *                  {@link Component#TYPEFACE_SANSSERIF} or
-   *                  {@link Component#TYPEFACE_MONOSPACE}
+   * @param typeface one of {@link Component#TYPEFACE_DEFAULT},
+   *                 {@link Component#TYPEFACE_SERIF},
+   *                 {@link Component#TYPEFACE_SANSSERIF} or
+   *                 {@link Component#TYPEFACE_MONOSPACE}
    */
   @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_TYPEFACE,
       defaultValue = Component.TYPEFACE_DEFAULT + "")
@@ -782,6 +783,7 @@ public final class ListView extends AndroidViewComponent {
     fontTypeDetail = typeface;
     setAdapterData();
   }
+
   /**
    * Returns the image width of ListView layouts containing images
    *
@@ -901,7 +903,7 @@ public final class ListView extends AndroidViewComponent {
    * allows the user to swipe left or right to brows the elements.
    *
    * @param orientation one of {@link ComponentConstants#LAYOUT_ORIENTATION_VERTICAL},
-   *              {@link ComponentConstants#LAYOUT_ORIENTATION_HORIZONTAL},
+   *                    {@link ComponentConstants#LAYOUT_ORIENTATION_HORIZONTAL},
    */
   @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_RECYCLERVIEW_ORIENTATION,
       defaultValue = ComponentConstants.LAYOUT_ORIENTATION_VERTICAL + "")
@@ -968,10 +970,9 @@ public final class ListView extends AndroidViewComponent {
   /**
    * Creates a
    *
-   * @param mainText     Primary text of the entry. Should be unique if possible.
-   * @param detailText   Additional descriptive text.
-   * @param imageName    File name of an image that has been uploaded to media.
-   *
+   * @param mainText   Primary text of the entry. Should be unique if possible.
+   * @param detailText Additional descriptive text.
+   * @param imageName  File name of an image that has been uploaded to media.
    */
   @SimpleFunction(description = "Create a ListView entry. MainText is required. DetailText and ImageName are optional.")
   public YailDictionary CreateElement(final String mainText, final String detailText, final String imageName) {
@@ -988,8 +989,7 @@ public final class ListView extends AndroidViewComponent {
   }
 
   @SimpleFunction(description = "Get the Detail Text of a ListView element.")
-  public String GetDetailText(final YailDictionary listElement)
-  {
+  public String GetDetailText(final YailDictionary listElement) {
     return listElement.get(Component.LISTVIEW_KEY_DESCRIPTION).toString();
   }
 
@@ -1139,7 +1139,7 @@ public final class ListView extends AndroidViewComponent {
   /**
    * Removes Item from list at a given index
    */
-  @SimpleFunction(description = "Removes Item from list at a given index")
+  @SimpleFunction(description = "Removes Item from list at a given index.")
   public void RemoveItemAtIndex(int index) {
     if (index < 1 || index > items.size()) {
       container.$form().dispatchErrorOccurredEvent(this, "RemoveItemAtIndex",
@@ -1154,7 +1154,7 @@ public final class ListView extends AndroidViewComponent {
   /**
    * Add new Item to list
    */
-  @SimpleFunction(description = "Add new Item to list at the end")
+  @SimpleFunction(description = "Add new Item to list at the end.")
   public void AddItem(String mainText, String detailText, String imageName) {
     if (!items.isEmpty()) {
       Object o = items.get(0);
@@ -1170,7 +1170,7 @@ public final class ListView extends AndroidViewComponent {
     } else {
       if (layout == Component.LISTVIEW_LAYOUT_SINGLE_TEXT) {
         items.add(mainText);
-      } else{
+      } else {
         items.add(CreateElement(mainText, detailText, imageName));
       }
     }
@@ -1181,7 +1181,7 @@ public final class ListView extends AndroidViewComponent {
   /**
    * Add new Items to list
    */
-  @SimpleFunction(description = "Add new Items to list at the end")
+  @SimpleFunction(description = "Add new Items to list at the end.")
   public void AddItems(List<Object> itemsList) {
     if (!itemsList.isEmpty()) {
       int positionStart = items.size();
@@ -1195,9 +1195,9 @@ public final class ListView extends AndroidViewComponent {
   /**
    * Add new Item to list at a given index
    */
-  @SimpleFunction(description = "Add new Item to list at a given index")
+  @SimpleFunction(description = "Add new Item to list at a given index.")
   public void AddItemAtIndex(int index, String mainText, String detailText, String imageName) {
-    if (index < 1 || index > items.size()+ 1) {
+    if (index < 1 || index > items.size() + 1) {
       container.$form().dispatchErrorOccurredEvent(this, "AddItemAtIndex",
           ErrorMessages.ERROR_LISTVIEW_INDEX_OUT_OF_BOUNDS, index);
       return;
@@ -1216,7 +1216,7 @@ public final class ListView extends AndroidViewComponent {
     } else {
       if (layout == Component.LISTVIEW_LAYOUT_SINGLE_TEXT) {
         items.add(index - 1, mainText);
-      } else{
+      } else {
         items.add(index - 1, CreateElement(mainText, detailText, imageName));
       }
     }
@@ -1227,9 +1227,9 @@ public final class ListView extends AndroidViewComponent {
   /**
    * Add new Items to list at specific index
    */
-  @SimpleFunction(description = "Add new Items to list at specific index")
+  @SimpleFunction(description = "Add new Items to list at specific index.")
   public void AddItemsAtIndex(int index, YailList itemsList) {
-    if (index < 1 || index > items.size()+ 1) {
+    if (index < 1 || index > items.size() + 1) {
       container.$form().dispatchErrorOccurredEvent(this, "AddItemsAtIndex",
           ErrorMessages.ERROR_LISTVIEW_INDEX_OUT_OF_BOUNDS, index);
       return;
@@ -1287,6 +1287,7 @@ public final class ListView extends AndroidViewComponent {
   private class DividerItemDecoration extends RecyclerView.ItemDecoration {
     public DividerItemDecoration() {
     }
+
     @Override
     public void onDraw(Canvas canvas, RecyclerView parent, RecyclerView.State state) {
       //If margins are set, dividers will not be created.
@@ -1324,7 +1325,7 @@ public final class ListView extends AndroidViewComponent {
       int position = parent.getChildAdapterPosition(view);
       int spanCount = 1; //No GridLayout support, so spanCount set to 1.
       if (margins == 0) {
-        if (position != RecyclerView.NO_POSITION && position < parent.getAdapter().getItemCount() -1) {
+        if (position != RecyclerView.NO_POSITION && position < parent.getAdapter().getItemCount() - 1) {
           if (orientation == ComponentConstants.LAYOUT_ORIENTATION_HORIZONTAL) {
             outRect.set(0, 0, dividerSize, 0);
           } else {
@@ -1344,5 +1345,11 @@ public final class ListView extends AndroidViewComponent {
         outRect.bottom = margins;
       }
     }
+  }
+
+  @Deprecated
+  @SimpleFunction(description = "Reload the ListView to reflect any changes in the data.")
+  public void Refresh() {
+    setAdapterData();
   }
 }
