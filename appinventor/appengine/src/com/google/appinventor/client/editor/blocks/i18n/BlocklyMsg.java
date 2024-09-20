@@ -1,4 +1,4 @@
-package com.google.appinventor.client.editor.youngandroid.i18n;
+package com.google.appinventor.client.editor.blocks.i18n;
 
 import com.google.appinventor.client.utils.Promise;
 
@@ -64,7 +64,7 @@ public interface BlocklyMsg extends ClientBundle {
     }
 
     private static native void installTranslations(String translations)/*-{
-      @com.google.appinventor.client.editor.youngandroid.i18n.BlocklyMsg.Loader::translations =
+      @com.google.appinventor.client.editor.blocks.i18n.BlocklyMsg.Loader::translations =
         JSON.parse(translations);
     }-*/;
   }

@@ -40,7 +40,7 @@ public final class YoungAndroidFormUpgrader {
     }
   }
 
-  private static final SimpleComponentDatabase COMPONENT_DATABASE =
+  public static final SimpleComponentDatabase COMPONENT_DATABASE =
       SimpleComponentDatabase.getInstance();
 
   private YoungAndroidFormUpgrader() {
