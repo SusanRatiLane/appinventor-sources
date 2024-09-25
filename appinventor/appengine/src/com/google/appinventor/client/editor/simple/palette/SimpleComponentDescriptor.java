@@ -221,4 +221,5 @@ public final class SimpleComponentDescriptor {
     mockComponent.onCreateFromPalette();
     return mockComponent;
   }
+
 }

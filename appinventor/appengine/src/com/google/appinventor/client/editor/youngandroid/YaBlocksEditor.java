@@ -39,6 +39,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import static com.google.appinventor.client.Ode.MESSAGES;
+
 /**
  * Editor for Young Android Blocks (.blk) files.
  *
@@ -67,12 +69,16 @@ public final class YaBlocksEditor extends BlocksEditor<YoungAndroidBlocksNode, Y
     super(projectEditor, blocksNode, YaVersion.YOUNG_ANDROID_VERSION, YAIL,
         BlocksCodeGenerationTarget.YAIL,
         SimpleComponentDatabase.getInstance(blocksNode.getProjectId()));
+
     project = Ode.getInstance().getProjectManager().getProject(blocksNode.getProjectId());
     project.addProjectChangeListener(this);
     onProjectLoaded(project);
   }
 
-  // FileEditor methods
+  @Override
+  public String getTabText() {
+    return MESSAGES.blocksEditorTabName(blocksNode.getFormName());
+  }
 
   @Override
   public void onShow() {

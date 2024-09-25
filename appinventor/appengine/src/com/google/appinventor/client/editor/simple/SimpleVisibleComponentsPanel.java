@@ -6,6 +6,11 @@
 
 package com.google.appinventor.client.editor.simple;
 
+import com.google.appinventor.client.Ode;
+import com.google.appinventor.client.editor.simple.components.MockForm;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.appinventor.client.editor.ProjectEditor;
 import com.google.appinventor.client.editor.designer.DesignerRootComponent;
 import com.google.appinventor.client.editor.simple.palette.SimplePaletteItem;
@@ -14,12 +19,18 @@ import com.google.appinventor.client.widgets.dnd.DropTarget;
 import com.google.appinventor.shared.simple.ComponentDatabaseChangeListener;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.appinventor.shared.settings.SettingsConstants;
+
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.ListBox;
 
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import static com.google.appinventor.client.Ode.MESSAGES;
 
@@ -29,12 +40,17 @@ import static com.google.appinventor.client.Ode.MESSAGES;
  */
 public abstract class SimpleVisibleComponentsPanel<T extends DesignerRootComponent>
     extends Composite implements DropTarget, ComponentDatabaseChangeListener {
+  // UI elements
+  protected static final Logger LOG = Logger.getLogger(SimpleVisibleComponentsPanel.class.getName());
+
   // Corresponding panel for non-visible components (because we allow users to drop
   // non-visible components onto the root, but we show them in the non-visible
   // components panel)
   private final SimpleNonVisibleComponentsPanel<T> nonVisibleComponentsPanel;
 
   protected T root;
+  protected final ProjectEditor projectEditor;
+  protected final MockForm form;
 
   /**
    * Creates new component design panel for visible components.
@@ -44,6 +60,9 @@ public abstract class SimpleVisibleComponentsPanel<T extends DesignerRootCompone
    */
   public SimpleVisibleComponentsPanel(SimpleNonVisibleComponentsPanel<T> nonVisibleComponentsPanel) {
     this.nonVisibleComponentsPanel = nonVisibleComponentsPanel;
+    projectEditor = Ode.getCurrentProjectEditor();
+
+    form = root.asMockComponent().getForm();
   }
 
   public abstract void setRoot(T root);
@@ -51,6 +70,7 @@ public abstract class SimpleVisibleComponentsPanel<T extends DesignerRootCompone
   public SimpleNonVisibleComponentsPanel<T> getNonVisibleComponentsPanel() {
     return nonVisibleComponentsPanel;
   }
+
 
   // DropTarget implementation
 

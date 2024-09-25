@@ -124,6 +124,8 @@ public abstract class DesignerEditor<S extends SourceNode, T extends DesignerRoo
         SourceStructureBox.getSourceStructureBox().getSourceStructureExplorer();
 
     // Create UI elements for the designer panels.
+
+    // TODO: These are now generic and not necessarily "simple"
     this.visibleComponentsPanel = visibleComponentsPanel;
     nonVisibleComponentsPanel = visibleComponentsPanel.getNonVisibleComponentsPanel();
     componentDatabaseChangeListeners.add(nonVisibleComponentsPanel);

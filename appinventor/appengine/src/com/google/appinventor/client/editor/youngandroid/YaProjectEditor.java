@@ -11,6 +11,7 @@ import static com.google.appinventor.client.Ode.MESSAGES;
 import com.google.appinventor.client.ErrorReporter;
 import com.google.appinventor.client.Ode;
 import com.google.appinventor.client.OdeAsyncCallback;
+import com.google.appinventor.client.UiStyleFactory;
 import com.google.appinventor.client.boxes.AssetListBox;
 import com.google.appinventor.client.editor.EditorManager;
 import com.google.appinventor.client.editor.FileEditor;
@@ -136,22 +137,8 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
     propertyDialogBox.showDialog(curScreen);
   }
 
-  /**
-   * Returns a project editor factory for {@code YaProjectEditor}s.
-   *
-   * @return a project editor factory for {@code YaProjectEditor}s.
-   */
-  public static ProjectEditorFactory getFactory() {
-    return new ProjectEditorFactory() {
-      @Override
-      public ProjectEditor createProjectEditor(ProjectRootNode projectRootNode) {
-        return new YaProjectEditor(projectRootNode);
-      }
-    };
-  }
-
-  public YaProjectEditor(ProjectRootNode projectRootNode) {
-    super(projectRootNode);
+  public YaProjectEditor(ProjectRootNode projectRootNode, UiStyleFactory styleFactory) {
+    super(projectRootNode, styleFactory);
     project.addProjectChangeListener(this);
     COMPONENT_DATABASE = SimpleComponentDatabase.getInstance(projectId);
     Ode.getInstance().getTokenAuthService().getCloudDBToken(new OdeAsyncCallback<String>() {
@@ -238,7 +225,7 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
     for (ProjectNode source : projectRootNode.getAllSourceNodes()) {
       if (source instanceof YoungAndroidFormNode) {
         addDesigner(((YoungAndroidFormNode) source).getFormName(),
-            new YaFormEditor(this, (YoungAndroidFormNode) source));
+            new YaFormEditor(this, (YoungAndroidFormNode)source));
       }
     }
     for (ProjectNode source: projectRootNode.getAllSourceNodes()) {

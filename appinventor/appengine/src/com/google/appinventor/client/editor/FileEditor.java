@@ -6,8 +6,10 @@
 
 package com.google.appinventor.client.editor;
 
+import com.google.appinventor.client.AssetManager;
 import com.google.appinventor.client.Ode;
 import com.google.appinventor.client.editor.simple.palette.DropTargetProvider;
+import com.google.appinventor.client.editor.youngandroid.YaProjectEditor;
 import com.google.appinventor.shared.rpc.project.FileNode;
 import com.google.appinventor.shared.rpc.project.ProjectRootNode;
 import com.google.gwt.core.client.Callback;
@@ -24,7 +26,7 @@ public abstract class FileEditor extends Composite {
   private static final Logger LOG = Logger.getLogger(FileEditor.class.getName());
 
   // The project editor that contains this file editor.
-  protected final ProjectEditor projectEditor;
+  protected final YaProjectEditor projectEditor;
 
   // FileNode associated with this file editor
   protected final FileNode fileNode;
@@ -38,7 +40,7 @@ public abstract class FileEditor extends Composite {
    * @param fileNode  FileNode associated with this file editor
    */
   public FileEditor(ProjectEditor projectEditor, FileNode fileNode) {
-    this.projectEditor = projectEditor;
+    this.projectEditor = (YaProjectEditor)projectEditor ;
     this.fileNode = fileNode;
   }
 
