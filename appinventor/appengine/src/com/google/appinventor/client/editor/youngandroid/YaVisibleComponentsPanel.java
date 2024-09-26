@@ -4,22 +4,16 @@
 package com.google.appinventor.client.editor.youngandroid;
 
 import com.google.appinventor.client.editor.ProjectEditor;
-import com.google.appinventor.client.editor.simple.SimpleNonVisibleComponentsPanel;
 import com.google.appinventor.client.editor.simple.SimpleVisibleComponentsPanel;
 import com.google.appinventor.client.editor.simple.components.MockForm;
 import com.google.appinventor.shared.settings.SettingsConstants;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-
-import static com.google.appinventor.client.Ode.MESSAGES;
 
 /**
  * An implementation of SimpleVisibleComponentsPanel for the MockForm designer.
@@ -58,7 +52,7 @@ public class YaVisibleComponentsPanel extends SimpleVisibleComponentsPanel<MockF
         int idx = Integer.parseInt(listboxPhoneTablet.getSelectedValue());
         int width = drop_lst[idx][0];
         int height = drop_lst[idx][1];
-        String val = Integer.toString(idx) + "," + Integer.toString(width) + "," + Integer.toString(height);
+        String val = idx + "," + width + "," + height;
         // here, we can change settings by putting val into it
         projectEditor.changeProjectSettingsProperty(SettingsConstants.PROJECT_YOUNG_ANDROID_SETTINGS,
             SettingsConstants.YOUNG_ANDROID_SETTINGS_PHONE_TABLET, val);
@@ -178,10 +172,6 @@ public class YaVisibleComponentsPanel extends SimpleVisibleComponentsPanel<MockF
     if (root == null) {
       return;
     }
-
-    if (root == null)
-      return;
-
     root.changePreviewSize(width, height, idx);
   }
 
@@ -194,13 +184,11 @@ public class YaVisibleComponentsPanel extends SimpleVisibleComponentsPanel<MockF
   }
 
   public void enableTabletPreviewCheckBox(boolean enable){
-    if (root != null){
+    if (root != null) {
       if (!enable){
         changeFormPreviewSize(0, 320, 505);
-        listboxPhoneTablet.setVisible(enable);
       } else {
         getUserSettingChangeSize();
-        listboxPhoneTablet.setVisible(enable);
       }
     }
     listboxPhoneTablet.setEnabled(enable);
@@ -210,13 +198,10 @@ public class YaVisibleComponentsPanel extends SimpleVisibleComponentsPanel<MockF
     if (root != null) {
       if (!enable) {
         changeFormPhonePreview(-1, "Classic");
-        listboxPhonePreview.setVisible(enable);
       } else {
         getUserSettingChangePreview();
-        listboxPhonePreview.setVisible(enable);
       }
     }
     listboxPhonePreview.setEnabled(enable);
   }
-
 }

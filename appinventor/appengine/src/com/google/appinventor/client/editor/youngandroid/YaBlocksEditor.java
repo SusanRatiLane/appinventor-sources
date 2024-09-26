@@ -63,7 +63,7 @@ public final class YaBlocksEditor extends BlocksEditor<YoungAndroidBlocksNode, Y
   private static final Logger LOG = Logger.getLogger(YaBlocksEditor.class.getName());
 
   // The project associated with this blocks editor.
-  private Project project;
+  private final Project project;
 
   YaBlocksEditor(YaProjectEditor projectEditor, YoungAndroidBlocksNode blocksNode) {
     super(projectEditor, blocksNode, YaVersion.YOUNG_ANDROID_VERSION, YAIL,
@@ -133,7 +133,7 @@ public final class YaBlocksEditor extends BlocksEditor<YoungAndroidBlocksNode, Y
   }
 
   public Set<String> getBlockTypeSet() {
-    Set<String> blockTypes = new HashSet<String>();
+    Set<String> blockTypes = new HashSet<>();
     String xmlString = blocksArea.getBlocksContent();
     Document blockDoc = XMLParser.parse(xmlString);
     NodeList blockElements = blockDoc.getElementsByTagName("block");
@@ -160,21 +160,24 @@ public final class YaBlocksEditor extends BlocksEditor<YoungAndroidBlocksNode, Y
         Element mutElem = (Element) blockElem.getElementsByTagName("mutation").item(0);
         String component_type = mutElem.getAttribute("component_type");
         String event_name = mutElem.getAttribute("event_name");
-        Set<String> blockTypes = componentBlocks.get(component_type) == null ? new HashSet<String>() : componentBlocks.get(component_type);
+        Set<String> blockTypes = componentBlocks.get(component_type) == null
+            ? new HashSet<>() : componentBlocks.get(component_type);
         blockTypes.add(event_name);
         componentBlocks.put(component_type, blockTypes);
       } else if ("component_method".equals(blockType)) {
         Element mutElem = (Element) blockElem.getElementsByTagName("mutation").item(0);
         String component_type = mutElem.getAttribute("component_type");
         String method_name = mutElem.getAttribute("method_name");
-        Set<String> blockTypes = componentBlocks.get(component_type) == null ? new HashSet<String>() : componentBlocks.get(component_type);
+        Set<String> blockTypes = componentBlocks.get(component_type) == null
+             ? new HashSet<>() : componentBlocks.get(component_type);
         blockTypes.add(method_name);
         componentBlocks.put(component_type, blockTypes);
       } else if ("component_set_get".equals(blockType)) {
         Element mutElem = (Element) blockElem.getElementsByTagName("mutation").item(0);
         String component_type = mutElem.getAttribute("component_type");
         String property_name = mutElem.getAttribute("property_name");
-        Set<String> blockTypes = componentBlocks.get(component_type) == null ? new HashSet<String>() : componentBlocks.get(component_type);
+        Set<String> blockTypes = componentBlocks.get(component_type) == null
+            ? new HashSet<>() : componentBlocks.get(component_type);
         blockTypes.add(property_name);
         componentBlocks.put(component_type, blockTypes);
       }
@@ -205,7 +208,7 @@ public final class YaBlocksEditor extends BlocksEditor<YoungAndroidBlocksNode, Y
   }
 
   public MockForm getForm() {
-    YaProjectEditor yaProjectEditor = (YaProjectEditor) projectEditor;
+    YaProjectEditor yaProjectEditor = projectEditor;
     YaFormEditor myFormEditor = (YaFormEditor) yaProjectEditor.getFormFileEditor(blocksNode.getFormName());
     if (myFormEditor != null) {
       return myFormEditor.getForm();
@@ -254,7 +257,7 @@ public final class YaBlocksEditor extends BlocksEditor<YoungAndroidBlocksNode, Y
     YoungAndroidAssetsFolder assetsFolder = ((YoungAndroidProjectNode) project.getRootNode())
         .getAssetsFolder();
     for (ProjectNode node : assetsFolder.getChildren()) {
-      blocksArea.addAsset(((YoungAndroidAssetNode) node).getName());
+      blocksArea.addAsset(node.getName());
     }
   }
 
@@ -263,17 +266,16 @@ public final class YaBlocksEditor extends BlocksEditor<YoungAndroidBlocksNode, Y
     if (node instanceof YoungAndroidSourceNode) {
       blocksArea.addScreen(((YoungAndroidSourceNode) node).getFormName());
     } else if (node instanceof YoungAndroidAssetNode) {
-      blocksArea.addAsset(((YoungAndroidAssetNode) node).getName());
+      blocksArea.addAsset(node.getName());
     }
   }
-
 
   @Override
   public void onProjectNodeRemoved(Project project, ProjectNode node) {
     if (node instanceof YoungAndroidSourceNode) {
       blocksArea.removeScreen(((YoungAndroidSourceNode) node).getFormName());
     } else if (node instanceof YoungAndroidAssetNode) {
-      blocksArea.removeAsset(((YoungAndroidAssetNode) node).getName());
+      blocksArea.removeAsset(node.getName());
     }
   }
 

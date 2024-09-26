@@ -59,7 +59,7 @@ public abstract class BlocksEditor<S extends SourceNode, T extends DesignerEdito
     BlockDrawerSelectionListener, BlocklyWorkspaceChangeListener {
   public static final String EDITOR_TYPE = BlocksEditor.class.getSimpleName();
   protected static final Images IMAGES = Ode.getImageBundle();
-  private static final Logger LOG = Logger.getLogger(BlocksEditor.class.getName());
+  protected static final Logger LOG = Logger.getLogger(BlocksEditor.class.getName());
 
   // A constant to substract from the total height of the Viewer window, set through
   // the computed height of the user's window (Window.getClientHeight())
@@ -99,12 +99,12 @@ public abstract class BlocksEditor<S extends SourceNode, T extends DesignerEdito
   // component is adding one that we already have (which can happen when a component gets
   // moved from one container to another). In that case we do not want to add it to the
   // blocks area again.
-  private Set<String> componentUuids = new HashSet<String>();
+  private final Set<String> componentUuids = new HashSet<>();
 
   // Keep a map from projectid_formname -> YaBlocksEditor for handling blocks workspace changed
   // callbacks from the BlocklyPanel objects. This has to be static because it is used by
   // static methods that are called from the Javascript Blockly world.
-  private static Map<String, BlocksEditor<?, ?>> formToBlocksEditor = new HashMap<String, BlocksEditor<?, ?>>();
+  private final static Map<String, BlocksEditor<?, ?>> formToBlocksEditor = new HashMap<>();
 
   /**
    * Creates a {@code FileEditor} instance.

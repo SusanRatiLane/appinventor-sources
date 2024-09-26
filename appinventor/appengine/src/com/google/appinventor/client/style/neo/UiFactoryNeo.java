@@ -7,9 +7,6 @@ package com.google.appinventor.client.style.neo;
 
 import com.google.appinventor.client.UiStyleFactory;
 import com.google.appinventor.client.editor.ProjectEditor;
-import com.google.appinventor.client.editor.simple.SimpleNonVisibleComponentsPanel;
-import com.google.appinventor.client.editor.simple.SimpleVisibleComponentsPanel;
-import com.google.appinventor.client.editor.youngandroid.YaFormEditor;
 import com.google.appinventor.client.editor.youngandroid.YaNonVisibleComponentsPanel;
 import com.google.appinventor.client.editor.youngandroid.YaVisibleComponentsPanel;
 import com.google.appinventor.client.explorer.folder.ProjectFolder;
