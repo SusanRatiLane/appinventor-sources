@@ -446,7 +446,7 @@ public abstract class DesignerEditor<S extends SourceNode, T extends DesignerRoo
    * Show the given component's properties in the properties panel.
    */
   protected void updatePropertiesPanel(List<MockComponent> components, boolean selected) {
-    if (components == null || components.size() == 0) {
+    if (components.isEmpty()) {
       throw new IllegalArgumentException("components must be a list of at least 1");
     }
     if (selectedProperties != null) {
@@ -472,7 +472,7 @@ public abstract class DesignerEditor<S extends SourceNode, T extends DesignerRoo
             properties.add(propertyName + ":" + property.getType());
           }
         }
-        if (properties.size() > 0) {
+        if (!properties.isEmpty()) {
           propertyMaps.keySet().retainAll(properties);
         }
         first = false;

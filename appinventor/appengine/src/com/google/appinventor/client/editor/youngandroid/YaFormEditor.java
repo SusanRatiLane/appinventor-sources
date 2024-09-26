@@ -12,12 +12,10 @@ import com.google.appinventor.client.ErrorReporter;
 import com.google.appinventor.client.Ode;
 import com.google.appinventor.client.OdeAsyncCallback;
 import com.google.appinventor.client.boxes.PaletteBox;
-import com.google.appinventor.client.boxes.PropertiesBox;
 import com.google.appinventor.client.editor.ProjectEditor;
 import com.google.appinventor.client.editor.designer.DesignerEditor;
 import com.google.appinventor.client.editor.simple.ComponentNotFoundException;
 import com.google.appinventor.client.editor.simple.SimpleComponentDatabase;
-import com.google.appinventor.client.editor.simple.SimpleNonVisibleComponentsPanel;
 import com.google.appinventor.client.editor.simple.components.MockComponent;
 import com.google.appinventor.client.editor.simple.components.MockContainer;
 import com.google.appinventor.client.editor.simple.components.MockForm;
@@ -82,11 +80,6 @@ public final class YaFormEditor extends DesignerEditor<YoungAndroidFormNode, Moc
   private String preUpgradeJsonString;
 
   private JSONArray authURL;    // List of App Inventor versions we have been edited on.
-
-  /**
-   * A mapping of component UUIDs to mock components in the designer view.
-   */
-  private final Map<String, MockComponent> componentsDb = new HashMap<>();
 
   private static final int OLD_PROJECT_YAV = 150; // Projects older then this have no authURL
 
@@ -333,7 +326,7 @@ public final class YaFormEditor extends DesignerEditor<YoungAndroidFormNode, Moc
     root.select(null);
 
     String subsetjson = root.getPropertyValue(SettingsConstants.YOUNG_ANDROID_SETTINGS_BLOCK_SUBSET);
-    if (subsetjson.length() > 0) {
+    if (!subsetjson.isEmpty()) {
       reloadComponentPalette(subsetjson);
     }
     super.onFileLoaded(content);
@@ -348,17 +341,16 @@ public final class YaFormEditor extends DesignerEditor<YoungAndroidFormNode, Moc
     root.addDesignerChangeListener(this);
     // Also have the blocks editor listen to changes. Do this here instead
     // of in the blocks editor so that we don't risk it missing any updates.
-    root.addDesignerChangeListener(((YaProjectEditor) projectEditor)
-        .getBlocksFileEditor(root.getName()));
+    root.addDesignerChangeListener(projectEditor.getBlocksFileEditor(root.getName()));
   }
 
   public void reloadComponentPalette(String subsetjson) {
     Set<String> shownComponents = new HashSet<String>();
-    if (subsetjson.length() > 0) {
+    if (!subsetjson.isEmpty()) {
       try {
         String shownComponentsStr = getShownComponents(subsetjson);
-        if (shownComponentsStr.length() > 0) {
-          shownComponents = new HashSet<String>(Arrays.asList(shownComponentsStr.split(",")));
+        if (!shownComponentsStr.isEmpty()) {
+          shownComponents = new HashSet<>(Arrays.asList(shownComponentsStr.split(",")));
         }
         palettePanel.reloadComponentsFromSet(shownComponents);
       } catch (Exception e) {
@@ -407,7 +399,7 @@ public final class YaFormEditor extends DesignerEditor<YoungAndroidFormNode, Moc
    */
   protected void loadDesigner() {
     root.refresh();
-    MockComponent selectedComponent = root.getLastSelectedComponent();
+//    MockComponent selectedComponent = root.getLastSelectedComponent();
 
     // Set the palette box's content.
     PaletteBox paletteBox = PaletteBox.getPaletteBox();
@@ -470,7 +462,7 @@ public final class YaFormEditor extends DesignerEditor<YoungAndroidFormNode, Moc
     //
     // NOTE: It is important that these be encoded before any children components.
     String propertiesString = properties.encodeAsPairs(forYail);
-    if (propertiesString.length() > 0) {
+    if (!propertiesString.isEmpty()) {
       sb.append(',');
       sb.append(propertiesString);
     }
@@ -533,7 +525,7 @@ public final class YaFormEditor extends DesignerEditor<YoungAndroidFormNode, Moc
   @Override
   public boolean beforeComponentTypeRemoved(List<String> componentTypes) {
     boolean result = super.beforeComponentTypeRemoved(componentTypes);
-    List<MockComponent> mockComponents = new ArrayList<MockComponent>(getForm().getChildren());
+    List<MockComponent> mockComponents = new ArrayList<>(getForm().getChildren());
     for (String compType : componentTypes) {
       for (MockComponent mockComp : mockComponents) {
         if (mockComp.getType().equals(compType)) {
@@ -634,7 +626,7 @@ public final class YaFormEditor extends DesignerEditor<YoungAndroidFormNode, Moc
   }-*/;
 
   private YaBlocksEditor getBlocksEditor() {
-    return (YaBlocksEditor) ((YaProjectEditor) projectEditor).getBlocksFileEditor(sourceNode.getFormName());
+    return (YaBlocksEditor) projectEditor.getBlocksFileEditor(sourceNode.getFormName());
   }
 
   private JsArrayString getSelectedComponentBlocks() {
@@ -651,7 +643,7 @@ public final class YaFormEditor extends DesignerEditor<YoungAndroidFormNode, Moc
       YaBlocksEditor blocksEditor) {
     JsArrayString blocks = blocksEditor.getTopBlocksForComponentByName(component.getName());
     if (component instanceof MockContainer) {
-      for (MockComponent child : ((MockContainer) component).getChildren()) {
+      for (MockComponent child : component.getChildren()) {
         JsArrayString childBlocks = getSelectedComponentBlocks(child, blocksEditor);
         for (int i = 0; i < childBlocks.length(); i++) {
           blocks.push(childBlocks.get(i));

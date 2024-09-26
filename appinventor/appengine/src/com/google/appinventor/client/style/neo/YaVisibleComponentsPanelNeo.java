@@ -7,9 +7,6 @@ package com.google.appinventor.client.style.neo;
 
 import com.google.appinventor.client.components.Icon;
 import com.google.appinventor.client.editor.ProjectEditor;
-import com.google.appinventor.client.editor.simple.SimpleEditor;
-import com.google.appinventor.client.editor.simple.SimpleNonVisibleComponentsPanel;
-import com.google.appinventor.client.editor.simple.components.MockForm;
 import com.google.appinventor.client.editor.youngandroid.YaNonVisibleComponentsPanel;
 import com.google.appinventor.client.editor.youngandroid.YaVisibleComponentsPanel;
 import com.google.appinventor.shared.settings.SettingsConstants;
@@ -92,6 +89,5 @@ public class YaVisibleComponentsPanelNeo extends YaVisibleComponentsPanel {
     uibinder.createAndBindUi(this);
     super.listboxPhonePreview = listboxPhonePreview;
     super.listboxPhoneTablet = listboxPhoneTablet;
-    super.phoneScreen = phoneScreen;
   }
 }

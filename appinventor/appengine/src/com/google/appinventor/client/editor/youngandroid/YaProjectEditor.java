@@ -16,7 +16,6 @@ import com.google.appinventor.client.boxes.AssetListBox;
 import com.google.appinventor.client.editor.EditorManager;
 import com.google.appinventor.client.editor.FileEditor;
 import com.google.appinventor.client.editor.ProjectEditor;
-import com.google.appinventor.client.editor.ProjectEditorFactory;
 import com.google.appinventor.client.editor.blocks.BlocksEditor;
 import com.google.appinventor.client.editor.designer.DesignerEditor;
 import com.google.appinventor.client.editor.simple.SimpleComponentDatabase;
@@ -35,7 +34,6 @@ import com.google.appinventor.shared.rpc.project.ChecksumedFileException;
 import com.google.appinventor.shared.rpc.project.ChecksumedLoadFile;
 import com.google.appinventor.shared.rpc.project.ProjectNode;
 import com.google.appinventor.shared.rpc.project.ProjectRootNode;
-import com.google.appinventor.shared.rpc.project.SourceNode;
 import com.google.appinventor.shared.rpc.project.youngandroid.YoungAndroidBlocksNode;
 import com.google.appinventor.shared.rpc.project.youngandroid.YoungAndroidComponentsFolder;
 import com.google.appinventor.shared.rpc.project.youngandroid.YoungAndroidFormNode;
@@ -91,8 +89,8 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
   // blocks representation of the program logic. Some day it may also have an
   // editor for the textual representation of the program logic.
   private static class EditorSet {
-    DesignerEditor<?, ?, ?, ?, ?> formEditor = null;
-    BlocksEditor<?, ?> blocksEditor = null;
+    YaFormEditor formEditor = null;
+    YaBlocksEditor blocksEditor = null;
   }
 
   // Maps form name -> editors for this form
@@ -159,8 +157,7 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
     }
     loadedBlocksEditors.add(formName);
 
-    final BlocksEditor<?, DesignerEditor<?, ?, ?, ?, ?>> newBlocksEditor =
-        (BlocksEditor) editorMap.get(formName).blocksEditor;
+    final YaBlocksEditor newBlocksEditor = editorMap.get(formName).blocksEditor;
     newBlocksEditor.setDesigner(editorMap.get(formName).formEditor);
     newBlocksEditor.loadFile(new Command() {
         @Override
@@ -182,24 +179,6 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
         }
       });
   }
-
-  public void addBlocksEditor(BlocksEditor<?, ?> editor) {
-    String formName = editor.getEntityName();
-    int pos = Collections.binarySearch(fileIds, editor.getFileId(),
-        getFileIdComparator());
-    if (pos < 0) {
-      pos = -pos - 1;
-    }
-    insertFileEditor(editor, pos);
-    if (isLastOpened(((SourceNode) editor.getFileNode()).getPrefixedEntityName())) {
-      screen1BlocksLoaded = true;
-      if (readyToShowScreen1()) {
-        Ode.CLog("YaProjectEditor.addBlocksEditor.loadFile.execute: switching to screen "
-            + formName + " for project " + editor.getProjectId());
-        Ode.getInstance().getDesignToolbar().switchToScreen(editor.getProjectId(),
-            formName, DesignToolbar.View.DESIGNER);
-      }
-    }  }
 
   /**
    * Project process is completed before loadProject is started!
@@ -350,7 +329,7 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
     // removed, calling DesignToolbar.removeScreen a second time will be a no-op.
     LOG.info("YaProjectEditor: got onProjectNodeRemoved for project "
             + project.getProjectId() + ", node " + node.getFileId());
-    String formName = null;
+    String formName;
     // Screen Editorss
     if (node instanceof YoungAndroidFormNode) {
       formName = ((YoungAndroidFormNode) node).getFormName();
@@ -386,7 +365,7 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
    * @return a list of component instance names
    */
   public List<String> getComponentInstances(String formName) {
-    List<String> components = new ArrayList<String>();
+    List<String> components = new ArrayList<>();
     EditorSet editorSet = editorMap.get(formName);
     if (editorSet == null) {
       return components;
@@ -396,7 +375,7 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
   }
 
   public List<String> getComponentInstances() {
-    List<String> components = new ArrayList<String>();
+    List<String> components = new ArrayList<>();
     for (String formName : editorMap.keySet()) {
       components.addAll(getComponentInstances(formName));
     }
@@ -404,7 +383,7 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
   }
 
   public Set<String> getComponentTypes(String formName) {
-    Set<String> types = new HashSet<String>();
+    Set<String> types = new HashSet<>();
     EditorSet editorSet = editorMap.get(formName);
     if (editorSet == null) {
       return types;
@@ -416,7 +395,7 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
   }
 
   public Set<String> getUniqueComponentTypes() {
-    Set<String> types = new HashSet<String>();
+    Set<String> types = new HashSet<>();
     for (String formName : editorMap.keySet()) {
       types.addAll(getComponentTypes(formName));
     }
@@ -424,7 +403,7 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
   }
 
   public Set<String> getUniqueBuiltInBlockTypes() {
-    Set<String> types = new HashSet<String>();
+    Set<String> types = new HashSet<>();
     for (EditorSet ed : editorMap.values()) {
       types.addAll(ed.blocksEditor.getBlockTypeSet());
     }
@@ -434,7 +413,7 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
   // Returns a hash of component names with the set of all component blocks (events, methods,
   // and properties) in use for all screens in the current project
   public HashMap<String, Set<String>> getUniqueComponentBlockTypes() {
-    HashMap<String, Set<String>> componentBlocks = new HashMap<String, Set<String>>();
+    HashMap<String, Set<String>> componentBlocks = new HashMap<>();
     for (EditorSet ed : editorMap.values()) {
       componentBlocks = ed.blocksEditor.getComponentBlockTypeSet(componentBlocks);
     }
@@ -489,7 +468,7 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
     };
   }
 
-  private void addDesigner(final String entityName, final DesignerEditor<?, ?, ?, ?, ?> newDesigner) {
+  private void addDesigner(final String entityName, YaFormEditor newDesigner) {
     if (editorMap.containsKey(entityName)) {
       // This happens if the blocks editor was already added.
       editorMap.get(entityName).formEditor = newDesigner;
@@ -543,7 +522,7 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
     return screen1FormLoaded && screen1BlocksLoaded && screen1Added;
   }
 
-  private void addBlocksEditor(String entityName, final BlocksEditor<?, ?> newBlocksEditor) {
+  private void addBlocksEditor(String entityName, final YaBlocksEditor newBlocksEditor) {
     if (editorMap.containsKey(entityName)) {
       // This happens if the form editor was already added.
       editorMap.get(entityName).blocksEditor = newBlocksEditor;
@@ -640,12 +619,12 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
               // group new extensions by package name
               String packageName = name.substring(0, name.lastIndexOf('.'));
               if (!externalCollections.containsKey(packageName)) {
-                externalCollections.put(packageName, new HashSet<String>());
+                externalCollections.put(packageName, new HashSet<>());
               }
               externalCollections.get(packageName).add(name);
 
               if (!extensionsInNode.containsKey(fileId)) {
-                extensionsInNode.put(fileId, new HashSet<String>());
+                extensionsInNode.put(fileId, new HashSet<>());
               }
               extensionsInNode.get(fileId).add(name);
               extensionToNodeName.put(name, fileId);
@@ -688,7 +667,7 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
   public void removeComponent(Map<String, String> componentTypes) {
     final Ode ode = Ode.getInstance();
     final YoungAndroidComponentsFolder componentsFolder = ((YoungAndroidProjectNode) project.getRootNode()).getComponentsFolder();
-    Set<String> externalCompFolders = new HashSet<String>();
+    Set<String> externalCompFolders = new HashSet<>();
     // Old projects with old extensions will use FQCN for the directory name rather than the package
     // Prefer deleting com.foo.Bar over com.foo if com.foo.Bar exists.
     for (ProjectNode child : componentsFolder.getChildren()) {
@@ -697,7 +676,7 @@ public final class YaProjectEditor extends ProjectEditor implements ProjectChang
         externalCompFolders.add(parts[2]);
       }
     }
-    Set<String> removedPackages = new HashSet<String>();
+    Set<String> removedPackages = new HashSet<>();
     for (String componentType : componentTypes.keySet()) {
       String typeName = componentTypes.get(componentType);
       if (!externalCompFolders.contains(typeName) && !externalComponents.contains(typeName)) {
