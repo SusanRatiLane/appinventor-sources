@@ -20,7 +20,7 @@ public enum ListOrientation implements OptionList<Integer> {
 
   ListOrientation(int value) {
     this.orientation = value;
-  } 
+  }
 
   public Integer toUnderlyingValue() {
     return orientation;

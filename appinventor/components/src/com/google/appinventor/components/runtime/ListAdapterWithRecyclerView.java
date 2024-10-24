@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListAdapterWithRecyclerView
-    extends RecyclerView.Adapter<ListAdapterWithRecyclerView.RvViewHolder>  implements Filterable {
+    extends RecyclerView.Adapter<ListAdapterWithRecyclerView.RvViewHolder> implements Filterable {
   private static final String LOG_TAG = "ListAdapterRecyclerView";
 
   private ClickListener clickListener;
@@ -146,7 +146,7 @@ public class ListAdapterWithRecyclerView
     cardView.setRadius(radius);
     cardView.setCardElevation(2.1f);
     ViewCompat.setElevation(cardView, 20);
-       
+
     cardView.setClickable(true);
     final int idCard = ViewCompat.generateViewId();
     cardView.setId(idCard);
@@ -294,16 +294,16 @@ public class ListAdapterWithRecyclerView
       position = originalPositions.indexOf(position);
     }
     if (selectedItems.contains(position)) {
-        return;
+      return;
     }
     if (!selectedItems.isEmpty()) {
-        int oldPosition = selectedItems.get(0);
-        selectedItems.clear();
-        notifyItemChanged(oldPosition);
+      int oldPosition = selectedItems.get(0);
+      selectedItems.clear();
+      notifyItemChanged(oldPosition);
     }
     selectedItems.add(position);
     notifyItemChanged(position);
-}
+  }
 
   public void changeSelections(int position) {
     if(!originalPositions.isEmpty()) {
@@ -331,7 +331,7 @@ public class ListAdapterWithRecyclerView
 
     public RvViewHolder(View view, int idCard, int idFirst, int idSecond, int idImages) {
       super(view);
-      
+
       view.setOnClickListener(this);
 
       cardView = view.findViewById(idCard);
@@ -352,7 +352,7 @@ public class ListAdapterWithRecyclerView
         position = originalPositions.get(position);
       }
       clickListener.onItemClick(position, v);
-    }   
+    }
   }
 
   public void setOnItemClickListener(ClickListener clickListener) {

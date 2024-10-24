@@ -149,7 +149,7 @@ open class ListView: ViewComponent, AbstractMethodsForViewComponent,
       _view.reloadData()
     }
   }
-  
+
   // This property is not supported in iOS
   @objc open var BounceEdgeEffect: Bool {
     get {

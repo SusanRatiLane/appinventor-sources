@@ -66,16 +66,16 @@ import android.graphics.Rect;
 
 @DesignerComponent(version = YaVersion.LISTVIEW_COMPONENT_VERSION,
     description = "<p>This is a visible component that displays a list of text and image elements.</p>" +
-                      " <p>Simple lists of strings may be set using the ElementsFromString property." +
-                      " More complex lists of elements containing multiple strings and/or images can be created" +
-                      " using the ListData and ListViewLayout properties. </p>",
+        " <p>Simple lists of strings may be set using the ElementsFromString property." +
+        " More complex lists of elements containing multiple strings and/or images can be created using " +
+        "the ListData and ListViewLayout properties. </p>",
     category = ComponentCategory.USERINTERFACE,
     nonVisible = false,
     iconName = "images/listView.png")
 @SimpleObject
 @UsesLibraries(libraries ="recyclerview.jar, cardview.jar, cardview.aar, dynamicanimation.jar")
 @UsesPermissions(permissionNames = "android.permission.INTERNET," +
-                                       "android.permission.READ_EXTERNAL_STORAGE")
+        "android.permission.READ_EXTERNAL_STORAGE")
 public final class ListView extends AndroidViewComponent {
 
   private static final String LOG_TAG = "ListView";
@@ -188,7 +188,7 @@ public final class ListView extends AndroidViewComponent {
       txtSearchBox.setHintTextColor(COLOR_BLACK);
     }
 
-    //set up the listener 
+    //set up the listener
     txtSearchBox.addTextChangedListener(new TextWatcher() {
       @Override
       public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
@@ -337,8 +337,8 @@ public final class ListView extends AndroidViewComponent {
    * @suppressdoc
    */
   @SimpleProperty(description = "List of elements to show in the ListView. Depending "
-                                    + "on the ListView, this may be a list of strings or a list of 3-element sub-lists "
-                                    + "containing Text, Description, and Image file name.",
+      + "on the ListView, this may be a list of strings or a list of 3-element sub-lists "
+      + "containing Text, Description, and Image file name.",
       category = PropertyCategory.BEHAVIOR)
   public List Elements() {
     return items;
