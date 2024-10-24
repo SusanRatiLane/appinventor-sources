@@ -300,19 +300,6 @@ public final class ListView extends AndroidViewComponent {
   }
 
   /**
-   * Returns true or false depending on the visibility of the Filter bar element
-   *
-   * @return true or false (visibility)
-   * @suppressdoc
-   */
-  @SimpleProperty(description = "List filter bar, allows to search the list for relevant items. "
-                                    + "True will display the bar, Falseness will hide it.",
-      category = PropertyCategory.BEHAVIOR)
-  public boolean ShowFilterBar() {
-    return showFilter;
-  }
-
-  /**
    * Sets visibility of the filter bar. `true`{:.logic.block} will show the bar,
    * `false`{:.logic.block} will hide it.
    *
@@ -328,6 +315,19 @@ public final class ListView extends AndroidViewComponent {
     } else {
       txtSearchBox.setVisibility(View.GONE);
     }
+  }
+
+  /**
+   * Returns true or false depending on the visibility of the Filter bar element
+   *
+   * @return true or false (visibility)
+   * @suppressdoc
+   */
+  @SimpleProperty(description = "List filter bar, allows to search the list for relevant items. "
+      + "True will display the bar, False will hide it.",
+      category = PropertyCategory.BEHAVIOR)
+  public boolean ShowFilterBar() {
+    return showFilter;
   }
 
   /**
