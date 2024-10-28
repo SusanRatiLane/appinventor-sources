@@ -836,10 +836,6 @@ This is a visible component that displays a list of text and image elements in y
 {:id="ListView.ListViewLayout" .number} *ListViewLayout*
 : Specifies type of layout for ListView row.
 
-{:id="ListView.MultiSelect" .boolean} *MultiSelect*
-: Sets the multiselect function. `true`{:.logic.block} will enable the function,
- `false`{:.logic.block} will disable.
-
 {:id="ListView.Orientation" .number} *Orientation*
 : Specifies the layout's orientation. This may be: `Vertical`, which displays elements
  in rows one after the other; or `Horizontal`, which displays one element at a time and

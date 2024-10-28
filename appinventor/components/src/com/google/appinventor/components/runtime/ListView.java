@@ -880,9 +880,10 @@ public final class ListView extends AndroidViewComponent {
    * @return true or false (is multiselect)
    * @suppressdoc
    */
-  @SimpleProperty(description = "A function that allows you to select multiple elements. "
-                                    + "True - function enabled, false - disabled.",
-      category = PropertyCategory.BEHAVIOR)
+  // See https://github.com/mit-cml/appinventor-sources/pull/3235#issuecomment-2435573318
+//  @SimpleProperty(description = "A function that allows you to select multiple elements. "
+//                                    + "True - function enabled, false - disabled.",
+//      category = PropertyCategory.BEHAVIOR)
   public boolean MultiSelect() {
     return multiSelect;
   }
@@ -893,9 +894,10 @@ public final class ListView extends AndroidViewComponent {
    *
    * @param multiSelect sets the function according to this input
    */
-  @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_BOOLEAN,
-      defaultValue = "False")
-  @SimpleProperty
+  // See https://github.com/mit-cml/appinventor-sources/pull/3235#issuecomment-2435573318
+//  @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_BOOLEAN,
+//      defaultValue = "False")
+//  @SimpleProperty
   public void MultiSelect(boolean multi) {
     if (selectionIndex > 0) {
       listAdapterWithRecyclerView.clearSelections();
