@@ -331,6 +331,18 @@ public final class ListView extends AndroidViewComponent {
   }
 
   /**
+   * Specifies the list of choices to display.
+   *
+   * @param itemsList a List containing the strings to be added to the ListView
+   */
+  @SimpleProperty
+  public void Elements(List<Object> itemsList) {
+    items = new ArrayList<>(itemsList);
+    updateAdapterData();
+    listAdapterWithRecyclerView.notifyDataSetChanged();
+  }
+
+  /**
    * Elements property getter method
    *
    * @return a YailList representing the list of strings to be picked from
@@ -342,18 +354,6 @@ public final class ListView extends AndroidViewComponent {
       category = PropertyCategory.BEHAVIOR)
   public List Elements() {
     return items;
-  }
-
-  /**
-   * Specifies the list of choices to display.
-   *
-   * @param itemsList a List containing the strings to be added to the ListView
-   */
-  @SimpleProperty
-  public void Elements(List<Object> itemsList) {
-    items = new ArrayList<>(itemsList);
-    updateAdapterData();
-    listAdapterWithRecyclerView.notifyDataSetChanged();
   }
 
   /**
