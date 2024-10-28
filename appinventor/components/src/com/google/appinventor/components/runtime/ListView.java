@@ -352,7 +352,7 @@ public final class ListView extends AndroidViewComponent {
       + "on the ListView, this may be a list of strings or a list of 3-element sub-lists "
       + "containing Text, Description, and Image file name.",
       category = PropertyCategory.BEHAVIOR)
-  public List Elements() {
+  public List<Object> Elements() {
     return items;
   }
 
