@@ -963,10 +963,13 @@ public final class ListView extends AndroidViewComponent {
   @SimpleProperty(userVisible = false)
   public void ListData(String propertyValue) {
     this.propertyValue = propertyValue;
-    items.clear();
-    if (propertyValue != null && propertyValue != "") {
+    if (propertyValue != null && !propertyValue.isEmpty() && !propertyValue.equals("[]")) {
       try {
         JSONArray arr = new JSONArray(propertyValue);
+        // Note that ListData is set from the designer only. If we change this, then the logic here
+        // will need to be updated to handle the case where ListData is set from the blocks and
+        // happens to clear the contents.
+        items.clear();
         // Convert the JSON data into a list of Dictionaries
         for (int i = 0; i < arr.length(); ++i) {
           JSONObject jsonItem = arr.getJSONObject(i);
