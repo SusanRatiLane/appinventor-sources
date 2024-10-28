@@ -59,15 +59,16 @@ public class ListAdapterWithRecyclerView
   private List<Integer> originalPositions = new ArrayList<>();
   protected final ComponentContainer container;
   private List<Integer> selectedItems = new ArrayList<>();
+  private String lastQuery = "";
 
   protected final Filter filter = new Filter() {
     @Override
     protected FilterResults performFiltering(CharSequence charSequence) {
-      String filterQuery = charSequence.toString().toLowerCase();
+      lastQuery = charSequence.toString().toLowerCase();
       FilterResults results = new FilterResults();
       List<Object> filteredList = new ArrayList<>();
       originalPositions = new ArrayList<>();
-      if (filterQuery == null || filterQuery.length() == 0) {
+      if (lastQuery == null || lastQuery.length() == 0) {
         filteredList = new ArrayList<>(originalItems);
         items = new ArrayList<>(originalItems);
       } else {
@@ -87,7 +88,7 @@ public class ListAdapterWithRecyclerView
           } else {
             filterString = item.toString();
           }
-          if (filterString.toLowerCase().contains(filterQuery)) {
+          if (filterString.toLowerCase().contains(lastQuery)) {
             filteredList.add(item);
             originalPositions.add(index);
           }
@@ -133,6 +134,8 @@ public class ListAdapterWithRecyclerView
     this.originalItems = newItems;
     if (originalPositions.isEmpty()) {
       this.items = new ArrayList<>(newItems);
+    } else {
+      filter.filter(lastQuery);
     }
     clearSelections();
   }
