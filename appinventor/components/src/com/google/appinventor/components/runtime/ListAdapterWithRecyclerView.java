@@ -102,6 +102,7 @@ public class ListAdapterWithRecyclerView
     protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
       items = new ArrayList<>((List<Object>) filterResults.values);
       clearSelections();
+      notifyDataSetChanged();
       // We store the original data in the originalItems variable
       // We store the original item indexes in the originalPositions variable
       // We have eliminated hiding/showing CardView to improve performance
@@ -319,7 +320,6 @@ public class ListAdapterWithRecyclerView
 
   public void clearSelections() {
     selectedItems.clear();
-    notifyDataSetChanged();
   }
 
   class RvViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

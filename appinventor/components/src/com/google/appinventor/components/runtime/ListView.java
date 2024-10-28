@@ -418,6 +418,7 @@ public final class ListView extends AndroidViewComponent {
     } else {
       selection = "";
       listAdapterWithRecyclerView.clearSelections();
+      listAdapterWithRecyclerView.notifyDataSetChanged();
     }
   }
 
@@ -898,6 +899,7 @@ public final class ListView extends AndroidViewComponent {
   public void MultiSelect(boolean multi) {
     if (selectionIndex > 0) {
       listAdapterWithRecyclerView.clearSelections();
+      listAdapterWithRecyclerView.notifyDataSetChanged();
     }
     this.multiSelect = multi;
   }
