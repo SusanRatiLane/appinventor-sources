@@ -684,36 +684,37 @@ Blockly.Blocks.component_event = {
  * @lends {Blockly.Block}
  */
 Blockly.Blocks.component_method = {
-  category : 'Component',
-  helpUrl : function() {
-      var url = Blockly.ComponentBlock.METHODS_HELPURLS[this.getTypeName()];
-      if (url && url[0] == '/') {
-        var parts = url.split('#');
-        parts[1] = this.getTypeName() + '.' + this.methodName;
-        url = parts.join('#');
-      }
-      return url;
+  category: 'Component',
+  helpUrl: function () {
+    var url = Blockly.ComponentBlock.METHODS_HELPURLS[this.getTypeName()];
+    if (url && url[0] == '/') {
+      var parts = url.split('#');
+      parts[1] = this.getTypeName() + '.' + this.methodName;
+      url = parts.join('#');
+    }
+    return url;
   },
 
-  mutationToDom : function() {
+  mutationToDom: function () {
 
     var container = document.createElement('mutation');
     container.setAttribute('component_type', this.typeName);
     container.setAttribute('method_name', this.methodName);
-    var isGenericString = "false";
-    if(this.isGeneric){
-      isGenericString = "true";
-    }
-    container.setAttribute('is_generic', isGenericString);
-    if(!this.isGeneric) {
+    container.setAttribute('is_generic', this.isGeneric ? "true" : "false");
+    if (!this.isGeneric) {
       container.setAttribute('instance_name', this.instanceName);//instance name not needed
     }
     if (!this.isGeneric && this.typeName == "Clock" &&
-        Blockly.ComponentBlock.isClockMethodName(this.methodName)) {
+      Blockly.ComponentBlock.isClockMethodName(this.methodName)) {
       var timeUnit = this.getFieldValue('TIME_UNIT');
       container.setAttribute('method_name', 'Add' + timeUnit);
       container.setAttribute('timeUnit', timeUnit);
+    } else if (
+      (this.typeName == "HorizontalScrollArrangement" && Blockly.ComponentBlock.isHorizontalScrollArrangementMethodName(this.methodName)) ||
+      (this.typeName == "VerticalScrollArrangement" && Blockly.ComponentBlock.isVerticalScrollArrangementMethodName(this.methodName))) {
+      container.setAttribute('method_name', this.getFieldValue('SCROLL_OPERATION'));
     }
+
     return container;
   },
 
@@ -800,6 +801,18 @@ Blockly.Blocks.component_method = {
             this.setFieldValue('Duration', "TIME_UNIT");
             break;
         }
+      } else if (
+          (this.typeName == "HorizontalScrollArrangement" && Blockly.ComponentBlock.isHorizontalScrollArrangementMethodName(this.methodName)) ||
+          (this.typeName == "VerticalScrollArrangement" && Blockly.ComponentBlock.isVerticalScrollArrangementMethodName(this.methodName)) ) {
+        var scrollOperationDropDown = this.typeName == "HorizontalScrollArrangement" ?
+          Blockly.ComponentBlock.createHorizontalScrollOperationDropDown() :
+          Blockly.ComponentBlock.createVerticalScrollOperationDropDown();
+        this.appendDummyInput()
+          .appendField(Blockly.Msg.LANG_COMPONENT_BLOCK_METHOD_TITLE_CALL)
+          .appendField(this.componentDropDown, Blockly.ComponentBlock.COMPONENT_SELECTOR)
+          .appendField('.')
+          .appendField(scrollOperationDropDown, "SCROLL_OPERATION");
+        this.setFieldValue(this.methodName, "SCROLL_OPERATION");
       } else {
         this.appendDummyInput()
           .appendField(Blockly.Msg.LANG_COMPONENT_BLOCK_METHOD_TITLE_CALL)
@@ -1652,6 +1665,35 @@ Blockly.ComponentBlock.isClockMethodName =  function  (name) {
     return Blockly.ComponentBlock.clockMethodNames.indexOf(name) != -1;
 };
 
+Blockly.ComponentBlock.horizontalScrollOperations = ["ScrollLeftEnd", "ScrollRightEnd", "ArrowScrollLeftward",
+  "ArrowScrollRightward", "PageScrollLeftward", "PageScrollRightward"];
+Blockly.ComponentBlock.horizontalScrollOperationsMenu = function () {
+  return [[ Blockly.common.getMainWorkspace().getComponentDatabase().getInternationalizedMethodName("ScrollLeftEnd"), "ScrollLeftEnd"],
+   [ Blockly.common.getMainWorkspace().getComponentDatabase().getInternationalizedMethodName("ScrollRightEnd"), "ScrollRightEnd"],
+   [ Blockly.common.getMainWorkspace().getComponentDatabase().getInternationalizedMethodName("ArrowScrollLeftward"), "ArrowScrollLeftward"],
+   [ Blockly.common.getMainWorkspace().getComponentDatabase().getInternationalizedMethodName("ArrowScrollRightward"), "ArrowScrollRightward"],
+   [ Blockly.common.getMainWorkspace().getComponentDatabase().getInternationalizedMethodName("PageScrollLeftward"), "PageScrollLeftward"],
+   [ Blockly.common.getMainWorkspace().getComponentDatabase().getInternationalizedMethodName("PageScrollRightward"), "PageScrollRightward"]
+  ]};
+
+Blockly.ComponentBlock.isHorizontalScrollArrangementMethodName = function (name) {
+    return Blockly.ComponentBlock.horizontalScrollOperations.indexOf(name) != -1;
+};
+
+Blockly.ComponentBlock.verticalScrollOperations = ["ScrollTop", "ScrollBottom", "ArrowScrollUpward",
+  "ArrowScrollDownward", "PageScrollUpward", "PageScrollDownward"];
+Blockly.ComponentBlock.verticalScrollOperationsMenu = function() {
+  return [[ Blockly.common.getMainWorkspace().getComponentDatabase().getInternationalizedMethodName("ScrollTop"), "ScrollTop"],
+   [ Blockly.common.getMainWorkspace().getComponentDatabase().getInternationalizedMethodName("ScrollBottom"), "ScrollBottom"],
+   [ Blockly.Msg.common.getMainWorkspace().getComponentDatabase().getInternationalizedMethodName("ArrowScrollUpward"), "ArrowScrollUpward"],
+   [ Blockly.common.getMainWorkspace().getComponentDatabase().getInternationalizedMethodName("ArrowScrollDownward"), "ArrowScrollDownward"],
+   [ Blockly.common.getMainWorkspace().getComponentDatabase().getInternationalizedMethodName("PageScrollUpward"), "PageScrollUpward"],
+   [ Blockly.common.getMainWorkspace().getComponentDatabase().getInternationalizedMethodName("PageScrollDownward"), "PageScrollDownward"]
+  ]};
+Blockly.ComponentBlock.isVerticalScrollArrangementMethodName = function (name) {
+    return Blockly.ComponentBlock.verticalScrollOperations.indexOf(name) != -1;
+};
+
 Blockly.ComponentBlock.createComponentDropDown = function(block){
   var componentDropDown = new AI.Blockly.FieldNoCheckDropdown([["",""]]);
   componentDropDown.menuGenerator_ = function(){ return block.getTopWorkspace().getComponentDatabase().getComponentNamesByType(block.typeName); };
@@ -1667,6 +1709,18 @@ Blockly.ComponentBlock.createComponentTypeDropDown = function(block) {
 Blockly.ComponentBlock.createClockAddDropDown = function(/*block*/){
   var componentDropDown = new Blockly.FieldDropdown([["",""]]);
   componentDropDown.menuGenerator_ = function(){ return Blockly.ComponentBlock.timeUnitsMenu; };
+  return componentDropDown;
+};
+
+Blockly.ComponentBlock.createHorizontalScrollOperationDropDown = function(){
+  var componentDropDown = new Blockly.FieldDropdown([["",""]]);
+  componentDropDown.menuGenerator_ = Blockly.ComponentBlock.horizontalScrollOperationsMenu();
+  return componentDropDown;
+};
+
+Blockly.ComponentBlock.createVerticalScrollOperationDropDown = function(){
+  var componentDropDown = new Blockly.FieldDropdown([["",""]]);
+  componentDropDown.menuGenerator_ = Blockly.ComponentBlock.verticalScrollOperationsMenu();
   return componentDropDown;
 };
 

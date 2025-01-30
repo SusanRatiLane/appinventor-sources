@@ -2741,6 +2741,22 @@ public interface OdeMessages extends Messages, ComponentTranslations {
   String UnitProperties();
 
   //Params
+  @DefaultMessage("scrollPosition")
+  @Description("")
+  String scrollPositionParams();
+
+  @DefaultMessage("position")
+  @Description("")
+  String positionParams();
+
+  @DefaultMessage("amount")
+  @Description("")
+  String amountParams();
+
+  @DefaultMessage("animated")
+  @Description("")
+  String animatedParams();
+
   @DefaultMessage("xAccel")
   @Description("")
   String xAccelParams();

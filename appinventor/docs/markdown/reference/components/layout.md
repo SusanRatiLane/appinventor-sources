@@ -138,6 +138,12 @@ A formatting element in which to place components that should be displayed from 
 {:id="HorizontalScrollArrangement.Image" .text} *Image*
 : Specifies the path of the background image of the `HorizontalScrollArrangement`.
 
+{:id="HorizontalScrollArrangement.MaxScrollPosition" .number .ro .bo} *MaxScrollPosition*
+: Return the maximum position that the ScrollArrangement can reach
+
+{:id="HorizontalScrollArrangement.ScrollPosition" .number .ro .bo} *ScrollPosition*
+: The scroll position is the same as the number of pixels that are hidden from view above the scrollable area. If the scroll bar is at the very left, or if the element is not scrollable, this number will be 0.
+
 {:id="HorizontalScrollArrangement.Visible" .boolean} *Visible*
 : Specifies whether the `HorizontalScrollArrangement` should be visible on the screen.  Value is `true`{:.logic.block}
  if the `HorizontalScrollArrangement` is showing and `false`{:.logic.block} if hidden.
@@ -152,14 +158,49 @@ A formatting element in which to place components that should be displayed from 
 ### Events  {#HorizontalScrollArrangement-Events}
 
 {:.events}
-None
 
+{:id="HorizontalScrollArrangement.ReachLeftEnd"} ReachLeftEnd()
+: Notice that if blocks like "ScrollLeftEnd" is excuted, this event would be called
+
+{:id="HorizontalScrollArrangement.ReachRightEnd"} ReachRightEnd()
+: Notice that if blocks like "ScrollRightEnd" is excuted, this event would be called
+
+{:id="HorizontalScrollArrangement.ScrollChanged"} ScrollChanged(*scrollPosition*{:.number})
+: Notice that if blocks like "ScrollBy" is excuted, this event would be called
 
 ### Methods  {#HorizontalScrollArrangement-Methods}
 
 {:.methods}
-None
 
+{:id="HorizontalScrollArrangement.ArrowScrollLeftward" class="method"} <i/> ArrowScrollLeftward()
+: Scroll leftward for half a page (defaut with animation)
+
+{:id="HorizontalScrollArrangement.ArrowScrollRightward" class="method"} <i/> ArrowScrollRightward()
+: Scroll rightward for half a page (defaut with animation)
+
+{:id="HorizontalScrollArrangement.PageScrollLeftward" class="method"} <i/> PageScrollLeftward()
+: Scroll leftward for a full page (defaut with animation)
+
+{:id="HorizontalScrollArrangement.PageScrollRightward" class="method"} <i/> PageScrollRightward()
+: Scroll rightward for a full page (defaut with animation)
+
+{:id="HorizontalScrollArrangement.ScrollBy" class="method"} <i/> ScrollBy(*displacement*{:.number})
+: Scroll rightward so for a specific displacement, scroll leftward if diaplacement is negative (without animation)
+
+{:id="HorizontalScrollArrangement.ScrollLeftEnd" class="method"} <i/> ScrollLeftEnd()
+: Scroll to the left end of the scroll arrangement (defaut with animation)
+
+{:id="HorizontalScrollArrangement.ScrollRightEnd" class="method"} <i/> ScrollRightEnd()
+: Scroll to the right end of the scroll arrangement (defaut with animation)
+
+{:id="HorizontalScrollArrangement.ScrollTo" class="method"} <i/> ScrollTo(*position*{:.number})
+: Scroll to a specific position (without animation)
+
+{:id="HorizontalScrollArrangement.SmoothScrollBy" class="method"} <i/> SmoothScrollBy(*displacement*{:.number})
+: Scroll rightward so for a specific displacement, scroll leftward if diaplacement is negative (with animation)
+
+{:id="HorizontalScrollArrangement.SmoothScrollTo" class="method"} <i/> SmoothScrollTo(*position*{:.number})
+: Scroll to a specific position (with animation)
 
 ## TableArrangement  {#TableArrangement}
 
@@ -350,6 +391,12 @@ A formatting element in which to place components that should be displayed one b
 {:id="VerticalScrollArrangement.Image" .text} *Image*
 : Specifies the path of the background image of the `VerticalScrollArrangement`.
 
+{:id="VerticalScrollArrangement.MaxScrollPosition" .number .ro .bo} *MaxScrollPosition*
+: Return the maximum position that the ScrollArrangement can reach
+
+{:id="VerticalScrollArrangement.ScrollPosition" .number .ro .bo} *ScrollPosition*
+: The scroll position is the same as the number of pixels that are hidden from view above the scrollable area. If the scroll bar is at the very top, or if the element is not scrollable, this number will be 0.
+
 {:id="VerticalScrollArrangement.Visible" .boolean} *Visible*
 : Specifies whether the `VerticalScrollArrangement` should be visible on the screen.  Value is `true`{:.logic.block}
  if the `VerticalScrollArrangement` is showing and `false`{:.logic.block} if hidden.
@@ -364,11 +411,46 @@ A formatting element in which to place components that should be displayed one b
 ### Events  {#VerticalScrollArrangement-Events}
 
 {:.events}
-None
 
+{:id="VerticalScrollArrangement.ReachBottom"} ReachBottom()
+: Notice that if blocks like "ScrollBottom" is excuted, this event would be called
+
+{:id="VerticalScrollArrangement.ReachTop"} ReachTop()
+: Notice that if blocks like "ScrollTop" is excuted, this event would be called
+
+{:id="VerticalScrollArrangement.ScrollChanged"} ScrollChanged(*scrollPosition*{:.number})
+: Notice that if blocks like "ScrollBy" is excuted, this event would be called
 
 ### Methods  {#VerticalScrollArrangement-Methods}
 
 {:.methods}
-None
 
+{:id="VerticalScrollArrangement.ArrowScrollDownward" class="method"} <i/> ArrowScrollDownward()
+: Scroll downward for half a page (defaut with animation)
+
+{:id="VerticalScrollArrangement.ArrowScrollUpward" class="method"} <i/> ArrowScrollUpward()
+: Scroll upward for half a page (defaut with animation)
+
+{:id="VerticalScrollArrangement.PageScrollDownward" class="method"} <i/> PageScrollDownward()
+: Scroll downward for a full page (defaut with animation)
+
+{:id="VerticalScrollArrangement.PageScrollUpward" class="method"} <i/> PageScrollUpward()
+: Scroll upward for a full page (defaut with animation)
+
+{:id="VerticalScrollArrangement.ScrollBottom" class="method"} <i/> ScrollBottom()
+: Scroll to the bottom of the scroll arrangement (defaut with animation)
+
+{:id="VerticalScrollArrangement.ScrollBy" class="method"} <i/> ScrollBy(*displacement*{:.number})
+: Scroll downward so for a specific displacement, scroll upward if diaplacement is negative (without animation)
+
+{:id="VerticalScrollArrangement.ScrollTo" class="method"} <i/> ScrollTo(*position*{:.number})
+: Scroll to a specific position (without animation)
+
+{:id="VerticalScrollArrangement.ScrollTop" class="method"} <i/> ScrollTop()
+: Scroll to the top of the scroll arrangement (defaut with animation)
+
+{:id="VerticalScrollArrangement.SmoothScrollBy" class="method"} <i/> SmoothScrollBy(*displacement*{:.number})
+: Scroll downward so for a specific displacement, scroll upward if diaplacement is negative (with animation)
+
+{:id="VerticalScrollArrangement.SmoothScrollTo" class="method"} <i/> SmoothScrollTo(*position*{:.number})
+: Scroll to a specific position (with animation)

@@ -828,5 +828,18 @@
     "Blockly.Msg.SHOW": "显示工作区控件",
     "Blockly.Msg.HIDE": "隐藏工作区控件",
     "Blockly.Msg.CLEAN_UP": "整理代码块",
-    "Blockly.Msg.REDO": "重做"
+    "Blockly.Msg.REDO": "重做",
+    "Blockly.Msg.H_SCROLL_OPERATION_SCROLL_LEFT_END": "滚动到最左端",
+    "Blockly.Msg.H_SCROLL_OPERATION_SCROLL_RIGHT_END": "滚动到最右端",
+    "Blockly.Msg.H_SCROLL_OPERATION_ARROW_SCROLL_LEFTWARD": "向左滚动半页",
+    "Blockly.Msg.H_SCROLL_OPERATION_ARROW_SCROLL_RIGHTWARD": "向右滚动半页",
+    "Blockly.Msg.H_SCROLL_OPERATION_PAGE_SCROLL_LEFTWARD": "向左滚动一页",
+    "Blockly.Msg.H_SCROLL_OPERATION_PAGE_SCROLL_RIGHTWARD": "向右滚动一页",
+
+    "Blockly.Msg.V_SCROLL_OPERATION_SCROLL_TOP": "滚动到最顶端",
+    "Blockly.Msg.V_SCROLL_OPERATION_SCROLL_BOTTOM": "滚动到最底端",
+    "Blockly.Msg.V_SCROLL_OPERATION_ARROW_SCROLL_UPWARD": "向上滚动半页",
+    "Blockly.Msg.V_SCROLL_OPERATION_ARROW_SCROLL_DOWNWARD": "向下滚动半页",
+    "Blockly.Msg.V_SCROLL_OPERATION_PAGE_SCROLL_UPWARD": "向上滚动一页",
+    "Blockly.Msg.V_SCROLL_OPERATION_PAGE_SCROLL_DOWNWARD": "向下滚动一页"
 }
