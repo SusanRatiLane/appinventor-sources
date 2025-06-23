@@ -15,7 +15,7 @@
         <g:HTMLPanel>
             <img srcset="" src="/static/images/codi-logo.svg" ui:field="logo" height="37px"/>
         </g:HTMLPanel>
-        <mob:TopToolbarMob ui:field="topToolbar"/>
+        <mob:TopToolbarMobTest ui:field="topToolbar"/>
         <g:FlowPanel ui:field="rightPanel">
             <g:FlowPanel styleName="ode-TopPanelAccount">
                 <g:Label text="{messages.readOnlyMode}" styleName="ode-TopPanelWarningLabel"
