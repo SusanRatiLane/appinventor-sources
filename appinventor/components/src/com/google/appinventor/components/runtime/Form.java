@@ -1308,6 +1308,10 @@ public class Form extends AppInventorCompatActivity
         ViewGroup.LayoutParams.MATCH_PARENT));
     frameLayout.getViewTreeObserver().addOnGlobalLayoutListener(this);
     scaleLayout.requestLayout();
+    refreshLayout();
+  }
+
+  protected void refreshLayout() {
     androidUIHandler.post(new Runnable() {
       public void run() {
         if (frameLayout != null && frameLayout.getWidth() != 0 && frameLayout.getHeight() != 0) {
