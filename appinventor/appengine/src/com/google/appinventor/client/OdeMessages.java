@@ -723,10 +723,13 @@ public interface OdeMessages extends Messages, ComponentTranslations {
   @DefaultMessage("About")
   @Description("Label of the link for About")
   String aboutMenuItem();
-
   @DefaultMessage("Use Companion: {0} or {1}")
   @Description("Label showing the companion version")
   String useCompanion(String version, String alternateVersion);
+
+  @DefaultMessage("Forum Help")
+  @Description("Label for the Forum Help menu")
+  String forumHelpMenuItem();
 
   @DefaultMessage("Target Android SDK: {0} ({1})")
   @Description("Label showing the target sdk version and the target android version")

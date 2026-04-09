@@ -64,4 +64,12 @@ public interface UserInfoProvider {
 
   String getFauxProjectName();
 
+  boolean isCommunityLogin();
+
+  void setCommunityLogin(boolean communityLogin);
+
+  public String getCommunityLoginUsername();
+
+  public void setCommunityLoginUsername(String username);
+
 }

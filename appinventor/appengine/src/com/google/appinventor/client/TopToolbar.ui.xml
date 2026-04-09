@@ -165,6 +165,9 @@
       <ai:DropDownItem name="About" caption="{messages.aboutMenuItem}">
         <actions:AboutAction/>
       </ai:DropDownItem>
+      <ai:DropDownItem name="ForumHelp" caption="{messages.forumHelpMenuItem}">
+        <actions:ForumHelpAction />
+      </ai:DropDownItem>
       <hr/>
       <ai:DropDownItem name="Library" caption="{messages.libraryMenuItem}">
         <actions:OpenLinkAction link_name="Library"/>

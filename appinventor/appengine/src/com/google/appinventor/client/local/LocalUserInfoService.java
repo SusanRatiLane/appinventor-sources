@@ -12,6 +12,7 @@ import com.google.appinventor.shared.rpc.user.UserInfoServiceAsync;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class LocalUserInfoService implements UserInfoServiceAsync {
+
   @Override
   public void getSystemConfig(String sessionId, AsyncCallback<Config> callback) {
     Config config = new Config();
@@ -77,6 +78,35 @@ public class LocalUserInfoService implements UserInfoServiceAsync {
 
   @Override
   public void storeAppStoreSettings(String content, AsyncCallback<Void> callback) {
+
+  }
+  @Override
+  public void getUserCommunityLogin(AsyncCallback<Boolean> callback) {
+
+  }
+
+  @Override
+  public void setUserCommunityLogin(boolean communityLogin, AsyncCallback<Void> callback) {
+
+  }
+
+  @Override
+  public void getCommunityLoginUsername(AsyncCallback<String> callback) {
+
+  }
+
+  @Override
+  public void setCommunityLoginUsername(String username, AsyncCallback<Void> callback) {
+
+  }
+
+  @Override
+  public void loginToCommunity(String email, AsyncCallback<Void> callback) {
+
+  }
+
+  @Override
+  public void logoutFromCommunity(AsyncCallback<Void> callback) {
 
   }
 }

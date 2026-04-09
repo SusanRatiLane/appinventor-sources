@@ -6,23 +6,24 @@
 
 package com.google.appinventor.client;
 
-import static com.google.appinventor.client.Ode.MESSAGES;
-
-import com.google.appinventor.client.actions.EnableAutoloadAction;
-import com.google.appinventor.client.actions.SetFontDyslexicAction;
 import com.google.appinventor.client.boxes.ProjectListBox;
-import com.google.appinventor.client.editor.youngandroid.DesignToolbar.DesignProject;
-import com.google.appinventor.client.editor.youngandroid.DesignToolbar.Screen;
 import com.google.appinventor.client.editor.youngandroid.YaBlocksEditor;
 import com.google.appinventor.client.widgets.DropDownButton;
 import com.google.appinventor.common.version.AppInventorFeatures;
 import com.google.appinventor.shared.storage.StorageUtil;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Composite;
+
+import static com.google.appinventor.client.Ode.MESSAGES;
+
+import com.google.appinventor.client.actions.EnableAutoloadAction;
+import com.google.appinventor.client.actions.SetFontDyslexicAction;
+import com.google.appinventor.client.editor.youngandroid.DesignToolbar.DesignProject;
+import com.google.appinventor.client.editor.youngandroid.DesignToolbar.Screen;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import java.util.logging.Logger;
